@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0 — 2026-09-07 (second cut)
+
+- hash blocks prove: HashAux (sponge rate = cached structural digest of
+  the hashed input) built inside the traced worker; hash.tri fixture
+  (trident hash builtin) proves in ~660 ms debug, ~189 KB artifact,
+  verifies in ~140 ms; tampered artifacts reject.
+- look proving against a real BbgState via
+  `Warrior::prove_zheng_with_state`: looks answer from the state and
+  record Brakedown openings, the statement carries `state.root()` as
+  the public root. Cross-repo e2e lives here (joy sits above zheng and
+  bbg): hand-built .nox look program (trident cannot express a state
+  read yet — follow-up noted), prove -> verify PASS; stale root refuses
+  at prove; re-rooted and group-tampered artifacts reject.
+- CLI `--state` on prove: honest error — bbg has no whole-state file
+  format yet; the library path is wired.
+
 ## 0.2.0 — 2026-09-07
 
 M4 of the soft3 release: the prover is real.

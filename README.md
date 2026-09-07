@@ -46,8 +46,8 @@ count — one row per budget unit, and the trace IS the zheng witness.
 | prove (zheng) | works — `<name>.zheng.json` artifact |
 | verify a zheng proof | works — no re-execution |
 | deploy (particle + cyberlinks) | — after M4 |
-| bbg look (pattern 17) | — prove refuses look traces until a bbg state + root is wired (M6 consumer side) |
-| hash blocks in proofs | — prove refuses tag-15 traces until HashAux wiring |
+| bbg look (pattern 17) | works via joy-rs API (`prove_zheng_with_state`, public root in the statement); CLI `--state` awaits a bbg state-file format |
+| hash blocks in proofs | works — HashAux built from the arena's cached digests |
 
 The dashes are the release notes. No gates, no fakes.
 

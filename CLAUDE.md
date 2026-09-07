@@ -60,10 +60,16 @@ re-execution, `.tri`/`.json`/`.nox` inputs, `prove` (zheng proof ->
 `<name>.zheng.json`), `verify --proof` (zheng verification, no
 re-execution).
 
-**Dash**: deploy (post-M4), bbg look proving (M6 — prove refuses
-tag-17 traces), hash-block proving (prove refuses tag-15 traces until
-HashAux wiring). The dash is the release note — never fake a proof,
-never print a number the system didn't produce.
+**Working too**: hash-block proving (HashAux from the arena's cached
+digests) and look proving against a real BbgState
+(`prove_zheng_with_state`, public root in the statement — the
+cross-repo zheng+bbg e2e lives in joy's tests).
+
+**Dash**: deploy (post-M4), CLI `--state` loading (bbg has no
+whole-state file format yet — library path works), trident-level state
+reads (os.state.read unlowered — look tests hand-build .nox). The dash
+is the release note — never fake a proof, never print a number the
+system didn't produce.
 
 ## Execution model
 

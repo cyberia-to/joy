@@ -56,6 +56,14 @@ pub fn cmd_prove(args: ProveArgs) {
             process::exit(1);
         }
     };
+    if args.state.is_some() {
+        // bbg has no whole-state file loader yet (storage is dimension-level
+        // KV behind optional features). The library path is wired:
+        // joy_rs::Warrior::prove_zheng_with_state(bundle, input, &BbgState).
+        eprintln!("error: --state file loading is not wired: bbg has no state-file format yet");
+        eprintln!("state-carrying proofs work through the joy-rs API (prove_zheng_with_state)");
+        process::exit(1);
+    }
     let pi = make_input(&args.input_values, &args.secret);
     let warrior = Warrior::with_budget(args.budget);
 
