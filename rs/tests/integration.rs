@@ -298,3 +298,51 @@ fn prove_refuses_look_rows_honestly() {
     let r = warrior.prove_zheng(&b, &input(&[], &[]));
     assert!(r.is_err(), "no proof without a bbg state");
 }
+
+// ── hash blocks (tag 15) ─────────────────────────────────────────────────────
+
+/// Compile the hash.tri fixture (trident's hash builtin -> pattern 15).
+fn compiled_hash() -> ProgramBundle {
+    let mut options = trident::CompileOptions::for_profile("debug");
+    options.target_config = joy_rs::nox_terrain();
+    trident::compile_to_bundle(&fixture("hash.tri"), &options).expect("compile failed")
+}
+
+#[test]
+fn hash_program_proves_and_verifies() {
+    let warrior = Warrior::new();
+    let b = compiled_hash();
+    let (artifact, result) = warrior
+        .prove_zheng(&b, &input(&[42], &[]))
+        .expect("hash prove failed");
+    assert_eq!(result.output.len(), 4, "hash returns a 4-limb digest");
+    assert!(
+        warrior.verify_zheng(&b, &artifact).expect("verify errored"),
+        "hash proof must verify"
+    );
+}
+
+#[test]
+fn tampered_hash_group_rejected() {
+    let warrior = Warrior::new();
+    let b = compiled_hash();
+    let (artifact, _) = warrior
+        .prove_zheng(&b, &input(&[42], &[]))
+        .expect("hash prove failed");
+
+    // Tamper the witness commitment of an accumulator group via the wire
+    // form (the rate itself is not in the artifact — it is bound through
+    // the folded hash-binding steps, so any group tamper breaks the
+    // cross-group linkage digest).
+    let mut v: serde_json::Value =
+        serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
+    let groups = v["proof"]["groups"].as_array().unwrap().len();
+    let wc = &mut v["proof"]["groups"][groups - 1][1]["witness_commitment"];
+    let b0 = wc[0].as_u64().unwrap();
+    wc[0] = serde_json::Value::from(b0 ^ 1);
+    let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
+    assert!(
+        !warrior.verify_zheng(&b, &tampered).expect("verify errored"),
+        "tampered hash proof must be rejected"
+    );
+}

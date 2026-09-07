@@ -78,6 +78,41 @@ fn describe(kind: ErrorKind) -> &'static str {
     }
 }
 
+/// Build one [`zheng::HashAux`] per tag-15 block: the sponge rate is the
+/// structural digest of the hashed input (r15 of the block's first row),
+/// zero-padded to 8 — exactly what zheng's hash bindings replay against.
+/// Must run while the arena is alive; the digest is cached by the hash
+/// pattern itself.
+fn hash_aux_from_trace<const N: usize>(
+    reduction: &Reduction<N>,
+    tracer: &VecTrace,
+) -> Result<Vec<zheng::HashAux>, String> {
+    let mut aux = Vec::new();
+    let mut i = 0;
+    while i < tracer.0.len() {
+        if tracer.0[i].r()[0] != 15 {
+            i += 1;
+            continue;
+        }
+        let start = i;
+        while i < tracer.0.len() && tracer.0[i].r()[0] == 15 {
+            i += 1;
+        }
+        if i - start < 2 {
+            continue; // stray row: no block, no aux (mirrors zheng's scan)
+        }
+        let input = tracer.0[start].r()[15] as Order;
+        let digest = reduction
+            .digest(input)
+            .copied()
+            .ok_or_else(|| "hash block input has no cached digest".to_string())?;
+        let mut rate = [Goldilocks::ZERO; 8];
+        rate[..4].copy_from_slice(&digest);
+        aux.push(zheng::HashAux { rate });
+    }
+    Ok(aux)
+}
+
 /// The nox warrior. Executes ProgramBundles whose `target_vm` is "nox".
 pub struct Warrior {
     budget: u64,
@@ -101,15 +136,17 @@ impl Warrior {
         bundle: &ProgramBundle,
         input: &ProgramInput,
     ) -> Result<ExecutionResult, String> {
-        self.execute_traced(bundle, input).map(|(r, _)| r)
+        self.execute_traced(bundle, input).map(|(r, _, _)| r)
     }
 
-    /// Execute and keep the trace — the zheng witness.
+    /// Execute and keep the trace — the zheng witness — plus the HashAux
+    /// for every tag-15 block (the rate = structural digest of the hashed
+    /// input, recoverable only while the arena is alive).
     fn execute_traced(
         &self,
         bundle: &ProgramBundle,
         input: &ProgramInput,
-    ) -> Result<(ExecutionResult, VecTrace), String> {
+    ) -> Result<(ExecutionResult, VecTrace, Vec<zheng::HashAux>), String> {
         if bundle.target_vm != "nox" {
             return Err(format!(
                 "joy runs nox bundles; this bundle targets '{}' (use trisha for triton)",
@@ -130,20 +167,24 @@ impl Warrior {
         let handle = std::thread::Builder::new()
             .name("joy-reduce".to_string())
             .stack_size(STACK_SIZE)
-            .spawn(move || -> Result<(ExecutionResult, VecTrace), String> {
+            .spawn(move || -> Result<(ExecutionResult, VecTrace, Vec<zheng::HashAux>), String> {
                 let mut reduction = Reduction::<ARENA>::new();
                 let root = formula::parse(&mut reduction, assembly.trim())?;
                 let object = formula::build_subject(&mut reduction, &public)?;
                 let provider = SecretProvider::new(secret);
                 let mut tracer = VecTrace::default();
                 match reduce(&mut reduction, object, root, budget, &provider, &mut tracer) {
-                    Outcome::Ok(result, _remaining) => Ok((
-                        ExecutionResult {
-                            output: formula::leaves(&reduction, result)?,
-                            cycle_count: tracer.0.len() as u64,
-                        },
-                        tracer,
-                    )),
+                    Outcome::Ok(result, _remaining) => {
+                        let aux = hash_aux_from_trace(&reduction, &tracer)?;
+                        Ok((
+                            ExecutionResult {
+                                output: formula::leaves(&reduction, result)?,
+                                cycle_count: tracer.0.len() as u64,
+                            },
+                            tracer,
+                            aux,
+                        ))
+                    }
                     Outcome::Halt(remaining) => Err(format!(
                         "execution halted (budget remaining: {}) — out of budget, \
                          or a call pattern had no witness (secret inputs exhausted)",
@@ -191,26 +232,21 @@ impl Warrior {
     /// input_hash/output_hash (hemera of the first/last trace rows),
     /// focus_bound (the budget), bbg_root = zero sentinel (stateless).
     ///
-    /// Honest gaps, refused rather than papered over: traces containing
-    /// hash blocks (tag 15) need HashAux wiring; look rows (tag 17) need
-    /// a bbg state and its root in the statement (M6 consumer side).
+    /// Hash blocks (tag 15) prove via HashAux built from the arena's
+    /// cached input digests. Honest gap, refused rather than papered
+    /// over: look rows (tag 17) need a bbg state and its root in the
+    /// statement — use [`Warrior::prove_zheng_with_state`].
     pub fn prove_zheng(
         &self,
         bundle: &ProgramBundle,
         input: &ProgramInput,
     ) -> Result<(crate::proof::ProofArtifact, ExecutionResult), String> {
-        let (result, trace) = self.execute_traced(bundle, input)?;
+        let (result, trace, hash_aux) = self.execute_traced(bundle, input)?;
         if trace.0.len() < 2 {
             return Err(format!(
                 "trace has {} row(s): zheng folds row transitions and needs at least 2",
                 trace.0.len()
             ));
-        }
-        if trace.0.iter().any(|r| r.r()[0] == 15) {
-            return Err(
-                "trace contains hash blocks (tag 15): HashAux wiring is not built yet"
-                    .to_string(),
-            );
         }
         if trace.0.iter().any(|r| r.r()[0] == 17) {
             return Err(
@@ -230,7 +266,7 @@ impl Warrior {
             bbg_root: [0u8; 32],
         };
         let params = zheng::ProofParams::default();
-        let proof = zheng::commit(&trace, &[], &[], &[], &statement, &params)
+        let proof = zheng::commit(&trace, &hash_aux, &[], &[], &statement, &params)
             .map_err(|e| format!("zheng commit failed: {:?}", e))?;
 
         let artifact = crate::proof::ProofArtifact {

@@ -1,0 +1,4 @@
+program hashone
+fn main(a: Field) -> Digest {
+    hash(a, 0, 0, 0, 0, 0, 0, 0)
+}
