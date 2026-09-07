@@ -25,14 +25,15 @@ cli/            Binary crate (package name: joy)
   error.rs      JoyError enum
   compile.rs    .tri source -> ProgramBundle via trident API
   run.rs        joy run
-  verify.rs     joy verify (re-execution)
-  prove.rs      joy prove (honest M4 dash)
+  verify.rs     joy verify (--proof zheng / --claim re-execution)
+  prove.rs      joy prove (zheng artifact)
 
 rs/             CPU backend (crate: joy-rs)
   lib.rs        pub mod formula/target/warrior
   formula.rs    bracket text <-> nox Reduction arena; subject builder
   target.rs     nox TerrainConfig (resolve or built-in mirror)
-  warrior.rs    Warrior + SecretProvider over nox::reduce
+  warrior.rs    Warrior + SecretProvider over nox::reduce; prove/verify
+  proof.rs      ProofArtifact (zheng wire form) + program_hash
   tests/
     integration.rs   end-to-end bundle -> output tests
     fixtures/        add.tri + hand-built add.bundle.json
@@ -51,15 +52,18 @@ rs/             CPU backend (crate: joy-rs)
 - Use repo-qualified paths when referencing across repos
   (e.g. `joy/rs/warrior.rs` vs `trident/src/cli/mod.rs`).
 
-## What works vs what's a dash (M3 of the soft3 release)
+## What works vs what's a dash (M4 of the soft3 release)
 
 **Working**: `run` (nox reduce with VecTrace; public inputs = subject
 cons list, secret inputs = call-pattern witnesses), `verify` by
-re-execution, `.tri`/`.json`/`.nox` inputs.
+re-execution, `.tri`/`.json`/`.nox` inputs, `prove` (zheng proof ->
+`<name>.zheng.json`), `verify --proof` (zheng verification, no
+re-execution).
 
-**Dash**: `prove` (zheng, M4), proof-file verification (M4), deploy
-(post-M4), bbg look (M6). The dash is the release note — never fake
-a proof, never print a number the system didn't produce.
+**Dash**: deploy (post-M4), bbg look proving (M6 — prove refuses
+tag-17 traces), hash-block proving (prove refuses tag-15 traces until
+HashAux wiring). The dash is the release note — never fake a proof,
+never print a number the system didn't produce.
 
 ## Execution model
 
@@ -79,8 +83,9 @@ a proof, never print a number the system didn't produce.
 
 ```
 joy run    <bundle.json | file.tri | file.nox> [--input-values 1,2] [--secret 3] [--budget N]
-joy verify <bundle.json | file.tri | file.nox> --claim <values> [--input-values ...] [--secret ...]
-joy prove  <input>          # exits 1: zheng prover lands in M4
+joy prove  <input> [--input-values ...] [--secret ...] [--output p.zheng.json]
+joy verify <input> --proof <p.zheng.json>            # zheng proof, no re-execution
+joy verify <input> --claim <values> [--input-values ...]  # re-execution
 ```
 
 stdout = machine-readable output, stderr = progress/diagnostics.
