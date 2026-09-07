@@ -6,8 +6,10 @@
 //! `.nox` formula in bracket notation.
 
 pub mod formula;
+pub mod proof;
 pub mod target;
 pub mod warrior;
 
+pub use proof::{program_hash, ArtifactMeta, ProofArtifact, PROOF_FORMAT};
 pub use target::nox_terrain;
 pub use warrior::{Warrior, DEFAULT_BUDGET};

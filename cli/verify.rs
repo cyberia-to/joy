@@ -14,6 +14,9 @@ pub struct VerifyArgs {
     /// Claimed output values (comma-separated field elements)
     #[arg(long, value_delimiter = ',')]
     pub claim: Option<Vec<u64>>,
+    /// Verify a zheng proof artifact (no re-execution)
+    #[arg(long)]
+    pub proof: Option<PathBuf>,
     /// Target terrain (nox) or battlefield (cyber)
     #[arg(long, default_value = "nox")]
     pub target: String,
@@ -39,22 +42,6 @@ pub fn cmd_verify(args: VerifyArgs) {
         eprintln!("error: {}", e);
         process::exit(1);
     }
-    // A proof file is an M4 request — answer with the honest dash.
-    if matches!(
-        args.input.extension().and_then(|e| e.to_str()),
-        Some("toml") | Some("proof")
-    ) {
-        eprintln!("error: zheng proof verification lands in M4 of the soft3 release");
-        eprintln!("M3 verifies by re-execution: joy verify <bundle.json> --claim <values>");
-        process::exit(1);
-    }
-    let claim = match args.claim {
-        Some(c) => c,
-        None => {
-            eprintln!("error: --claim <values> is required (verification by re-execution)");
-            process::exit(1);
-        }
-    };
     let bundle = match load_bundle(&args.input, &args.profile) {
         Ok(b) => b,
         Err(e) => {
@@ -62,11 +49,59 @@ pub fn cmd_verify(args: VerifyArgs) {
             process::exit(1);
         }
     };
+
+    // Proof mode: verify the zheng artifact against this bundle. No
+    // re-execution — the proof carries the whole trace commitment.
+    if let Some(proof_path) = args.proof {
+        let artifact = match joy_rs::ProofArtifact::load(&proof_path) {
+            Ok(a) => a,
+            Err(e) => {
+                eprintln!("error: {}", e);
+                process::exit(1);
+            }
+        };
+        let warrior = Warrior::with_budget(args.budget);
+        match warrior.verify_zheng(&bundle, &artifact) {
+            Ok(true) => {
+                if let Some(claim) = &args.claim {
+                    if *claim != artifact.meta.output {
+                        println!("Verification: FAIL (zheng proof valid, claim mismatch)");
+                        println!("  claimed:  {:?}", claim);
+                        println!("  proven:   {:?}", artifact.meta.output);
+                        process::exit(1);
+                    }
+                }
+                println!("Verification: PASS (zheng proof)");
+                println!("  program: {}", artifact.meta.program);
+                println!("  output:  {:?}", artifact.meta.output);
+                println!("  cycles:  {}", artifact.meta.cycle_count);
+            }
+            Ok(false) => {
+                println!("Verification: FAIL (zheng proof rejected for this bundle)");
+                process::exit(1);
+            }
+            Err(e) => {
+                eprintln!("error: {}", e);
+                process::exit(1);
+            }
+        }
+        return;
+    }
+
+    let claim = match args.claim {
+        Some(c) => c,
+        None => {
+            eprintln!(
+                "error: --claim <values> (re-execution) or --proof <artifact> is required"
+            );
+            process::exit(1);
+        }
+    };
     let pi = make_input(&args.input_values, &args.secret);
     let warrior = Warrior::with_budget(args.budget);
     match warrior.verify_by_rerun(&bundle, &pi, &claim) {
         Ok(true) => {
-            println!("Verification: PASS (verified by re-execution; zheng proof arrives in M4)");
+            println!("Verification: PASS (re-execution; for a zheng proof use joy prove + --proof)");
         }
         Ok(false) => {
             // Re-run once more to show the actual output in the failure report.

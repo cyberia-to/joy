@@ -1953,12 +1953,87 @@ dependencies = [
 [[package]]
 name = "cyber-hemera"
 version = "0.3.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
+name = "cyber-lens"
+version = "0.1.2"
+dependencies = [
+ "cyber-lens-assayer",
+ "cyber-lens-binius",
+ "cyber-lens-brakedown",
+ "cyber-lens-core",
+ "cyber-lens-ikat",
+ "cyber-lens-porphyry",
+]
+
+[[package]]
+name = "cyber-lens-assayer"
+version = "0.1.1"
+dependencies = [
+ "cyber-lens-brakedown",
+ "cyber-lens-core",
+ "strata-nebu",
+ "strata-trop",
+]
+
+[[package]]
+name = "cyber-lens-binius"
+version = "0.1.1"
+dependencies = [
+ "cyber-hemera",
+ "cyber-lens-core",
+ "strata-kuro",
+]
+
+[[package]]
+name = "cyber-lens-brakedown"
+version = "0.1.1"
+dependencies = [
+ "cyber-hemera",
+ "cyber-lens-core",
+ "strata-nebu",
+]
+
+[[package]]
+name = "cyber-lens-core"
+version = "0.1.1"
+dependencies = [
+ "cyber-hemera",
+ "serde",
+ "strata-core",
+ "strata-nebu",
+ "strata-proof",
+]
+
+[[package]]
+name = "cyber-lens-ikat"
+version = "0.1.1"
+dependencies = [
+ "cyber-lens-brakedown",
+ "cyber-lens-core",
+ "strata-jali",
+ "strata-nebu",
+]
+
+[[package]]
+name = "cyber-lens-porphyry"
+version = "0.1.1"
+dependencies = [
+ "cyber-hemera",
+ "cyber-lens-core",
+ "strata-genies",
+]
 
 [[package]]
 name = "cyber-nox"
 version = "0.1.2"
 dependencies = [
  "cyber-hemera",
+ "cyber-lens-brakedown",
+ "cyber-lens-core",
  "strata-nebu",
 ]
 
@@ -3507,7 +3582,7 @@ dependencies = [
 
 [[package]]
 name = "joy"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "clap",
  "joy-rs",
@@ -3516,11 +3591,15 @@ dependencies = [
 
 [[package]]
 name = "joy-rs"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
+ "cyber-hemera",
  "cyber-nox",
+ "serde",
+ "serde_json",
  "strata-nebu",
  "trident-lang",
+ "zheng",
 ]
 
 [[package]]
@@ -5706,9 +5785,36 @@ dependencies = [
 ]
 
 [[package]]
+name = "strata-genies"
+version = "0.1.0"
+dependencies = [
+ "strata-core",
+ "strata-ext",
+ "strata-proof",
+]
+
+[[package]]
+name = "strata-jali"
+version = "0.1.0"
+dependencies = [
+ "strata-core",
+ "strata-nebu",
+]
+
+[[package]]
+name = "strata-kuro"
+version = "0.1.0"
+dependencies = [
+ "strata-core",
+ "strata-ext",
+ "strata-proof",
+]
+
+[[package]]
 name = "strata-nebu"
 version = "0.1.0"
 dependencies = [
+ "serde",
  "strata-compute",
  "strata-core",
  "strata-ext",
@@ -5717,6 +5823,13 @@ dependencies = [
 
 [[package]]
 name = "strata-proof"
+version = "0.1.0"
+dependencies = [
+ "strata-core",
+]
+
+[[package]]
+name = "strata-trop"
 version = "0.1.0"
 dependencies = [
  "strata-core",
@@ -7630,6 +7743,17 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 3.0.5",
+]
+
+[[package]]
+name = "zheng"
+version = "0.1.2"
+dependencies = [
+ "cyber-hemera",
+ "cyber-lens",
+ "cyber-nox",
+ "serde",
+ "strata-nebu",
 ]
 
 [[package]]

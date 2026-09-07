@@ -23,9 +23,9 @@ struct Cli {
 enum Command {
     /// Execute a Trident program on the nox VM
     Run(run::RunArgs),
-    /// Generate a zheng proof (lands in M4 of the soft3 release)
+    /// Execute and generate a zheng proof artifact
     Prove(prove::ProveArgs),
-    /// Verify a claimed output by re-execution
+    /// Verify a zheng proof (--proof) or a claimed output by re-execution (--claim)
     Verify(verify::VerifyArgs),
 }
 
