@@ -1,0 +1,17 @@
+{
+  "name": "add",
+  "version": "0.1.0",
+  "target_vm": "nox",
+  "target_os": null,
+  "entry_point": "main",
+  "source_hash": "",
+  "cost": {
+    "reductions": 3,
+    "padded_height": 0,
+    "estimated_proving_ns": 0
+  },
+  "functions": [
+    { "name": "main", "hash": "", "signature": "fn main() -> Field" }
+  ],
+  "assembly": "[5 [[1 3] [1 5]]]"
+}

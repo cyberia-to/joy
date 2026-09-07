@@ -1,0 +1,5 @@
+program add
+fn main(a: Field, b: Field) -> Field {
+    let c: Field = a + b
+    c * a
+}
