@@ -376,6 +376,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2af50177e190e07a26ab74f8b1efbfe2ef87da2116221318cb1c2e82baf7de06"
 
 [[package]]
+name = "bbg"
+version = "0.1.2"
+dependencies = [
+ "cyber-hemera",
+ "cyber-lens",
+ "cyber-nox",
+ "strata-nebu",
+ "zheng",
+]
+
+[[package]]
 name = "bincode"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3593,6 +3604,7 @@ dependencies = [
 name = "joy-rs"
 version = "0.2.0"
 dependencies = [
+ "bbg",
  "cyber-hemera",
  "cyber-nox",
  "serde",

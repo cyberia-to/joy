@@ -6,6 +6,8 @@
 
 use std::sync::atomic::{AtomicUsize, Ordering};
 
+use bbg::query::ProofLookProvider;
+use bbg::BbgState;
 use nebu::Goldilocks;
 use nox::{reduce, ErrorKind, Order, Outcome, Reduction, VecTrace};
 use nox::{CallProvider, LookProvider};
@@ -64,6 +66,35 @@ impl<const N: usize> CallProvider<N> for SecretProvider {
         let i = self.next.fetch_add(1, Ordering::SeqCst);
         let v = *self.values.get(i)?;
         reduction.atom(Goldilocks::new(v))
+    }
+}
+
+/// CallProvider over a live BBG state: looks answer (and record openings)
+/// via [`ProofLookProvider`]; secrets serve call patterns as usual.
+struct StateCalls<'a> {
+    looks: ProofLookProvider<'a>,
+    secrets: SecretProvider,
+}
+
+impl<'a> LookProvider for StateCalls<'a> {
+    fn look(
+        &self,
+        commitment: Goldilocks,
+        namespace: Goldilocks,
+        key: Goldilocks,
+    ) -> Option<Goldilocks> {
+        self.looks.look(commitment, namespace, key)
+    }
+}
+
+impl<'a, const N: usize> CallProvider<N> for StateCalls<'a> {
+    fn provide(
+        &self,
+        reduction: &mut Reduction<N>,
+        tag: Goldilocks,
+        object: Order,
+    ) -> Option<Order> {
+        CallProvider::<N>::provide(&self.secrets, reduction, tag, object)
     }
 }
 
@@ -242,20 +273,48 @@ impl Warrior {
         input: &ProgramInput,
     ) -> Result<(crate::proof::ProofArtifact, ExecutionResult), String> {
         let (result, trace, hash_aux) = self.execute_traced(bundle, input)?;
+        if trace.0.iter().any(|r| r.r()[0] == 17) {
+            return Err(
+                "trace contains look rows (tag 17): proving state reads needs a bbg \
+                 state — use prove_zheng_with_state"
+                    .to_string(),
+            );
+        }
+        self.finish_proof(bundle, result, trace, hash_aux, Vec::new(), [0u8; 32])
+    }
+
+    /// Execute against a live BBG state and produce a zheng proof artifact.
+    ///
+    /// Look rows (tag 17) answer from `state` and record Brakedown openings;
+    /// the statement carries `state.root()` as the PUBLIC root — the full
+    /// chain from the committed state to the verified proof.
+    pub fn prove_zheng_with_state(
+        &self,
+        bundle: &ProgramBundle,
+        input: &ProgramInput,
+        state: &BbgState,
+    ) -> Result<(crate::proof::ProofArtifact, ExecutionResult), String> {
+        let (result, trace, hash_aux, look_openings) =
+            self.execute_traced_with_state(bundle, input, state)?;
+        self.finish_proof(bundle, result, trace, hash_aux, look_openings, state.root())
+    }
+
+    /// Build statement + zheng proof + artifact from an executed trace.
+    fn finish_proof(
+        &self,
+        bundle: &ProgramBundle,
+        result: ExecutionResult,
+        trace: VecTrace,
+        hash_aux: Vec<zheng::HashAux>,
+        look_openings: Vec<zheng::LookOpening>,
+        bbg_root: [u8; 32],
+    ) -> Result<(crate::proof::ProofArtifact, ExecutionResult), String> {
         if trace.0.len() < 2 {
             return Err(format!(
                 "trace has {} row(s): zheng folds row transitions and needs at least 2",
                 trace.0.len()
             ));
         }
-        if trace.0.iter().any(|r| r.r()[0] == 17) {
-            return Err(
-                "trace contains look rows (tag 17): proving state reads needs a bbg \
-                 state and its root in the statement (soft3 M6)"
-                    .to_string(),
-            );
-        }
-
         let first = &trace.0[0];
         let last = &trace.0[trace.0.len() - 1];
         let statement = zheng::Statement {
@@ -263,10 +322,10 @@ impl Warrior {
             input_hash: zheng::row_hash(first),
             output_hash: zheng::row_hash(last),
             focus_bound: self.budget,
-            bbg_root: [0u8; 32],
+            bbg_root,
         };
         let params = zheng::ProofParams::default();
-        let proof = zheng::commit(&trace, &hash_aux, &[], &[], &statement, &params)
+        let proof = zheng::commit(&trace, &hash_aux, &[], &look_openings, &statement, &params)
             .map_err(|e| format!("zheng commit failed: {:?}", e))?;
 
         let artifact = crate::proof::ProofArtifact {
@@ -280,6 +339,85 @@ impl Warrior {
             },
         };
         Ok((artifact, result))
+    }
+
+    /// Execute with looks answered from a BBG state (scoped worker thread —
+    /// the state reference cannot cross a 'static spawn).
+    #[allow(clippy::type_complexity)]
+    fn execute_traced_with_state(
+        &self,
+        bundle: &ProgramBundle,
+        input: &ProgramInput,
+        state: &BbgState,
+    ) -> Result<
+        (
+            ExecutionResult,
+            VecTrace,
+            Vec<zheng::HashAux>,
+            Vec<zheng::LookOpening>,
+        ),
+        String,
+    > {
+        if bundle.target_vm != "nox" {
+            return Err(format!(
+                "joy runs nox bundles; this bundle targets '{}' (use trisha for triton)",
+                bundle.target_vm
+            ));
+        }
+        if !input.digests.is_empty() {
+            return Err(
+                "nox has no digest input stream (merkle_step is a Triton concept)".to_string(),
+            );
+        }
+
+        let assembly = bundle.assembly.clone();
+        let public = input.public.clone();
+        let secret = input.secret.clone();
+        let budget = self.budget;
+
+        std::thread::scope(|scope| {
+            let handle = std::thread::Builder::new()
+                .name("joy-reduce".to_string())
+                .stack_size(STACK_SIZE)
+                .spawn_scoped(scope, move || {
+                    let mut reduction = Reduction::<ARENA>::new();
+                    let root = formula::parse(&mut reduction, assembly.trim())?;
+                    let object = formula::build_subject(&mut reduction, &public)?;
+                    let provider = StateCalls {
+                        looks: ProofLookProvider::new(state),
+                        secrets: SecretProvider::new(secret),
+                    };
+                    let mut tracer = VecTrace::default();
+                    match reduce(&mut reduction, object, root, budget, &provider, &mut tracer) {
+                        Outcome::Ok(result, _remaining) => {
+                            let aux = hash_aux_from_trace(&reduction, &tracer)?;
+                            let openings = provider.looks.take_look_openings();
+                            Ok((
+                                ExecutionResult {
+                                    output: formula::leaves(&reduction, result)?,
+                                    cycle_count: tracer.0.len() as u64,
+                                },
+                                tracer,
+                                aux,
+                                openings,
+                            ))
+                        }
+                        Outcome::Halt(remaining) => Err(format!(
+                            "execution halted (budget remaining: {}) — out of budget, \
+                             or a call pattern had no witness (secret inputs exhausted)",
+                            remaining
+                        )),
+                        Outcome::Error(kind) => {
+                            Err(format!("reduction error: {}", describe(kind)))
+                        }
+                    }
+                })
+                .map_err(|e| format!("cannot spawn reduce thread: {}", e))?;
+
+            handle
+                .join()
+                .map_err(|_| "reduce thread panicked".to_string())?
+        })
     }
 
     /// Verify a proof artifact against a bundle — no re-execution.

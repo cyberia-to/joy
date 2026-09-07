@@ -346,3 +346,120 @@ fn tampered_hash_group_rejected() {
         "tampered hash proof must be rejected"
     );
 }
+
+// ── look rows (tag 17) against a real BBG state ──────────────────────────────
+// trident cannot express a state read yet (os.state.read is unlowered), so
+// the program is a hand-built .nox: a compose that first CONSES the look
+// object carrying the state root limbs, then runs the look formula against
+// it. Noted for the trident follow-up.
+
+/// `[2 [[cons-tree of root limbs] [1 [17 [[1 ns] [1 key]]]]]]`
+fn look_assembly(root: &[u8; 32], ns: u64, key: u64) -> String {
+    let l = bbg::dim::goldilocks_from_bytes32(root);
+    let (l0, l1, l2, l3) = (l[0].as_u64(), l[1].as_u64(), l[2].as_u64(), l[3].as_u64());
+    format!(
+        "[2 [[3 [[3 [[1 {l0}] [3 [[1 {l1}] [3 [[1 {l2}] [1 {l3}]]]]]]] [1 0]]] \
+         [1 [17 [[1 {ns}] [1 {key}]]]]]]"
+    )
+}
+
+/// A BBG state with two particles (mirrors bbg's look_e2e sample).
+fn sample_state() -> bbg::BbgState {
+    use bbg::types::ParticleRecord;
+    let mut state = bbg::BbgState::new();
+    state.particles.insert(
+        [1u8; 32],
+        ParticleRecord { energy: 77, pi_star: 0, weight: 0, s_yes: 0, s_no: 0, meta_score: 0 },
+    );
+    state.particles.insert(
+        [2u8; 32],
+        ParticleRecord { energy: 88, pi_star: 0, weight: 0, s_yes: 0, s_no: 0, meta_score: 0 },
+    );
+    state
+}
+
+#[test]
+fn look_program_proves_and_verifies_against_state() {
+    let state = sample_state();
+    let root = state.root();
+    // Particles dimension: cell 4 = first entry's energy (77).
+    let b = bundle(&look_assembly(&root, 0, 4));
+    let warrior = Warrior::new();
+    let (artifact, result) = warrior
+        .prove_zheng_with_state(&b, &input(&[], &[]), &state)
+        .expect("look prove failed");
+    assert_eq!(result.output, vec![77], "the look read the committed energy");
+    assert_eq!(artifact.statement.bbg_root, root, "public root in the statement");
+    assert!(
+        warrior.verify_zheng(&b, &artifact).expect("verify errored"),
+        "look proof must verify"
+    );
+}
+
+#[test]
+fn look_against_stale_root_refused_at_prove() {
+    let state = sample_state();
+    let stale_root = state.root();
+
+    // State advances; the program still declares the stale root.
+    let mut state = state;
+    state.particles.insert(
+        [3u8; 32],
+        bbg::types::ParticleRecord { energy: 99, pi_star: 0, weight: 0, s_yes: 0, s_no: 0, meta_score: 0 },
+    );
+    state.refresh_root();
+
+    let b = bundle(&look_assembly(&stale_root, 0, 4));
+    let err = Warrior::new().prove_zheng_with_state(&b, &input(&[], &[]), &state);
+    assert!(err.is_err(), "a stale declared root must not prove");
+}
+
+#[test]
+fn look_artifact_root_mismatch_rejected() {
+    let state = sample_state();
+    let root = state.root();
+    let b = bundle(&look_assembly(&root, 0, 4));
+    let warrior = Warrior::new();
+    let (artifact, _) = warrior
+        .prove_zheng_with_state(&b, &input(&[], &[]), &state)
+        .expect("look prove failed");
+
+    // Flip a byte of the public root in the artifact.
+    let mut v: serde_json::Value =
+        serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
+    let b0 = v["statement"]["bbg_root"][0].as_u64().unwrap();
+    v["statement"]["bbg_root"][0] = serde_json::Value::from((b0 ^ 1) & 0xff);
+    let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
+    assert!(
+        !warrior.verify_zheng(&b, &tampered).expect("verify errored"),
+        "a proof re-rooted to a different state must be rejected"
+    );
+}
+
+#[test]
+fn look_artifact_tampered_binding_group_rejected() {
+    let state = sample_state();
+    let root = state.root();
+    let b = bundle(&look_assembly(&root, 0, 4));
+    let warrior = Warrior::new();
+    let (artifact, _) = warrior
+        .prove_zheng_with_state(&b, &input(&[], &[]), &state)
+        .expect("look prove failed");
+
+    // The leaves live in the folded binding steps; tamper the eq-group
+    // witness commitment via the wire form — the cross-group linkage breaks.
+    let mut v: serde_json::Value =
+        serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
+    let groups = v["proof"]["groups"].as_array().unwrap().len();
+    let idx = (0..groups)
+        .find(|&i| v["proof"]["groups"][i][1]["committed_instance"]["num_cols"] == 3)
+        .expect("an eq-step binding group exists");
+    let wc = &mut v["proof"]["groups"][idx][1]["witness_commitment"];
+    let b0 = wc[0].as_u64().unwrap();
+    wc[0] = serde_json::Value::from((b0 ^ 1) & 0xff);
+    let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
+    assert!(
+        !warrior.verify_zheng(&b, &tampered).expect("verify errored"),
+        "a tampered look binding group must be rejected"
+    );
+}
