@@ -1,0 +1,12 @@
+[package]
+name = "joy-rs"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+trident-lang = { path = "../../trident" }
+nox = { package = "cyber-nox", path = "../../nox/rs" }
+nebu = { package = "strata-nebu", path = "../../strata/nebu/rs" }
