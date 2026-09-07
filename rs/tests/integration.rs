@@ -142,15 +142,29 @@ fn compile_tri_end_to_end() {
 }
 
 #[test]
-fn prove_is_an_honest_dash() {
-    let err = Warrior::new()
-        .prove(&bundle("[1 0]"), &input(&[], &[]))
-        .expect_err("prove must not pretend");
-    assert!(err.contains("M4"), "unexpected error: {}", err);
+fn prove_works_on_a_minimal_bundle() {
+    // The former honest dash: prove is real now (soft3 M4). The minimal
+    // provable program has two trace rows (zheng folds row transitions);
+    // add-literals gives three.
+    let warrior = Warrior::new();
+    let pd = warrior
+        .prove(&bundle("[5 [[1 3] [1 5]]]"), &input(&[], &[]))
+        .expect("prove failed");
+    assert_eq!(pd.format, joy_rs::PROOF_FORMAT);
+    assert!(warrior.verify(&pd).expect("verify errored"));
 }
 
 #[test]
-fn proof_verify_is_an_honest_dash() {
+fn prove_refuses_single_row_traces_honestly() {
+    // One trace row = no transition to fold. Honest refusal, not a fake.
+    let err = Warrior::new()
+        .prove_zheng(&bundle("[1 5]"), &input(&[], &[]))
+        .expect_err("single-row trace must be refused");
+    assert!(err.contains("row"), "unexpected error: {}", err);
+}
+
+#[test]
+fn verify_refuses_foreign_proof_formats() {
     let proof = trident::runtime::ProofData {
         claim: trident::field::proof::Claim {
             program_hash: Vec::new(),
@@ -158,10 +172,129 @@ fn proof_verify_is_an_honest_dash() {
             public_output: Vec::new(),
         },
         proof_bytes: Vec::new(),
-        format: "zheng-nox-v0".to_string(),
+        format: "stark-triton-v2".to_string(),
     };
     let err = Warrior::new()
         .verify(&proof)
-        .expect_err("verify must not pretend");
-    assert!(err.contains("M4"), "unexpected error: {}", err);
+        .expect_err("foreign formats are refused, not guessed at");
+    assert!(err.contains("format"), "unexpected error: {}", err);
+}
+
+
+// ── zheng prove / verify ─────────────────────────────────────────────────────
+
+/// Compile the add.tri fixture through the real trident API.
+fn compiled_add() -> ProgramBundle {
+    let mut options = trident::CompileOptions::for_profile("debug");
+    options.target_config = joy_rs::nox_terrain();
+    trident::compile_to_bundle(&fixture("add.tri"), &options).expect("compile failed")
+}
+
+#[test]
+fn prove_verify_roundtrip() {
+    let warrior = Warrior::new();
+    let b = compiled_add();
+    let (artifact, result) = warrior
+        .prove_zheng(&b, &input(&[3, 5], &[]))
+        .expect("prove failed");
+    assert_eq!(result.output, vec![24]);
+    assert_eq!(artifact.meta.output, vec![24]);
+    assert_eq!(artifact.format, joy_rs::PROOF_FORMAT);
+    assert!(
+        warrior.verify_zheng(&b, &artifact).expect("verify errored"),
+        "honest proof must verify"
+    );
+}
+
+#[test]
+fn prove_verify_roundtrip_through_traits_and_disk() {
+    let warrior = Warrior::new();
+    let b = compiled_add();
+    let pd = warrior
+        .prove(&b, &input(&[3, 5], &[]))
+        .expect("trait prove failed");
+    assert_eq!(pd.format, joy_rs::PROOF_FORMAT);
+    assert_eq!(pd.claim.public_output, vec![24]);
+    assert!(warrior.verify(&pd).expect("trait verify errored"));
+
+    // Disk round-trip: save, load, verify.
+    let dir = std::env::temp_dir().join("joy-proof-test");
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = dir.join("add.zheng.json");
+    let artifact: joy_rs::ProofArtifact = serde_json::from_slice(&pd.proof_bytes).unwrap();
+    artifact.save(&path).expect("save failed");
+    let loaded = joy_rs::ProofArtifact::load(&path).expect("load failed");
+    assert!(warrior.verify_zheng(&b, &loaded).expect("verify errored"));
+}
+
+#[test]
+fn tampered_proof_rejected() {
+    let warrior = Warrior::new();
+    let b = compiled_add();
+    let (artifact, _) = warrior
+        .prove_zheng(&b, &input(&[3, 5], &[]))
+        .expect("prove failed");
+
+    // Tamper a field inside the proof via the wire form.
+    let mut v: serde_json::Value =
+        serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
+    let ev = v["proof"]["groups"][0][0]["eval_value"].as_u64().unwrap();
+    v["proof"]["groups"][0][0]["eval_value"] = serde_json::Value::from(ev ^ 1);
+    let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
+    assert!(
+        !warrior.verify_zheng(&b, &tampered).expect("verify errored"),
+        "tampered proof must be rejected"
+    );
+}
+
+#[test]
+fn proof_for_a_different_program_rejected() {
+    let warrior = Warrior::new();
+    let b = compiled_add();
+    let (artifact, _) = warrior
+        .prove_zheng(&b, &input(&[3, 5], &[]))
+        .expect("prove failed");
+    // A different bundle: raw add-literals formula.
+    let other = bundle("[5 [[1 3] [1 5]]]");
+    assert!(
+        !warrior.verify_zheng(&other, &artifact).expect("verify errored"),
+        "proof must bind to its program"
+    );
+}
+
+#[test]
+fn artifact_load_error_paths() {
+    // Missing file.
+    let missing = joy_rs::ProofArtifact::load(std::path::Path::new("/nonexistent/p.zheng.json"));
+    assert!(missing.is_err());
+
+    // Malformed JSON.
+    let dir = std::env::temp_dir().join("joy-proof-test");
+    std::fs::create_dir_all(&dir).unwrap();
+    let bad = dir.join("bad.zheng.json");
+    std::fs::write(&bad, b"{not json").unwrap();
+    assert!(joy_rs::ProofArtifact::load(&bad).is_err());
+
+    // Unknown format string.
+    let warrior = Warrior::new();
+    let b = compiled_add();
+    let (mut artifact, _) = warrior
+        .prove_zheng(&b, &input(&[3, 5], &[]))
+        .expect("prove failed");
+    artifact.format = "not-zheng".to_string();
+    let p = dir.join("wrongformat.zheng.json");
+    artifact.save(&p).unwrap();
+    let err = joy_rs::ProofArtifact::load(&p);
+    assert!(err.is_err(), "unknown format must be refused");
+}
+
+#[test]
+fn prove_refuses_look_rows_honestly() {
+    // A look formula (tag 17) has no bbg state wired: prove must refuse,
+    // not fabricate. NullCalls-style provider gives no look values, so the
+    // reduction itself errors — either way, no proof comes out.
+    let warrior = Warrior::new();
+    let b = bundle("[17 [[1 0] [1 2]]]");
+    let r = warrior.prove_zheng(&b, &input(&[], &[]));
+    assert!(r.is_err(), "no proof without a bbg state");
 }
