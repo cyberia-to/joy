@@ -1,0 +1,13 @@
+[package]
+name = "joy"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "joy"
+path = "main.rs"
+
+[dependencies]
+joy-rs = { path = "../rs" }
+trident-lang = { path = "../../trident" }
+clap = { version = "4", features = ["derive"] }
