@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 — 2026-09-07 (second cut)
+## 0.2.0 — 2026-09-08
 
 - hash blocks prove: HashAux (sponge rate = cached structural digest of
   the hashed input) built inside the traced worker; hash.tri fixture
@@ -15,11 +15,6 @@
   at prove; re-rooted and group-tampered artifacts reject.
 - CLI `--state` on prove: honest error — bbg has no whole-state file
   format yet; the library path is wired.
-
-## 0.2.0 — 2026-09-07
-
-M4 of the soft3 release: the prover is real.
-
 - `joy prove` — execute via nox with the tracer, fold the trace with
   zheng (SuperSpartan + Brakedown + HyperNova accumulators), write a
   `<name>.zheng.json` artifact: statement + proof + metadata. Statement
@@ -30,11 +25,10 @@ M4 of the soft3 release: the prover is real.
   proofs for a different bundle, tampered proofs, malformed artifacts,
   foreign formats. Output names the mode: "PASS (zheng proof)" vs
   "PASS (re-execution)".
-- Honest refusals: hash-block traces (needs HashAux wiring), look
-  traces (needs a bbg state + public root, M6 consumer side),
-  single-row traces (no transition to fold).
 - add.tri fixture chain measured (debug build): prove ~285 ms for
   10 reductions, artifact ~44 KB, verify ~90 ms.
+- `reads_state` follows trident's additive ProgramBundle field
+  (compat fix; joy does not yet cons the live root per the flag).
 
 ## 0.1.0 — 2026-09-07
 
