@@ -33,6 +33,7 @@ fn bundle(assembly: &str) -> ProgramBundle {
             estimated_proving_ns: 0,
         },
         source_hash: String::new(),
+        reads_state: false,
     }
 }
 

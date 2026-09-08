@@ -100,6 +100,7 @@ fn bundle_from_nox(path: &std::path::Path) -> Result<trident::runtime::ProgramBu
             estimated_proving_ns: 0,
         },
         source_hash: String::new(),
+        reads_state: false,
     })
 }
 
