@@ -20,7 +20,7 @@ Each crate uses `[lib] path = "lib.rs"` or `[[bin]] path = "main.rs"` —
 **no `src/` subdirectory anywhere** (trisha convention).
 
 ```
-cli/            Binary crate (package name: joy)
+cli/            Binary crate (package name: cyber-joy, binary: joy)
   main.rs       Entry point + Cli/Command + load_bundle/make_input
   error.rs      JoyError enum
   compile.rs    .tri source -> ProgramBundle via trident API
@@ -65,9 +65,10 @@ digests) and look proving against a real BbgState
 (`prove_zheng_with_state`, public root in the statement — the
 cross-repo zheng+bbg e2e lives in joy's tests).
 
-**Dash**: deploy (post-M4), CLI `--state` loading (bbg has no
-whole-state file format yet — library path works), trident-level state
-reads (os.state.read unlowered — look tests hand-build .nox). The dash
+**Dash**: deploy (post-0.2), CLI `--state` loading (bbg has no
+whole-state file format yet — library path works), consing the live
+root per `ProgramBundle.reads_state` (trident lowers `os.state.read`
+since 0.2.0; joy's look tests still hand-build .nox). The dash
 is the release note — never fake a proof, never print a number the
 system didn't produce.
 
@@ -90,7 +91,8 @@ system didn't produce.
 ```
 joy run    <bundle.json | file.tri | file.nox> [--input-values 1,2] [--secret 3] [--budget N]
 joy prove  <input> [--input-values ...] [--secret ...] [--output p.zheng.json]
-joy verify <input> --proof <p.zheng.json>            # zheng proof, no re-execution
+joy verify <p.zheng.json>                            # self-contained artifact, no re-execution
+joy verify <input> --proof <p.zheng.json>            # same, bound to this bundle
 joy verify <input> --claim <values> [--input-values ...]  # re-execution
 ```
 

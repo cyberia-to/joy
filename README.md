@@ -6,8 +6,8 @@ programs on the nox VM, the proof-native machine of the soft3 stack.
 ```
 source .tri → trident → ProgramBundle (.nox formula) → joy
                                                         ├── run     nox reduce, traced
-                                                        ├── verify  re-execution
-                                                        └── prove   zheng (M4) —
+                                                        ├── prove   zheng proof -> .zheng.json
+                                                        └── verify  the proof — no re-execution
 ```
 
 Trident is the weapon; warriors wield it. Trisha fights on Triton,
@@ -20,7 +20,8 @@ joy run    program.tri --input-values 3,5       # compile via trident, execute, 
 joy run    bundle.json                           # execute a compiled bundle
 joy run    formula.nox --secret 42               # execute a raw nox formula
 joy prove  program.tri --input-values 3,5        # execute + zheng proof -> program.zheng.json
-joy verify program.tri --proof program.zheng.json  # verify the proof, NO re-execution
+joy verify program.zheng.json                   # self-contained artifact, NO re-execution
+joy verify program.tri --proof program.zheng.json  # same, bound to this bundle
 joy verify bundle.json --claim 8                 # verify by re-execution
 ```
 
@@ -64,7 +65,7 @@ the final trace row), not value-by-value.
 ## build
 
 ```
-cargo install --path cli --force
+cargo install --path cli --force     # or: cargo install cyber-joy
 ```
 
 Depends on sibling repos by path: `../trident` (compiler,
