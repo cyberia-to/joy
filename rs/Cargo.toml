@@ -1,6 +1,6 @@
 [package]
 name = "joy-rs"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 description = "joy's warrior implementation — execute/prove/verify Trident on nox"
 license-file = "../LICENSE"
@@ -13,8 +13,9 @@ path = "lib.rs"
 trident-lang = { version = "0.2", path = "../../trident" }
 nox = { package = "cyber-nox", version = "0.2", path = "../../nox/rs" }
 nebu = { package = "strata-nebu", version = "0.1", path = "../../strata/nebu/rs" }
-zheng = { version = "0.2", path = "../../zheng/rs", features = ["serde"] }
+zheng = { version = "0.2.1", path = "../../zheng/rs", features = ["serde"] }
 bbg = { version = "0.2", path = "../../bbg/rs" }
 hemera = { package = "cyber-hemera", version = "0.3", path = "../../hemera/rs" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+postcard = { version = "1", features = ["alloc"] }

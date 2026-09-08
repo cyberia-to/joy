@@ -57,7 +57,7 @@ rs/             CPU backend (crate: joy-rs)
 **Working**: `run` (nox reduce with VecTrace; public inputs = subject
 cons list, secret inputs = call-pattern witnesses), `verify` by
 re-execution, `.tri`/`.json`/`.nox` inputs, `prove` (zheng proof ->
-`<name>.zheng.json`), `verify --proof` (zheng verification, no
+`<name>.zheng`), `verify --proof` (zheng verification, no
 re-execution).
 
 **Working too**: hash-block proving (HashAux from the arena's cached
@@ -90,9 +90,9 @@ system didn't produce.
 
 ```
 joy run    <bundle.json | file.tri | file.nox> [--input-values 1,2] [--secret 3] [--budget N]
-joy prove  <input> [--input-values ...] [--secret ...] [--output p.zheng.json]
-joy verify <p.zheng.json>                            # self-contained artifact, no re-execution
-joy verify <input> --proof <p.zheng.json>            # same, bound to this bundle
+joy prove  <input> [--input-values ...] [--secret ...] [--output p.zheng]
+joy verify <p.zheng>                            # self-contained artifact, no re-execution
+joy verify <input> --proof <p.zheng>            # same, bound to this bundle
 joy verify <input> --claim <values> [--input-values ...]  # re-execution
 ```
 

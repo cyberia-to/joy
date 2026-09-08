@@ -222,7 +222,7 @@ fn prove_verify_roundtrip_through_traits_and_disk() {
     let dir = std::env::temp_dir().join("joy-proof-test");
     std::fs::create_dir_all(&dir).unwrap();
     let path = dir.join("add.zheng.json");
-    let artifact: joy_rs::ProofArtifact = serde_json::from_slice(&pd.proof_bytes).unwrap();
+    let artifact: joy_rs::ProofArtifact = joy_rs::ProofArtifact::from_bytes(&pd.proof_bytes).unwrap();
     artifact.save(&path).expect("save failed");
     let loaded = joy_rs::ProofArtifact::load(&path).expect("load failed");
     assert!(warrior.verify_zheng(&b, &loaded).expect("verify errored"));

@@ -27,7 +27,7 @@ pub struct ProveArgs {
     /// Reduction budget (also the statement's focus bound)
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
-    /// Artifact path (default: <input stem>.zheng.json next to the input)
+    /// Artifact path (default: <input stem>.zheng next to the input)
     #[arg(long)]
     pub output: Option<PathBuf>,
     /// Chain state (accepted for trident delegation; no chain wiring yet)
@@ -35,13 +35,13 @@ pub struct ProveArgs {
     pub state: Option<String>,
 }
 
-/// Default artifact path: `<input stem>.zheng.json` next to the input.
+/// Default artifact path: `<input stem>.zheng` next to the input.
 fn artifact_path(input: &PathBuf) -> PathBuf {
     let stem = input
         .file_stem()
         .and_then(|s| s.to_str())
         .unwrap_or("program");
-    input.with_file_name(format!("{}.zheng.json", stem))
+    input.with_file_name(format!("{}.zheng", stem))
 }
 
 pub fn cmd_prove(args: ProveArgs) {

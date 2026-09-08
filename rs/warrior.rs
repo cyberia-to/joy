@@ -463,8 +463,7 @@ impl Warrior {
 impl Prover for Warrior {
     fn prove(&self, bundle: &ProgramBundle, input: &ProgramInput) -> Result<ProofData, String> {
         let (artifact, result) = self.prove_zheng(bundle, input)?;
-        let proof_bytes = serde_json::to_vec(&artifact)
-            .map_err(|e| format!("cannot serialize proof artifact: {}", e))?;
+        let proof_bytes = artifact.to_bytes()?;
         Ok(ProofData {
             claim: trident::field::proof::Claim {
                 program_hash: artifact
@@ -491,8 +490,7 @@ impl Verifier for Warrior {
                 crate::proof::PROOF_FORMAT
             ));
         }
-        let artifact: crate::proof::ProofArtifact = serde_json::from_slice(&proof.proof_bytes)
-            .map_err(|e| format!("malformed proof bytes: {}", e))?;
+        let artifact = crate::proof::ProofArtifact::from_bytes(&proof.proof_bytes)?;
         // No bundle in this trait call: verify the statement as carried.
         // Binding a proof to a specific bundle is verify_zheng's job.
         let params = zheng::ProofParams::default();

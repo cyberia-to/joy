@@ -1,12 +1,15 @@
 //! proof — the zheng proof artifact: what `joy prove` writes and
 //! `joy verify --proof` reads.
 //!
-//! Wire form is JSON via zheng's serde feature (Goldilocks = canonical
-//! u64, non-canonical values rejected at deserialize). The statement is
-//! the cryptographic payload; `meta` is operational context (program
-//! name, executed outputs, cycle count) — the outputs are bound to the
-//! proof only through `statement.output_hash` (the hemera hash of the
-//! last trace row), not individually.
+//! Wire form is compact binary (postcard, varint-packed) over zheng's
+//! serde types: Goldilocks = canonical u64, non-canonical values rejected
+//! at deserialize; the prover's folded witness is never on the wire. The
+//! statement is the cryptographic payload; `meta` is operational context
+//! (program name, executed outputs, cycle count, the assembly) — the
+//! outputs are bound to the proof only through `statement.output_hash`
+//! (the hemera hash of the last trace row), not individually; the
+//! assembly is bound through `statement.program_hash`. JSON artifacts
+//! from 0.2.0 still load.
 
 use std::fs;
 use std::path::Path;
@@ -51,11 +54,28 @@ pub struct ArtifactMeta {
 impl ProofArtifact {
     /// Write the artifact as JSON. Returns the byte length written.
     pub fn save(&self, path: &Path) -> Result<usize, String> {
-        let json = serde_json::to_vec(self)
-            .map_err(|e| format!("cannot serialize proof artifact: {}", e))?;
-        fs::write(path, &json)
+        let bytes = self.to_bytes()?;
+        fs::write(path, &bytes)
             .map_err(|e| format!("cannot write {}: {}", path.display(), e))?;
-        Ok(json.len())
+        Ok(bytes.len())
+    }
+
+    /// Compact binary wire form (postcard).
+    pub fn to_bytes(&self) -> Result<Vec<u8>, String> {
+        postcard::to_allocvec(self).map_err(|e| format!("cannot serialize proof artifact: {}", e))
+    }
+
+    /// Parse the binary wire form; falls back to the 0.2.0 JSON form.
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, String> {
+        match postcard::from_bytes::<ProofArtifact>(bytes) {
+            Ok(a) => Ok(a),
+            Err(bin_err) => serde_json::from_slice::<ProofArtifact>(bytes).map_err(|json_err| {
+                format!(
+                    "malformed proof artifact: not postcard ({}) nor 0.2.0 JSON ({})",
+                    bin_err, json_err
+                )
+            }),
+        }
     }
 
     /// Read an artifact back. Rejects unknown formats and malformed wire
@@ -63,8 +83,8 @@ impl ProofArtifact {
     pub fn load(path: &Path) -> Result<Self, String> {
         let bytes = fs::read(path)
             .map_err(|e| format!("cannot read {}: {}", path.display(), e))?;
-        let artifact: ProofArtifact = serde_json::from_slice(&bytes)
-            .map_err(|e| format!("malformed proof artifact {}: {}", path.display(), e))?;
+        let artifact = Self::from_bytes(&bytes)
+            .map_err(|e| format!("{} ({})", e, path.display()))?;
         if artifact.format != PROOF_FORMAT {
             return Err(format!(
                 "unknown proof format '{}' (this joy verifies '{}')",

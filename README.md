@@ -6,7 +6,7 @@ programs on the nox VM, the proof-native machine of the soft3 stack.
 ```
 source .tri → trident → ProgramBundle (.nox formula) → joy
                                                         ├── run     nox reduce, traced
-                                                        ├── prove   zheng proof -> .zheng.json
+                                                        ├── prove   zheng proof -> .zheng
                                                         └── verify  the proof — no re-execution
 ```
 
@@ -19,9 +19,9 @@ joy fights on nox: terrain nox, battlefield cyber.
 joy run    program.tri --input-values 3,5       # compile via trident, execute, print output
 joy run    bundle.json                           # execute a compiled bundle
 joy run    formula.nox --secret 42               # execute a raw nox formula
-joy prove  program.tri --input-values 3,5        # execute + zheng proof -> program.zheng.json
-joy verify program.zheng.json                   # self-contained artifact, NO re-execution
-joy verify program.tri --proof program.zheng.json  # same, bound to this bundle
+joy prove  program.tri --input-values 3,5        # execute + zheng proof -> program.zheng
+joy verify program.zheng                   # self-contained artifact, NO re-execution
+joy verify program.tri --proof program.zheng  # same, bound to this bundle
 joy verify bundle.json --claim 8                 # verify by re-execution
 ```
 
@@ -44,7 +44,7 @@ count — one row per budget unit, and the trace IS the zheng witness.
 | run (nox reduce + Tracer) | works |
 | verify by re-execution | works |
 | .tri / .json / .nox inputs | works |
-| prove (zheng) | works — `<name>.zheng.json` artifact |
+| prove (zheng) | works — `<name>.zheng` artifact |
 | verify a zheng proof | works — no re-execution |
 | deploy (particle + cyberlinks) | — after M4 |
 | bbg look (pattern 17) | works via joy-rs API (`prove_zheng_with_state`, public root in the statement); CLI `--state` awaits a bbg state-file format |
@@ -54,7 +54,7 @@ The dashes are the release notes. No gates, no fakes.
 
 ## proof artifact
 
-`joy prove` writes `<name>.zheng.json` next to the input (or `--output`):
+`joy prove` writes `<name>.zheng` next to the input (or `--output`):
 statement (program/input/output hemera hashes, focus bound, bbg root
 sentinel) + the zheng trace proof + metadata. `joy verify --proof`
 recomputes the program hash from the bundle, checks it against the

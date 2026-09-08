@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.2 — 2026-09-08
+
+- artifacts are compact binary (`<name>.zheng`, postcard) instead of JSON:
+  add.tri 19.6 KB → 5.4 KB, two secrets 74 KB → 20 KB, a hash 189 KB →
+  52 KB. 0.2.1 JSON artifacts still load.
+- the prover's folded witness is no longer on the wire (zheng 0.2.1
+  `serde(skip)`): it was the prover's private folded state — for
+  divine() programs, the secrets' image — and the verifier never read it.
+- what remains is ~1.7 KiB per accumulator group, one group per CCS
+  structure (3 / 12 / 23 above); collapsing groups toward a 2–5 KB
+  program-level proof is zheng#8.
+
 ## 0.2.0 — 2026-09-08
 
 - hash blocks prove: HashAux (sponge rate = cached structural digest of
@@ -17,7 +29,7 @@
   format yet; the library path is wired.
 - `joy prove` — execute via nox with the tracer, fold the trace with
   zheng (SuperSpartan + Brakedown + HyperNova accumulators), write a
-  `<name>.zheng.json` artifact: statement + proof + metadata. Statement
+  `<name>.zheng` artifact: statement + proof + metadata. Statement
   binds the program (hemera of the assembly), the first/last trace rows
   (input/output hashes), the budget (focus bound); bbg_root is the
   zero sentinel (stateless programs).
