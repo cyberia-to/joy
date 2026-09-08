@@ -9,7 +9,8 @@ use super::{check_target, load_bundle, make_input};
 
 #[derive(Args)]
 pub struct VerifyArgs {
-    /// Input: .json bundle, .tri source (or project dir), or raw .nox formula
+    /// Input: a .zheng.json proof artifact (self-contained), or a .json
+    /// bundle / .tri source / raw .nox formula (with --proof or --claim)
     pub input: PathBuf,
     /// Claimed output values (comma-separated field elements)
     #[arg(long, value_delimiter = ',')]
@@ -42,6 +43,40 @@ pub fn cmd_verify(args: VerifyArgs) {
         eprintln!("error: {}", e);
         process::exit(1);
     }
+
+    // A proof artifact given directly (what `trident verify <artifact>`
+    // sends through the warrior boundary): self-contained verification.
+    if args.proof.is_none() {
+        if let Ok(artifact) = joy_rs::ProofArtifact::load(&args.input) {
+            let warrior = Warrior::with_budget(args.budget);
+            match warrior.verify_artifact(&artifact) {
+                Ok(true) => {
+                    if let Some(claim) = &args.claim {
+                        if *claim != artifact.meta.output {
+                            println!("Verification: FAIL (zheng proof valid, claim mismatch)");
+                            println!("  claimed:  {:?}", claim);
+                            println!("  proven:   {:?}", artifact.meta.output);
+                            process::exit(1);
+                        }
+                    }
+                    println!("Verification: PASS (zheng proof)");
+                    println!("  program: {}", artifact.meta.program);
+                    println!("  output:  {:?}", artifact.meta.output);
+                    println!("  cycles:  {}", artifact.meta.cycle_count);
+                }
+                Ok(false) => {
+                    println!("Verification: FAIL (zheng proof rejected — assembly or proof tampered)");
+                    process::exit(1);
+                }
+                Err(e) => {
+                    eprintln!("error: {}", e);
+                    process::exit(1);
+                }
+            }
+            return;
+        }
+    }
+
     let bundle = match load_bundle(&args.input, &args.profile) {
         Ok(b) => b,
         Err(e) => {

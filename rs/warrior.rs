@@ -336,6 +336,7 @@ impl Warrior {
                 program: bundle.name.clone(),
                 output: result.output.clone(),
                 cycle_count: result.cycle_count,
+                assembly: Some(bundle.assembly.clone()),
             },
         };
         Ok((artifact, result))
@@ -431,6 +432,28 @@ impl Warrior {
     ) -> Result<bool, String> {
         if artifact.statement.program_hash != crate::proof::program_hash(&bundle.assembly) {
             return Ok(false); // proof is for a different program
+        }
+        let params = zheng::ProofParams::default();
+        Ok(zheng::verify(&artifact.proof, &artifact.statement, &params).is_ok())
+    }
+
+    /// Verify a self-contained artifact — no bundle, no re-execution.
+    ///
+    /// The assembly carried in `meta` is recomputed into program_hash and
+    /// checked against the statement first, so a tampered assembly is
+    /// rejected exactly like a tampered proof. This is what
+    /// `trident verify <artifact>` reaches through the warrior boundary.
+    pub fn verify_artifact(
+        &self,
+        artifact: &crate::proof::ProofArtifact,
+    ) -> Result<bool, String> {
+        let assembly = artifact.meta.assembly.as_deref().ok_or_else(|| {
+            "artifact carries no assembly (written before 0.2.0) — verify it \
+             against its bundle: joy verify <bundle> --proof <artifact>"
+                .to_string()
+        })?;
+        if artifact.statement.program_hash != crate::proof::program_hash(assembly) {
+            return Ok(false); // assembly in meta does not match the proven program
         }
         let params = zheng::ProofParams::default();
         Ok(zheng::verify(&artifact.proof, &artifact.statement, &params).is_ok())

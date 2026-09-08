@@ -39,6 +39,13 @@ pub struct ArtifactMeta {
     pub output: Vec<u64>,
     /// Trace rows consumed (= reductions = budget spent).
     pub cycle_count: u64,
+    /// The nox formula the proof was generated from. Makes the artifact
+    /// self-contained: `joy verify <artifact>` recomputes program_hash
+    /// from it and checks it against the statement, so the assembly is
+    /// hash-bound to the proof even though it travels in `meta`. Absent
+    /// in artifacts written before 0.2.0 — those need the bundle.
+    #[serde(default)]
+    pub assembly: Option<String>,
 }
 
 impl ProofArtifact {
