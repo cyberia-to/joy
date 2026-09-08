@@ -377,7 +377,7 @@ checksum = "2af50177e190e07a26ab74f8b1efbfe2ef87da2116221318cb1c2e82baf7de06"
 
 [[package]]
 name = "bbg"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "cyber-hemera",
  "cyber-lens",
@@ -1963,14 +1963,23 @@ dependencies = [
 
 [[package]]
 name = "cyber-hemera"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "serde",
 ]
 
 [[package]]
+name = "cyber-joy"
+version = "0.2.0"
+dependencies = [
+ "clap",
+ "joy-rs",
+ "trident-lang",
+]
+
+[[package]]
 name = "cyber-lens"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "cyber-lens-assayer",
  "cyber-lens-binius",
@@ -1982,7 +1991,7 @@ dependencies = [
 
 [[package]]
 name = "cyber-lens-assayer"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "cyber-lens-brakedown",
  "cyber-lens-core",
@@ -1992,7 +2001,7 @@ dependencies = [
 
 [[package]]
 name = "cyber-lens-binius"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "cyber-hemera",
  "cyber-lens-core",
@@ -2001,7 +2010,7 @@ dependencies = [
 
 [[package]]
 name = "cyber-lens-brakedown"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "cyber-hemera",
  "cyber-lens-core",
@@ -2010,7 +2019,7 @@ dependencies = [
 
 [[package]]
 name = "cyber-lens-core"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "cyber-hemera",
  "serde",
@@ -2021,7 +2030,7 @@ dependencies = [
 
 [[package]]
 name = "cyber-lens-ikat"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "cyber-lens-brakedown",
  "cyber-lens-core",
@@ -2031,7 +2040,7 @@ dependencies = [
 
 [[package]]
 name = "cyber-lens-porphyry"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "cyber-hemera",
  "cyber-lens-core",
@@ -2040,7 +2049,7 @@ dependencies = [
 
 [[package]]
 name = "cyber-nox"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "cyber-hemera",
  "cyber-lens-brakedown",
@@ -3592,15 +3601,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "joy"
-version = "0.2.0"
-dependencies = [
- "clap",
- "joy-rs",
- "trident-lang",
-]
-
-[[package]]
 name = "joy-rs"
 version = "0.2.0"
 dependencies = [
@@ -3988,14 +3988,6 @@ dependencies = [
  "log",
  "wasi",
  "windows-sys 0.61.2",
-]
-
-[[package]]
-name = "mir-format"
-version = "0.1.0"
-dependencies = [
- "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -5780,25 +5772,25 @@ dependencies = [
 
 [[package]]
 name = "strata-compute"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "strata-core",
 ]
 
 [[package]]
 name = "strata-core"
-version = "0.1.0"
+version = "0.1.1"
 
 [[package]]
 name = "strata-ext"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "strata-core",
 ]
 
 [[package]]
 name = "strata-genies"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "strata-core",
  "strata-ext",
@@ -5807,7 +5799,7 @@ dependencies = [
 
 [[package]]
 name = "strata-jali"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "strata-core",
  "strata-nebu",
@@ -5815,7 +5807,7 @@ dependencies = [
 
 [[package]]
 name = "strata-kuro"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "strata-core",
  "strata-ext",
@@ -5824,7 +5816,7 @@ dependencies = [
 
 [[package]]
 name = "strata-nebu"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "serde",
  "strata-compute",
@@ -5835,14 +5827,14 @@ dependencies = [
 
 [[package]]
 name = "strata-proof"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "strata-core",
 ]
 
 [[package]]
 name = "strata-trop"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "strata-core",
 ]
@@ -6614,7 +6606,7 @@ dependencies = [
 
 [[package]]
 name = "trident-lang"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "ariadne",
  "blake3",
@@ -6623,7 +6615,6 @@ dependencies = [
  "clap",
  "cyber-hemera",
  "cyber-nox",
- "mir-format",
  "petgraph 0.7.1",
  "pollster",
  "rayon",
@@ -7760,7 +7751,7 @@ dependencies = [
 
 [[package]]
 name = "zheng"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "cyber-hemera",
  "cyber-lens",

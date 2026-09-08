@@ -1,13 +1,19 @@
 [package]
-name = "joy"
+name = "cyber-joy"
 version = "0.2.0"
 edition = "2021"
+description = "joy — the cyber warrior: executes, proves, verifies Trident programs on nox"
+license-file = "../LICENSE"
+repository = "https://github.com/cyberia-to/joy"
+readme = "../README.md"
+keywords = ["zk", "provable", "nox", "trident", "prover"]
+categories = ["cryptography", "command-line-utilities"]
 
 [[bin]]
 name = "joy"
 path = "main.rs"
 
 [dependencies]
-joy-rs = { path = "../rs" }
-trident-lang = { path = "../../trident" }
+joy-rs = { version = "0.2", path = "../rs" }
+trident-lang = { version = "0.2", path = "../../trident" }
 clap = { version = "4", features = ["derive"] }
