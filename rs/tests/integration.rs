@@ -239,8 +239,8 @@ fn tampered_proof_rejected() {
     // Tamper a field inside the proof via the wire form.
     let mut v: serde_json::Value =
         serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
-    let ev = v["proof"]["groups"][0][0]["eval_value"].as_u64().unwrap();
-    v["proof"]["groups"][0][0]["eval_value"] = serde_json::Value::from(ev ^ 1);
+    let ev = v["proof"]["universal"]["proof"]["eval_value"].as_u64().unwrap();
+    v["proof"]["universal"]["proof"]["eval_value"] = serde_json::Value::from(ev ^ 1);
     let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
     assert!(
         !warrior.verify_zheng(&b, &tampered).expect("verify errored"),
@@ -331,14 +331,13 @@ fn tampered_hash_group_rejected() {
         .prove_zheng(&b, &input(&[42], &[]))
         .expect("hash prove failed");
 
-    // Tamper the witness commitment of an accumulator group via the wire
+    // Tamper the witness commitment of the binding group via the wire
     // form (the rate itself is not in the artifact — it is bound through
     // the folded hash-binding steps, so any group tamper breaks the
     // cross-group linkage digest).
     let mut v: serde_json::Value =
         serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
-    let groups = v["proof"]["groups"].as_array().unwrap().len();
-    let wc = &mut v["proof"]["groups"][groups - 1][1]["witness_commitment"];
+    let wc = &mut v["proof"]["binding"]["accumulator"]["witness_commitment"];
     let b0 = wc[0].as_u64().unwrap();
     wc[0] = serde_json::Value::from(b0 ^ 1);
     let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
@@ -451,11 +450,8 @@ fn look_artifact_tampered_binding_group_rejected() {
     // witness commitment via the wire form — the cross-group linkage breaks.
     let mut v: serde_json::Value =
         serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
-    let groups = v["proof"]["groups"].as_array().unwrap().len();
-    let idx = (0..groups)
-        .find(|&i| v["proof"]["groups"][i][1]["committed_instance"]["num_cols"] == 3)
-        .expect("an eq-step binding group exists");
-    let wc = &mut v["proof"]["groups"][idx][1]["witness_commitment"];
+    assert!(!v["proof"]["binding"].is_null(), "an eq-step binding group exists");
+    let wc = &mut v["proof"]["binding"]["accumulator"]["witness_commitment"];
     let b0 = wc[0].as_u64().unwrap();
     wc[0] = serde_json::Value::from((b0 ^ 1) & 0xff);
     let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();

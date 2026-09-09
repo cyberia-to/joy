@@ -13,7 +13,7 @@ path = "lib.rs"
 trident-lang = { version = "0.2", path = "../../trident" }
 nox = { package = "cyber-nox", version = "0.2", path = "../../nox/rs" }
 nebu = { package = "strata-nebu", version = "0.1", path = "../../strata/nebu/rs" }
-zheng = { version = "0.2.1", path = "../../zheng/rs", features = ["serde"] }
+zheng = { version = "0.3.0", path = "../../zheng/rs", features = ["serde"] }
 bbg = { version = "0.2", path = "../../bbg/rs" }
 hemera = { package = "cyber-hemera", version = "0.3", path = "../../hemera/rs" }
 serde = { version = "1", features = ["derive"] }

@@ -91,7 +91,7 @@ pub fn cmd_prove(args: ProveArgs) {
         "Proved in {} ms: {} reductions, {} accumulator groups, {} bytes",
         prove_ms,
         result.cycle_count,
-        artifact.proof.groups.len(),
+        artifact.proof.group_count(),
         bytes
     );
     eprintln!("Output: {:?}", result.output);

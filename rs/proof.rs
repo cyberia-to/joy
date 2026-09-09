@@ -27,7 +27,8 @@ pub struct ProofArtifact {
     pub format: String,
     /// Public statement the proof attests to.
     pub statement: Statement,
-    /// The zheng trace proof (per-CCS-structure accumulator groups).
+    /// The zheng trace proof: the universal Layer-1 group plus, when the
+    /// program opens anything, the binding group.
     pub proof: TraceProof,
     /// Operational context — NOT individually proof-bound.
     pub meta: ArtifactMeta,

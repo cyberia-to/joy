@@ -1988,7 +1988,7 @@ dependencies = [
 
 [[package]]
 name = "cyber-joy"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "clap",
  "joy-rs",
@@ -3655,7 +3655,7 @@ dependencies = [
 
 [[package]]
 name = "joy-rs"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "bbg",
  "cyber-hemera",
@@ -7827,7 +7827,7 @@ dependencies = [
 
 [[package]]
 name = "zheng"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "cyber-hemera",
  "cyber-lens",
