@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 — 2026-09-09
+
+- zheng 0.3.1: one universal step CCS for every Layer-1 row, bindings in a
+  single second accumulator — any program is ≤ 2 accumulator groups, and
+  every proof byte on the wire is verifier-read. Artifacts: (a+b)·a 1.3 KB,
+  two divine() secrets 1.4 KB, one hash 2.4 KB, a depth-32 Merkle path
+  2.6 KB (0.2.2: 2.67 MB). Proof bytes alone: 1.1 / 1.2 / 2.2 / 2.2 KB.
+- the assembly travels deflated (`meta.assembly_deflate`, ~6x smaller);
+  `ArtifactMeta::assembly_text()` serves either form; 0.2.x plain-text
+  artifacts still load, 0.2.x proofs do not verify (format change).
+- `group_count()`; tamper tests on `universal` / `binding`.
+
 ## 0.2.2 — 2026-09-08
 
 - artifacts are compact binary (`<name>.zheng`, postcard) instead of JSON:
