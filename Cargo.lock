@@ -1988,7 +1988,7 @@ dependencies = [
 
 [[package]]
 name = "cyber-joy"
-version = "0.2.2"
+version = "0.3.0"
 dependencies = [
  "clap",
  "joy-rs",
@@ -3655,11 +3655,12 @@ dependencies = [
 
 [[package]]
 name = "joy-rs"
-version = "0.2.2"
+version = "0.3.0"
 dependencies = [
  "bbg",
  "cyber-hemera",
  "cyber-nox",
+ "miniz_oxide 0.8.9",
  "postcard",
  "serde",
  "serde_json",

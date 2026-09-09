@@ -50,6 +50,32 @@ pub struct ArtifactMeta {
     /// in artifacts written before 0.2.0 — those need the bundle.
     #[serde(default)]
     pub assembly: Option<String>,
+    /// The same assembly, deflate-compressed (bracket notation is highly
+    /// repetitive: a depth-32 Merkle path is 6.5 KB of text, ~1 KB
+    /// deflated). Written by 0.3.0+; takes precedence over `assembly`.
+    #[serde(default)]
+    pub assembly_deflate: Option<Vec<u8>>,
+}
+
+impl ArtifactMeta {
+    /// The formula this proof was generated from, whichever form it travels in.
+    pub fn assembly_text(&self) -> Result<Option<String>, String> {
+        if let Some(z) = &self.assembly_deflate {
+            let bytes = miniz_oxide::inflate::decompress_to_vec(z)
+                .map_err(|e| format!("corrupt assembly_deflate: {:?}", e))?;
+            return String::from_utf8(bytes)
+                .map(Some)
+                .map_err(|e| format!("assembly is not UTF-8: {}", e));
+        }
+        Ok(self.assembly.clone())
+    }
+
+    /// Store the assembly deflated (drops any plain copy).
+    pub fn set_assembly(&mut self, assembly: &str) {
+        self.assembly = None;
+        self.assembly_deflate =
+            Some(miniz_oxide::deflate::compress_to_vec(assembly.as_bytes(), 9));
+    }
 }
 
 impl ProofArtifact {

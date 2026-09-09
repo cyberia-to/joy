@@ -336,7 +336,11 @@ impl Warrior {
                 program: bundle.name.clone(),
                 output: result.output.clone(),
                 cycle_count: result.cycle_count,
-                assembly: Some(bundle.assembly.clone()),
+                assembly: None,
+                assembly_deflate: Some(miniz_oxide::deflate::compress_to_vec(
+                    bundle.assembly.as_bytes(),
+                    9,
+                )),
             },
         };
         Ok((artifact, result))
@@ -447,12 +451,12 @@ impl Warrior {
         &self,
         artifact: &crate::proof::ProofArtifact,
     ) -> Result<bool, String> {
-        let assembly = artifact.meta.assembly.as_deref().ok_or_else(|| {
+        let assembly = artifact.meta.assembly_text()?.ok_or_else(|| {
             "artifact carries no assembly (written before 0.2.0) — verify it \
              against its bundle: joy verify <bundle> --proof <artifact>"
                 .to_string()
         })?;
-        if artifact.statement.program_hash != crate::proof::program_hash(assembly) {
+        if artifact.statement.program_hash != crate::proof::program_hash(&assembly) {
             return Ok(false); // assembly in meta does not match the proven program
         }
         let params = zheng::ProofParams::default();

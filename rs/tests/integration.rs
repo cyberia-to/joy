@@ -468,19 +468,21 @@ fn artifact_is_self_contained_and_binds_its_assembly() {
     let (mut artifact, _) = warrior
         .prove_zheng(&b, &input(&[3, 5], &[]))
         .expect("prove failed");
-    assert_eq!(artifact.meta.assembly.as_deref(), Some(b.assembly.as_str()));
+    assert_eq!(artifact.meta.assembly_text().unwrap().as_deref(), Some(b.assembly.as_str()));
+    assert!(artifact.meta.assembly.is_none(), "assembly travels deflated");
     assert!(
         warrior.verify_artifact(&artifact).expect("verify errored"),
         "self-contained artifact must verify without its bundle"
     );
     // a swapped assembly no longer matches the proven program_hash
-    artifact.meta.assembly = Some("[1 5]".to_string());
+    artifact.meta.set_assembly("[1 5]");
     assert!(
         !warrior.verify_artifact(&artifact).expect("verify errored"),
         "artifact with a different assembly must reject"
     );
     // no assembly at all (pre-0.2.0 artifact) is an explicit error, not a pass
     artifact.meta.assembly = None;
+    artifact.meta.assembly_deflate = None;
     assert!(warrior.verify_artifact(&artifact).is_err());
 }
 
