@@ -1,5 +1,16 @@
 # trident-side wiring for the joy warrior (M3)
 
+## Foundation alignment request
+
+`soft3/specs/warriors.md` now owns the common architecture. Align
+`trident/reference/warrior-api.md` and target discovery to it: a warrior
+supports a VM/OS family across an open-ended set of compatible network
+instances, and workers instantiate its capabilities using selected backends.
+An external binary is one interface, not the warrior's required process shape.
+Bundled network presets must remain optional; a new compatible network must
+be configurable without new source enums or a binary rebuild. Keep VM/OS,
+proof profile, network/genesis and executor identities distinct.
+
 ## Current request: build and deploy contract
 
 The target command contract is now in `joy/specs/cli.md` under

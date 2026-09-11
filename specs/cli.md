@@ -17,11 +17,19 @@ within those target sections.
 
 Cross-repository contracts:
 
+- [soft3/specs/warriors.md](../../soft3/specs/warriors.md): foundational VM/OS, warrior, backend, worker and open network-instance model;
 - [cyber/specs/cli.md](../../cyber/specs/cli.md): node lifecycle and worker management;
 - [cyber/specs/worker.md](../../cyber/specs/worker.md): authoritative job and acceptance contract;
 - [zheng/specs/execution.md](../../zheng/specs/execution.md): execution certificate semantics.
 
 ## responsibility
+
+Joy is a warrior implementation; workers instantiate its capabilities through
+selected backends. The same supported VM/OS/proof combination MUST accept an
+open-ended set of compatible network-instance descriptors. Bundled presets
+are conveniences; adding a compatible instance must require configuration
+only. CPU/GPU and local/remote placement are executor choices. This is the
+target architecture; today's stateless cyber alias has no network binding.
 
 Joy's target lifecycle is build → run/prove → verify → deploy. Cyber owns
 network state, job scheduling and acceptance. Trident owns the compiler
