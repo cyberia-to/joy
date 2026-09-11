@@ -184,6 +184,9 @@ impl Warrior {
                 bundle.target_vm
             ));
         }
+        if bundle.reads_state {
+            return Err("bundle requires state; stateless execution cannot supply a state root".into());
+        }
         if !input.digests.is_empty() {
             return Err(
                 "nox has no digest input stream (merkle_step is a Triton concept)".to_string(),

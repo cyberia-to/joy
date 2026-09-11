@@ -31,7 +31,7 @@ cli/            Binary crate (package name: cyber-joy, binary: joy)
 rs/             CPU backend (crate: joy-rs)
   lib.rs        pub mod formula/target/warrior
   formula.rs    bracket text <-> nox Reduction arena; subject builder
-  target.rs     nox TerrainConfig (resolve or built-in mirror)
+  target.rs     canonical nox TerrainConfig + versioned warrior package
   warrior.rs    Warrior + SecretProvider over nox::reduce; prove/verify
   proof.rs      ProofArtifact (zheng wire form) + program_hash
   tests/
@@ -108,6 +108,11 @@ joy verify <p.zheng>                            # self-contained artifact, no re
 joy verify <input> --proof <p.zheng>            # same, bound to this bundle
 joy verify <input> --claim <values> [--input-values ...]  # re-execution
 ```
+
+`joy describe --target nox|cyber` emits a versioned JSON target package.
+`targets/nox/capabilities.json` owns runtime capability declarations;
+machine values come from Trident's upstream nox contract. CLI `--state`
+requests fail; cyber currently aliases stateless nox only.
 
 stdout = machine-readable output, stderr = progress/diagnostics.
 `--target` accepts `nox` (terrain) or `cyber` (battlefield); anything

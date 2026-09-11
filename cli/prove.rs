@@ -30,7 +30,7 @@ pub struct ProveArgs {
     /// Artifact path (default: <input stem>.zheng next to the input)
     #[arg(long)]
     pub output: Option<PathBuf>,
-    /// Chain state (accepted for trident delegation; no chain wiring yet)
+    /// Chain state (not yet supported; requests fail explicitly)
     #[arg(long)]
     pub state: Option<String>,
 }

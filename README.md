@@ -9,6 +9,7 @@ can also produce a Zheng execution certificate whose input, output, program
 and reduction count are checked by the verifier.
 
 ```sh
+joy describe --target nox  # versioned JSON package and runtime capabilities
 joy run program.tri --input-values 3,5
 joy prove program.tri --input-values 3,5 --output program.zheng
 joy verify program.zheng --claim 24 --input-values 3,5
@@ -32,6 +33,16 @@ Public inputs bind as `[p_last [... [p_first 0]]]`. Proof verification checks
 requested `--claim` and `--input-values`; `--budget` bounds the certificate's
 budget. Self-contained artifacts carry the program; passing a source/bundle
 with `--proof` also checks that the certificate belongs to that program.
+
+## Target ownership
+
+`joy describe --target nox` exports the installed versioned Trident target
+package as JSON without executing user code. `cyber` currently names the same
+stateless nox adapter; it does not advertise a network SDK or deployment.
+Machine constants come from the canonical nox contract through Trident;
+Joy owns [runtime capabilities](targets/nox/capabilities.json), including the
+separate execution and public proof restrictions. No checkout or ambient
+machine descriptor is needed. CLI state requests fail explicitly.
 
 ## Legacy trace statements
 

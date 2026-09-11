@@ -36,7 +36,7 @@ pub struct VerifyArgs {
     /// Reduction budget
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
-    /// Chain state (accepted for trident delegation; no chain wiring yet)
+    /// Chain state (not yet supported; requests fail explicitly)
     #[arg(long)]
     pub state: Option<String>,
 }
@@ -44,6 +44,11 @@ pub struct VerifyArgs {
 pub fn cmd_verify(args: VerifyArgs) {
     if let Err(e) = check_target(&args.target) {
         eprintln!("error: {}", e);
+        process::exit(1);
+    }
+
+    if args.state.is_some() {
+        eprintln!("error: joy verify does not support --state; chain state loading is not implemented");
         process::exit(1);
     }
 

@@ -1,0 +1,16 @@
+{
+  "run": true,
+  "prove": true,
+  "verify": true,
+  "deploy": false,
+  "proof_formats": ["zheng-nox-public-execution-v1"],
+  "restrictions": [
+    "run: nox reductions with public inputs and sequential secret call witnesses; no digest stream or CLI state loading",
+    "prove: public stateless bounded static tags 0..15 only; no secrets, calls, state, dynamic continuations, pair equality or variable branch shapes",
+    "prove: full public witness disclosed; linear verification and storage; neither zero knowledge nor succinct",
+    "prove: both branch arms must have defined arithmetic; budget must cover static maximum cost",
+    "prove: at most 64 public inputs, 4096 program/symbolic noun nodes, depth 128, 4096 symbolic calls, 32768 gates/rows and 4096 output atoms",
+    "verify: public execution certificate or explicit native re-execution; old trace statements require explicit opt-in and do not authenticate execution or IO",
+    "cyber is currently a stateless nox alias; no cyber SDK, network state loading or deployment"
+  ]
+}

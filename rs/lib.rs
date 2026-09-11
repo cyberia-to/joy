@@ -12,7 +12,7 @@ pub mod target;
 pub mod warrior;
 
 pub use proof::{program_hash, ArtifactMeta, ProofArtifact, PROOF_FORMAT};
-pub use target::nox_terrain;
+pub use target::{nox_terrain, target_package};
 pub use warrior::{Warrior, DEFAULT_BUDGET};
 
 pub use execution::{ExecutionArtifact, EXECUTION_FORMAT};

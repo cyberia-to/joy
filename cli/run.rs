@@ -27,7 +27,7 @@ pub struct RunArgs {
     /// Reduction budget (bounds trace rows one-to-one)
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
-    /// Chain state (accepted for trident delegation; no chain wiring yet)
+    /// Chain state (not yet supported; requests fail explicitly)
     #[arg(long)]
     pub state: Option<String>,
 }
@@ -37,8 +37,9 @@ pub fn cmd_run(args: RunArgs) {
         eprintln!("error: {}", e);
         process::exit(1);
     }
-    if let Some(ref s) = args.state {
-        eprintln!("note: state '{}' ignored (chain wiring lands after M4)", s);
+    if args.state.is_some() {
+        eprintln!("error: joy run does not support --state; chain state loading is not implemented");
+        process::exit(1);
     }
     let bundle = match load_bundle(&args.input, &args.profile) {
         Ok(b) => b,

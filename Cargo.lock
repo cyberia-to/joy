@@ -214,6 +214,7 @@ version = "0.4.0"
 dependencies = [
  "clap",
  "joy-rs",
+ "serde_json",
  "trident-lang",
 ]
 
