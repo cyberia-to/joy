@@ -51,21 +51,22 @@ pub fn cmd_verify(args: VerifyArgs) {
             let warrior = Warrior::with_budget(args.budget);
             match warrior.verify_artifact(&artifact) {
                 Ok(true) => {
-                    if let Some(claim) = &args.claim {
-                        if *claim != artifact.meta.output {
-                            println!("Verification: FAIL (zheng proof valid, claim mismatch)");
-                            println!("  claimed:  {:?}", claim);
-                            println!("  proven:   {:?}", artifact.meta.output);
-                            process::exit(1);
-                        }
+                    if let Err(e) = joy_rs::proof::require_statement_only(args.claim.as_deref()) {
+                        eprintln!("error: {}", e);
+                        process::exit(1);
                     }
-                    println!("Verification: PASS (zheng proof)");
+                    println!("Verification: PASS (zheng trace statement)");
                     println!("  program: {}", artifact.meta.program);
-                    println!("  output:  {:?}", artifact.meta.output);
-                    println!("  cycles:  {}", artifact.meta.cycle_count);
+                    println!("  reported output (unverified): {:?}", artifact.meta.output);
+                    println!(
+                        "  reported cycles (unverified): {}",
+                        artifact.meta.cycle_count
+                    );
                 }
                 Ok(false) => {
-                    println!("Verification: FAIL (zheng proof rejected — assembly or proof tampered)");
+                    println!(
+                        "Verification: FAIL (zheng proof rejected — assembly or proof tampered)"
+                    );
                     process::exit(1);
                 }
                 Err(e) => {
@@ -98,18 +99,17 @@ pub fn cmd_verify(args: VerifyArgs) {
         let warrior = Warrior::with_budget(args.budget);
         match warrior.verify_zheng(&bundle, &artifact) {
             Ok(true) => {
-                if let Some(claim) = &args.claim {
-                    if *claim != artifact.meta.output {
-                        println!("Verification: FAIL (zheng proof valid, claim mismatch)");
-                        println!("  claimed:  {:?}", claim);
-                        println!("  proven:   {:?}", artifact.meta.output);
-                        process::exit(1);
-                    }
+                if let Err(e) = joy_rs::proof::require_statement_only(args.claim.as_deref()) {
+                    eprintln!("error: {}", e);
+                    process::exit(1);
                 }
-                println!("Verification: PASS (zheng proof)");
+                println!("Verification: PASS (zheng trace statement)");
                 println!("  program: {}", artifact.meta.program);
-                println!("  output:  {:?}", artifact.meta.output);
-                println!("  cycles:  {}", artifact.meta.cycle_count);
+                println!("  reported output (unverified): {:?}", artifact.meta.output);
+                println!(
+                    "  reported cycles (unverified): {}",
+                    artifact.meta.cycle_count
+                );
             }
             Ok(false) => {
                 println!("Verification: FAIL (zheng proof rejected for this bundle)");
@@ -126,9 +126,7 @@ pub fn cmd_verify(args: VerifyArgs) {
     let claim = match args.claim {
         Some(c) => c,
         None => {
-            eprintln!(
-                "error: --claim <values> (re-execution) or --proof <artifact> is required"
-            );
+            eprintln!("error: --claim <values> (re-execution) or --proof <artifact> is required");
             process::exit(1);
         }
     };
@@ -136,7 +134,9 @@ pub fn cmd_verify(args: VerifyArgs) {
     let warrior = Warrior::with_budget(args.budget);
     match warrior.verify_by_rerun(&bundle, &pi, &claim) {
         Ok(true) => {
-            println!("Verification: PASS (re-execution; for a zheng proof use joy prove + --proof)");
+            println!(
+                "Verification: PASS (re-execution; for a zheng proof use joy prove + --proof)"
+            );
         }
         Ok(false) => {
             // Re-run once more to show the actual output in the failure report.

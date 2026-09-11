@@ -152,7 +152,7 @@ fn prove_works_on_a_minimal_bundle() {
         .prove(&bundle("[5 [[1 3] [1 5]]]"), &input(&[], &[]))
         .expect("prove failed");
     assert_eq!(pd.format, joy_rs::PROOF_FORMAT);
-    assert!(warrior.verify(&pd).expect("verify errored"));
+    assert!(warrior.verify(&pd).expect_err("claims require output binding").contains("output values"));
 }
 
 #[test]
@@ -216,7 +216,7 @@ fn prove_verify_roundtrip_through_traits_and_disk() {
         .expect("trait prove failed");
     assert_eq!(pd.format, joy_rs::PROOF_FORMAT);
     assert_eq!(pd.claim.public_output, vec![24]);
-    assert!(warrior.verify(&pd).expect("trait verify errored"));
+    assert!(warrior.verify(&pd).expect_err("claims require output binding").contains("output values"));
 
     // Disk round-trip: save, load, verify.
     let dir = std::env::temp_dir().join("joy-proof-test");
@@ -505,4 +505,18 @@ fn divine_secrets_prove_and_verify() {
         warrior.verify_artifact(&artifact).expect("verify errored"),
         "call/divine trace must verify (nox r6 carries the value, not the Order)"
     );
+}
+
+#[test]
+fn metadata_cannot_authorize_an_output_claim() {
+    let b = compiled_add();
+    let warrior = Warrior::new();
+    let (mut artifact, _) = warrior.prove_zheng(&b, &input(&[3, 5], &[])).unwrap();
+    artifact.meta.output = vec![999];
+    // This API verifies only the trace statement; metadata is unverified.
+    assert!(warrior.verify_artifact(&artifact).unwrap());
+    assert!(joy_rs::proof::require_statement_only(Some(&artifact.meta.output)).is_err());
+    let mut pd = warrior.prove(&b, &input(&[3, 5], &[])).unwrap();
+    pd.claim.public_output = vec![999];
+    assert!(warrior.verify(&pd).is_err());
 }

@@ -494,11 +494,10 @@ impl Verifier for Warrior {
                 crate::proof::PROOF_FORMAT
             ));
         }
-        let artifact = crate::proof::ProofArtifact::from_bytes(&proof.proof_bytes)?;
-        // No bundle in this trait call: verify the statement as carried.
-        // Binding a proof to a specific bundle is verify_zheng's job.
-        let params = zheng::ProofParams::default();
-        Ok(zheng::verify(&artifact.proof, &artifact.statement, &params).is_ok())
+        // This trait promises verification of ProofData.claim, including the
+        // emitted values. The current circuit binds trace-row hashes instead.
+        // Statement-only callers use verify_artifact or verify_zheng explicitly.
+        Err("zheng cannot authenticate ProofData.claim output values yet; use statement-only verify_artifact or verify_by_rerun".to_string())
     }
 }
 

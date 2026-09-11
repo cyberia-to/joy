@@ -58,9 +58,9 @@ The dashes are the release notes. No gates, no fakes.
 statement (program/input/output hemera hashes, focus bound, bbg root
 sentinel) + the zheng trace proof + metadata. `joy verify --proof`
 recomputes the program hash from the bundle, checks it against the
-statement, and runs `zheng::verify` — the executed outputs in `meta` are
-bound in aggregate through `statement.output_hash` (the hemera hash of
-the final trace row), not value-by-value.
+statement, and runs `zheng::verify`. The executed outputs in `meta` are
+unverified: `statement.output_hash` hashes the final trace row, whose
+result is an arena identifier rather than the flattened output values.
 
 ## build
 
@@ -76,3 +76,18 @@ artifact wire form), `../hemera/rs` (program hashing).
 ## license
 
 cyber license: don't trust. don't fear. don't beg.
+
+### verification claims
+
+The current proof format is `zheng-hypernova-tensor-merkle-v2`. Regenerate
+older artifacts with the authenticated TensorMerkle PCS. Binary and JSON
+representations use the same format identifier.
+
+`verify <artifact>` and `verify <program> --proof <artifact>` check the trace
+statement. Emitted output values and cycle counts in artifact metadata are
+reported as unverified. The final-row hash authenticates arena identifiers,
+not a flattened output vector. Proof verification therefore rejects `--claim`;
+use `verify <program> --claim <values>` for verification by execution. For the
+same reason the generic `Verifier` trait refuses `ProofData.claim` until an
+output-to-arena relation is proved. `verify_artifact` and `verify_zheng` are
+the explicit statement-only library APIs.
