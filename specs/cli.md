@@ -17,7 +17,7 @@ within those target sections.
 
 Cross-repository contracts:
 
-- [soft3/specs/warriors.md](../../soft3/specs/warriors.md): foundational VM/OS, warrior, backend, worker and open network-instance model;
+- [soft3/specs/execution-model.md](../../soft3/specs/execution-model.md): foundational VM/OS, warrior, backend, worker and open network-instance model;
 - [cyber/specs/cli.md](../../cyber/specs/cli.md): node lifecycle and worker management;
 - [cyber/specs/worker.md](../../cyber/specs/worker.md): authoritative job and acceptance contract;
 - [zheng/specs/execution.md](../../zheng/specs/execution.md): execution certificate semantics.

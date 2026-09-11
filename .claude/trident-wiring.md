@@ -2,7 +2,7 @@
 
 ## Foundation alignment request
 
-`soft3/specs/warriors.md` now owns the common architecture. Align
+`soft3/specs/execution-model.md` now owns the common architecture. Align
 `trident/reference/warrior-api.md` and target discovery to it: a warrior
 supports a VM/OS family across an open-ended set of compatible network
 instances, and workers instantiate its capabilities using selected backends.
