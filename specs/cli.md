@@ -23,9 +23,11 @@ Cross-repository contracts:
 
 ## responsibility
 
-Joy executes, proves and verifies programs on nox. Cyber owns network state,
-job scheduling and acceptance. Trident owns compilation and ProgramBundle;
-Joy may invoke its compiler for local developer inputs. `--target cyber`
+Joy's target lifecycle is build → run/prove → verify → deploy. Cyber owns
+network state, job scheduling and acceptance. Trident owns the compiler
+contract and ProgramBundle; Joy's build command uses its reference nox
+lowering. The implemented CLI currently exposes run/prove/verify/describe;
+build and deploy are specified below as target commands. `--target cyber`
 selects a supported target alias; it supplies no network connection or
 authority to modify chain state.
 
@@ -140,11 +142,124 @@ Preserve the existing command names and add:
 
 ```text
 joy describe --target nox
+joy build INPUT [--target nox|cyber] [--profile NAME] [--emit bundle|nox] [-o PATH] [--force] [--format json-v1]
 joy run INPUT --input-file public.json --format json-v1
 joy run INPUT --input-file public.json --secret-file private.json
 joy prove INPUT --input-file public.json --output proof.zheng --format json-v1
 joy verify INPUT --proof proof.zheng --input-file public.json --claim-file output.json --format json-v1
+joy deploy BUNDLE --target cyber --state INSTANCE --dry-run [-o PLAN] [--proof ARTIFACT] [--force] [--format json-v1]
+joy deploy PLAN --submit --rpc URL --signer REF [--format json-v1]
 ```
+
+## target build contract
+
+`joy build` provides the standalone compilation entry point, requiring no
+node, wallet or live network. It accepts a `.tri` source or project directory.
+Default target is nox and default compilation profile is debug, matching
+run/prove. Explicit target selection overrides the project; otherwise use
+the project target and then nox. Named profiles use Trident's project
+resolution rules. Unknown profiles and unsupported targets fail explicitly.
+
+Build selects the version-matched target package and invokes Trident's
+compiler library. It MUST use the same resolution and lowering path as
+Joy's source run/prove commands. It MUST NOT spawn `trident build` and risk
+a delegation loop. The nox reference lowering remains owned by Trident.
+
+Default `--emit bundle` writes a ProgramBundle JSON file named
+`<source-stem>.bundle.json` beside a source, or `<project-name>.bundle.json`
+in the project root. It preserves assembly, entry point, function metadata,
+source identity, target and state-read declarations. `--emit nox` writes
+assembly to the corresponding `.nox` path; `-o`/`--output` overrides either
+destination. Assembly-only export is explicitly a lower-metadata format;
+deployment requires the full bundle.
+
+Library builds retain callable definitions; run/prove require an executable
+entry. Building a state-reading program may succeed when compilation supports
+it, while run/prove must still refuse unavailable state capabilities. Build
+success establishes compilation, independently of runtime/proof coverage.
+
+Build MUST NOT execute the program, request witnesses, generate a proof or
+submit anything to a node. Identical source/dependency bytes, compiler and
+target-package versions, and profile must yield identical artifact bytes;
+timestamps, absolute checkout paths and measured wall time stay outside the
+artifact identity. Static costs must be labelled estimates; absent costs
+must not be reported as measured zero cost.
+
+Human-mode stdout contains the output path; diagnostics go to stderr. JSON
+results carry kind `build`, artifact path/format, source and program identity,
+compiler version, target-package identity and profile. Publication follows
+the atomic no-overwrite/explicit-force rules below.
+
+Current gap: `joy/cli/main.rs` has no Build variant. Source compilation already
+exists in `joy/cli/compile.rs`. `trident build --target nox` currently uses its
+own reference path; adding `joy build` does not require replacing that path.
+Bundle equivalence between the two library entry paths is a conformance gate.
+
+## target deploy contract
+
+Deployment publishes an immutable program bundle under a network's rules.
+It returns evidence of submission or acceptance. Program execution and
+activation of stateful behavior are separate operations requiring that
+network's explicit policy. Joy constructs and transports deployment requests;
+Cyber owns admission, storage and finality.
+
+The command has two explicit modes: `--dry-run` prepares a deployment plan;
+`--submit` submits a previously prepared plan. Exactly one mode is required.
+A bare `joy deploy INPUT` is a usage error. Neither mode silently builds or
+proves: use build/prove first, then freeze those artifacts.
+
+Preparation consumes a full ProgramBundle, the requested network/state
+descriptor and any proof required by its deployment policy. It checks target
+compatibility and creates a plan binding the exact artifact bytes/identities,
+network/genesis identity, network ABI/policy version, operation and attached
+proof. The plan contains the submission payload; source-file paths alone
+are insufficient. Commitments and encoding follow the network's versioned
+deployment format, which must be defined before preparation is implemented.
+
+Dry run is offline: it does not sign, broadcast, spend funds, execute user
+code or assert live admission. Without `-o`, it prints the plan; with `-o`,
+it writes the plan atomically and prints its path. Missing network descriptors
+or an unsupported deployment format fail, including during dry run. A bare
+nox target has no deployment destination; the current stateless `cyber`
+alias also lacks the required network deployment descriptor.
+
+Submission requires an explicit RPC endpoint and signer reference. The signer
+reference identifies an authorized signing service/key handle; secret key
+material MUST NOT appear in argv or plan files. Joy checks the endpoint's
+network/genesis identity, validates the frozen plan and any attached proofs,
+and obtains authorization for that exact payload. Signer refusal stops the
+operation. An unsigned chaosnet `/v1/link` call cannot fulfill this contract.
+
+The node independently validates authorization and deployment policy.
+Submission success MUST report `submitted` and the actual receipt identifier;
+`accepted`/`finalized` may be reported only with corresponding node evidence.
+Local content hashing or HTTP reachability supplies neither receipt nor
+finality. A lost reply after sending yields `submission_unknown` with a
+stable submission identity for reconciliation, never blind retry with a new
+identity. Repeated submission of the same authorized operation must follow
+the network's idempotency/replay rules.
+
+JSON results have kind `deployment_plan` for preparation or `deployment` for
+submission and identify the bound program, network/genesis, policy and status.
+Receipt/finality fields are null until evidence exists. Plan output through
+`--format json-v1` uses the common result envelope. Verification/admission
+rejection uses exit 5; unsupported deployment uses exit 3; ambiguous transport
+failure uses exit 1 and error code `submission_unknown`, `retryable=false`.
+
+Deployment and proof capabilities are independent. Publishing public program
+code need not require an execution proof unless network policy says so.
+Stateful activation or proof-gated deployment must require the appropriate
+authenticated statement; stateless proof support cannot imply it.
+
+Current gap: Joy has no Deploy CLI variant and its Deployer trait implementation
+returns an error. Runtime metadata correctly declares `deploy=false`.
+Dry-run preparation alone MUST NOT change that flag to true. The current
+Trident deploy command publishes through its registry path, separately from
+warrior network deployment. Aligning delegation and the richer plan/signer/
+receipt API requires a Trident wiring change; the existing Deployer trait
+alone cannot express this contract.
+
+## target inputs, publication and discovery
 
 `--input-file`, `--secret-file` and `--claim-file` accept a UTF-8 JSON array
 of canonical decimal strings. They are mutually exclusive with their
@@ -210,16 +325,27 @@ Implement in this order:
 
 1. Validate the concurrent state-refusal and target-description changes;
    reject incompatible verification modes.
-2. Extend describe capabilities; add file inputs and structured output/errors.
-3. Add atomic artifact publication and adapter-enforceable limits/cancellation.
-4. Wire public stateless jobs through the cyber worker adapter.
-5. Add stateful/secret profiles only with authenticated proof support.
+2. Add build using the shared compiler path and deterministic bundle output.
+3. Extend describe capabilities; add file inputs and structured output/errors.
+4. Add atomic artifact publication and adapter-enforceable limits/cancellation.
+5. Wire public stateless jobs through the cyber worker adapter.
+6. Define the Cyber deployment format/policy and signer/receipt contract;
+   implement dry-run preparation, then authorized submission.
+7. Add stateful/secret profiles only with authenticated proof support.
 
 Required cases: native output and rerun agreement; proof verification without
 rerun; wrong program/input/output/budget rejection; corrupt proof rejection
 without downgrade; state/secret refusal; exact JSON types and exit behavior;
 artifact preservation on failure; cancellation and oversize input rejection.
 Public execution and legacy state-proof suites must be reported separately.
+
+Build gates: standalone build without a node; artifact equivalence across
+checkout locations; target/profile precedence; imported library preservation;
+built-bundle run/prove/verify equivalence with source inputs; explicit failure
+without replacing existing output. Deploy gates: dry run has no network or
+signer effects; missing network support fails; modified plan/bundle/proof and
+wrong genesis fail; signer refusal prevents submission; duplicate delivery
+and lost responses never fabricate acceptance or duplicate state effects.
 
 Baseline sources: `joy/cli/{main,run,prove,verify,execution_verify}.rs`,
 `joy/rs/{warrior,execution}.rs`. Current tests include

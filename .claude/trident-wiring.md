@@ -1,5 +1,28 @@
 # trident-side wiring for the joy warrior (M3)
 
+## Current request: build and deploy contract
+
+The target command contract is now in `joy/specs/cli.md` under
+"target build contract" and "target deploy contract". Both commands remain
+planned. Trident-side integration should:
+
+- Keep the reference nox lowering shared through the compiler library.
+  Joy build must never shell back into a delegating `trident build`.
+- Check artifact equivalence for identical compiler options, source inputs
+  and target packages. Joy defaults to ProgramBundle JSON, while today's
+  Trident nox build emits assembly; compare the corresponding representations.
+- Distinguish registry publication in `trident/src/cli/deploy.rs` from
+  warrior network deployment. Neither route may silently substitute for
+  the other.
+- Add an explicit deployment plan, signer and receipt API before delegating
+  network deployment. The current Deployer trait lacks this context.
+- Preserve `deploy=false` until actual authorized submission is supported;
+  offline preparation alone must not advertise network deployment.
+
+This is a wiring request, not a change to Trident. The M3 notes below are
+historical and describe the 2026-09-07 implementation, including old paths
+and capability declarations.
+
 joy does not touch ~/cyber/trident. This file is the exact patch the
 trident owner applies so `trident run/prove/verify --target nox`
 delegates to joy. Verified against trident master as of 2026-09-07.
