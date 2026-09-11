@@ -1,5 +1,9 @@
 # Joy
 
+Interface specification: [Joy CLI](specs/cli.md). Node integration and
+acceptance are owned by [cyber's worker contract](../cyber/specs/worker.md).
+Both specs distinguish the implemented baseline from the planned interface.
+
 Joy compiles and executes Trident programs on nox. Supported public programs
 can also produce a Zheng execution certificate whose input, output, program
 and reduction count are checked by the verifier.

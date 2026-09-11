@@ -97,6 +97,10 @@ system didn't produce.
 
 ## CLI contract
 
+`specs/cli.md` is the CLI contract: implemented baseline plus explicitly
+marked target requirements. Cross-repo jobs and acceptance are specified
+in `cyber/specs/worker.md`; do not duplicate node policy in Joy.
+
 ```
 joy run    <bundle.json | file.tri | file.nox> [--input-values 1,2] [--secret 3] [--budget N]
 joy prove  <input> [--input-values ...] [--secret ...] [--output p.zheng]
