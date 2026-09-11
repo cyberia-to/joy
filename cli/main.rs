@@ -12,6 +12,7 @@ use trident::runtime::ProgramInput;
 #[derive(Parser)]
 #[command(
     name = "joy",
+    version,
     about = "nox warrior — execute, prove, verify on the cyber battlefield"
 )]
 struct Cli {
