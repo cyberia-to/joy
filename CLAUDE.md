@@ -61,12 +61,16 @@ re-execution, `.tri`/`.json`/`.nox` inputs, `prove` (zheng proof ->
 re-execution).
 
 **Working too**: hash-block proving (HashAux from the arena's cached
-digests) and look proving against a real BbgState
-(`prove_zheng_with_state`, public root in the statement — the
-cross-repo zheng+bbg e2e lives in joy's tests).
+digests). Proof verification checks the trace statement; metadata outputs
+are unverified, and proof-mode output claims are explicitly refused.
+
+**Release blocker**: look/axis proof generation is explicitly refused by
+zheng until authenticated TensorMerkle recursive constraints are implemented.
+The old Tensor gadgets cannot authenticate the current Lens opening format.
+The positive cross-repo state-proof tests remain acceptance requirements.
 
 **Dash**: deploy (post-0.2), CLI `--state` loading (bbg has no
-whole-state file format yet — library path works), consing the live
+whole-state file format yet), consing the live
 root per `ProgramBundle.reads_state` (trident lowers `os.state.read`
 since 0.2.0; joy's look tests still hand-build .nox). The dash
 is the release note — never fake a proof, never print a number the
