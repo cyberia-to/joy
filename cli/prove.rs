@@ -61,14 +61,14 @@ pub fn cmd_prove(args: ProveArgs) {
         // KV behind optional features). The library path is wired:
         // joy_rs::Warrior::prove_zheng_with_state(bundle, input, &BbgState).
         eprintln!("error: --state file loading is not wired: bbg has no state-file format yet");
-        eprintln!("state-carrying proofs work through the joy-rs API (prove_zheng_with_state)");
+        eprintln!("authenticated state execution proofs are not implemented");
         process::exit(1);
     }
     let pi = make_input(&args.input_values, &args.secret);
     let warrior = Warrior::with_budget(args.budget);
 
     let t0 = Instant::now();
-    let (artifact, result) = match warrior.prove_zheng(&bundle, &pi) {
+    let (artifact, result) = match warrior.prove_execution(&bundle, &pi, args.budget) {
         Ok(v) => v,
         Err(e) => {
             eprintln!("error: {}", e);
@@ -88,11 +88,8 @@ pub fn cmd_prove(args: ProveArgs) {
 
     // stdout: machine-readable artifact location; stderr: the story.
     eprintln!(
-        "Proved in {} ms: {} reductions, {} accumulator groups, {} bytes",
-        prove_ms,
-        result.cycle_count,
-        artifact.proof.group_count(),
-        bytes
+        "Proved public execution in {} ms: {} reductions, {} bytes",
+        prove_ms, result.cycle_count, bytes
     );
     eprintln!("Output: {:?}", result.output);
     println!("{}", path.display());

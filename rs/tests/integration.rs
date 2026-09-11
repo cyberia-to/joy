@@ -112,7 +112,9 @@ fn fixture_bundle_json_runs() {
     let text = std::fs::read_to_string(fixture("add.bundle.json")).expect("fixture missing");
     let b = ProgramBundle::from_json(&text).expect("bundle parse failed");
     assert_eq!(b.target_vm, "nox");
-    let result = Warrior::new().run(&b, &input(&[], &[])).expect("run failed");
+    let result = Warrior::new()
+        .run(&b, &input(&[], &[]))
+        .expect("run failed");
     assert_eq!(result.output, vec![8]);
 }
 
@@ -151,8 +153,10 @@ fn prove_works_on_a_minimal_bundle() {
     let pd = warrior
         .prove(&bundle("[5 [[1 3] [1 5]]]"), &input(&[], &[]))
         .expect("prove failed");
-    assert_eq!(pd.format, joy_rs::PROOF_FORMAT);
-    assert!(warrior.verify(&pd).expect_err("claims require output binding").contains("output values"));
+    assert_eq!(pd.format, joy_rs::EXECUTION_FORMAT);
+    assert!(warrior
+        .verify(&pd)
+        .expect("public execution claim verification"));
 }
 
 #[test]
@@ -180,7 +184,6 @@ fn verify_refuses_foreign_proof_formats() {
         .expect_err("foreign formats are refused, not guessed at");
     assert!(err.contains("format"), "unexpected error: {}", err);
 }
-
 
 // ── zheng prove / verify ─────────────────────────────────────────────────────
 
@@ -214,18 +217,20 @@ fn prove_verify_roundtrip_through_traits_and_disk() {
     let pd = warrior
         .prove(&b, &input(&[3, 5], &[]))
         .expect("trait prove failed");
-    assert_eq!(pd.format, joy_rs::PROOF_FORMAT);
+    assert_eq!(pd.format, joy_rs::EXECUTION_FORMAT);
     assert_eq!(pd.claim.public_output, vec![24]);
-    assert!(warrior.verify(&pd).expect_err("claims require output binding").contains("output values"));
+    assert!(warrior
+        .verify(&pd)
+        .expect("public execution claim verification"));
 
     // Disk round-trip: save, load, verify.
     let dir = std::env::temp_dir().join("joy-proof-test");
     std::fs::create_dir_all(&dir).unwrap();
     let path = dir.join("add.zheng.json");
-    let artifact: joy_rs::ProofArtifact = joy_rs::ProofArtifact::from_bytes(&pd.proof_bytes).unwrap();
+    let artifact = joy_rs::ExecutionArtifact::from_bytes(&pd.proof_bytes).unwrap();
     artifact.save(&path).expect("save failed");
-    let loaded = joy_rs::ProofArtifact::load(&path).expect("load failed");
-    assert!(warrior.verify_zheng(&b, &loaded).expect("verify errored"));
+    let loaded = joy_rs::ExecutionArtifact::load(&path).expect("load failed");
+    loaded.verify().expect("execution verification failed");
 }
 
 #[test]
@@ -239,7 +244,9 @@ fn tampered_proof_rejected() {
     // Tamper a field inside the proof via the wire form.
     let mut v: serde_json::Value =
         serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
-    let ev = v["proof"]["universal"]["proof"]["eval_value"].as_u64().unwrap();
+    let ev = v["proof"]["universal"]["proof"]["eval_value"]
+        .as_u64()
+        .unwrap();
     v["proof"]["universal"]["proof"]["eval_value"] = serde_json::Value::from(ev ^ 1);
     let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
     assert!(
@@ -258,7 +265,9 @@ fn proof_for_a_different_program_rejected() {
     // A different bundle: raw add-literals formula.
     let other = bundle("[5 [[1 3] [1 5]]]");
     assert!(
-        !warrior.verify_zheng(&other, &artifact).expect("verify errored"),
+        !warrior
+            .verify_zheng(&other, &artifact)
+            .expect("verify errored"),
         "proof must bind to its program"
     );
 }
@@ -369,11 +378,25 @@ fn sample_state() -> bbg::BbgState {
     let mut state = bbg::BbgState::new();
     state.particles.insert(
         [1u8; 32],
-        ParticleRecord { energy: 77, pi_star: 0, weight: 0, s_yes: 0, s_no: 0, meta_score: 0 },
+        ParticleRecord {
+            energy: 77,
+            pi_star: 0,
+            weight: 0,
+            s_yes: 0,
+            s_no: 0,
+            meta_score: 0,
+        },
     );
     state.particles.insert(
         [2u8; 32],
-        ParticleRecord { energy: 88, pi_star: 0, weight: 0, s_yes: 0, s_no: 0, meta_score: 0 },
+        ParticleRecord {
+            energy: 88,
+            pi_star: 0,
+            weight: 0,
+            s_yes: 0,
+            s_no: 0,
+            meta_score: 0,
+        },
     );
     state
 }
@@ -388,8 +411,15 @@ fn look_program_proves_and_verifies_against_state() {
     let (artifact, result) = warrior
         .prove_zheng_with_state(&b, &input(&[], &[]), &state)
         .expect("look prove failed");
-    assert_eq!(result.output, vec![77], "the look read the committed energy");
-    assert_eq!(artifact.statement.bbg_root, root, "public root in the statement");
+    assert_eq!(
+        result.output,
+        vec![77],
+        "the look read the committed energy"
+    );
+    assert_eq!(
+        artifact.statement.bbg_root, root,
+        "public root in the statement"
+    );
     assert!(
         warrior.verify_zheng(&b, &artifact).expect("verify errored"),
         "look proof must verify"
@@ -405,7 +435,14 @@ fn look_against_stale_root_refused_at_prove() {
     let mut state = state;
     state.particles.insert(
         [3u8; 32],
-        bbg::types::ParticleRecord { energy: 99, pi_star: 0, weight: 0, s_yes: 0, s_no: 0, meta_score: 0 },
+        bbg::types::ParticleRecord {
+            energy: 99,
+            pi_star: 0,
+            weight: 0,
+            s_yes: 0,
+            s_no: 0,
+            meta_score: 0,
+        },
     );
     state.refresh_root();
 
@@ -450,7 +487,10 @@ fn look_artifact_tampered_binding_group_rejected() {
     // witness commitment via the wire form — the cross-group linkage breaks.
     let mut v: serde_json::Value =
         serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
-    assert!(!v["proof"]["binding"].is_null(), "an eq-step binding group exists");
+    assert!(
+        !v["proof"]["binding"].is_null(),
+        "an eq-step binding group exists"
+    );
     let wc = &mut v["proof"]["binding"]["accumulator"]["witness_commitment"];
     let b0 = wc[0].as_u64().unwrap();
     wc[0] = serde_json::Value::from((b0 ^ 1) & 0xff);
@@ -468,8 +508,14 @@ fn artifact_is_self_contained_and_binds_its_assembly() {
     let (mut artifact, _) = warrior
         .prove_zheng(&b, &input(&[3, 5], &[]))
         .expect("prove failed");
-    assert_eq!(artifact.meta.assembly_text().unwrap().as_deref(), Some(b.assembly.as_str()));
-    assert!(artifact.meta.assembly.is_none(), "assembly travels deflated");
+    assert_eq!(
+        artifact.meta.assembly_text().unwrap().as_deref(),
+        Some(b.assembly.as_str())
+    );
+    assert!(
+        artifact.meta.assembly.is_none(),
+        "assembly travels deflated"
+    );
     assert!(
         warrior.verify_artifact(&artifact).expect("verify errored"),
         "self-contained artifact must verify without its bundle"
@@ -518,5 +564,5 @@ fn metadata_cannot_authorize_an_output_claim() {
     assert!(joy_rs::proof::require_statement_only(Some(&artifact.meta.output)).is_err());
     let mut pd = warrior.prove(&b, &input(&[3, 5], &[])).unwrap();
     pd.claim.public_output = vec![999];
-    assert!(warrior.verify(&pd).is_err());
+    assert!(!warrior.verify(&pd).unwrap());
 }

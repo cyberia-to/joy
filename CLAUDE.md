@@ -60,9 +60,14 @@ re-execution, `.tri`/`.json`/`.nox` inputs, `prove` (zheng proof ->
 `<name>.zheng`), `verify --proof` (zheng verification, no
 re-execution).
 
-**Working too**: hash-block proving (HashAux from the arena's cached
-digests). Proof verification checks the trace statement; metadata outputs
-are unverified, and proof-mode output claims are explicitly refused.
+**Public execution certificates**: default `prove` and Prover/Verifier traits
+use `zheng-nox-public-execution-v1`, with exact CCS and authenticated public
+input/output/cost coordinates. Hashing is constrained. Full witness disclosed,
+linear verification, no ZK. `--secret` proof requests fail. See Zheng specs/execution.md.
+
+**Legacy statement APIs**: prove_zheng/verify_zheng/verify_artifact do not prove
+execution/output. CLI inspection requires --legacy-trace-statement and refuses
+IO/state/secret constraints. Never downgrade unsupported new proofs.
 
 **Release blocker**: look/axis proof generation is explicitly refused by
 zheng until authenticated TensorMerkle recursive constraints are implemented.

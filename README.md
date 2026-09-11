@@ -1,93 +1,62 @@
 # Joy
 
-nox warrior — the cyber battlefield. Executes and verifies Trident
-programs on the nox VM, the proof-native machine of the soft3 stack.
+Joy compiles and executes Trident programs on nox. Supported public programs
+can also produce a Zheng execution certificate whose input, output, program
+and reduction count are checked by the verifier.
 
-```
-source .tri → trident → ProgramBundle (.nox formula) → joy
-                                                        ├── run     nox reduce, traced
-                                                        ├── prove   zheng proof -> .zheng
-                                                        └── verify  the proof — no re-execution
-```
-
-Trident is the weapon; warriors wield it. Trisha fights on Triton,
-joy fights on nox: terrain nox, battlefield cyber.
-
-## what it does
-
-```
-joy run    program.tri --input-values 3,5       # compile via trident, execute, print output
-joy run    bundle.json                           # execute a compiled bundle
-joy run    formula.nox --secret 42               # execute a raw nox formula
-joy prove  program.tri --input-values 3,5        # execute + zheng proof -> program.zheng
-joy verify program.zheng                   # self-contained artifact, NO re-execution
-joy verify program.tri --proof program.zheng  # same, bound to this bundle
-joy verify bundle.json --claim 8                 # verify by re-execution
+```sh
+joy run program.tri --input-values 3,5
+joy prove program.tri --input-values 3,5 --output program.zheng
+joy verify program.zheng --claim 24 --input-values 3,5
+joy verify program.tri --proof program.zheng --claim 24
+joy verify program.tri --claim 24 --input-values 3,5  # native re-execution
 ```
 
-stdout carries the output values (one per line); stderr reports
-`Executed in N reductions`. The reduction count is the trace row
-count — one row per budget unit, and the trace IS the zheng witness.
+`prove` uses `zheng-nox-public-execution-v1`. Zheng derives a global CCS from
+the canonical program, authenticates the complete public witness and checks
+all constraints and public coordinates. Verification does not run nox.
+Hashing, arithmetic, comparisons, word operations and bounded compiled
+imports/loops/branches are covered within the supported symbolic surface.
 
-## input model
+The certificate reveals the full witness and has linear verification cost.
+It is **not zero knowledge or succinct**. Proving with `--secret`, calls,
+state reads, dynamic continuations or unsupported branch shapes fails;
+ordinary `run --secret` remains available. Both branch arms must have defined
+arithmetic even when unselected. See [Zheng's exact contract](../zheng/specs/execution.md).
 
-- **public inputs** (`--input-values`) bind as the nox subject, the
-  way trident's NoxCompiler binds function parameters:
-  `[p_last [... [p_first 0]]]`.
-- **secret inputs** (`--secret`) are served in order to nox call
-  patterns (tag 16) — the prover-side witness stream.
+Public inputs bind as `[p_last [... [p_first 0]]]`. Proof verification checks
+requested `--claim` and `--input-values`; `--budget` bounds the certificate's
+budget. Self-contained artifacts carry the program; passing a source/bundle
+with `--proof` also checks that the certificate belongs to that program.
 
-## status (0.1.0 · soft3 release M4)
+## Legacy trace statements
 
-| capability | state |
-|---|---|
-| run (nox reduce + Tracer) | works |
-| verify by re-execution | works |
-| .tri / .json / .nox inputs | works |
-| prove (zheng) | works — `<name>.zheng` artifact |
-| verify a zheng proof | works — no re-execution |
-| deploy (particle + cyberlinks) | — after M4 |
-| bbg look (pattern 17) | proof generation refused until authenticated TensorMerkle recursive constraints are implemented; CLI state loading is also pending |
-| hash blocks in proofs | works — HashAux built from the arena's cached digests |
+Old `zheng-hypernova-tensor-merkle-v2` artifacts do not establish execution
+or emitted values. Inspection requires an explicit opt-in:
 
-The dashes are the release notes. No gates, no fakes.
-
-## proof artifact
-
-`joy prove` writes `<name>.zheng` next to the input (or `--output`):
-statement (program/input/output hemera hashes, focus bound, bbg root
-sentinel) + the zheng trace proof + metadata. `joy verify --proof`
-recomputes the program hash from the bundle, checks it against the
-statement, and runs `zheng::verify`. The executed outputs in `meta` are
-unverified: `statement.output_hash` hashes the final trace row, whose
-result is an arena identifier rather than the flattened output values.
-
-## build
-
-```
-cargo install --path cli --force     # or: cargo install cyber-joy
+```sh
+joy verify old.zheng --legacy-trace-statement
 ```
 
-Depends on sibling repos by path: `../trident` (compiler,
-ProgramBundle), `../nox/rs` (cyber-nox, the VM), `../strata/nebu/rs`
-(Goldilocks), `../zheng/rs` (the prover, `serde` feature for the
-artifact wire form), `../hemera/rs` (program hashing).
+This mode labels execution/output unverified and refuses requested IO, state
+or secret constraints. There is no automatic proof downgrade. The old
+`prove_zheng`/`verify_zheng`/`verify_artifact` library methods remain legacy
+statement APIs; the `Prover`/`Verifier` traits use execution certificates.
 
-## license
+## Build and status
 
-cyber license: don't trust. don't fear. don't beg.
+Use coordinated sibling checkouts of Trident, Zheng, Lens, nox and soft3:
 
-### verification claims
+```sh
+cargo check --workspace --all-targets
+cargo test -p cyber-joy --test execution_claim
+cargo test -p joy-rs --test public_execution
+cargo install --path cli --locked
+```
 
-The current proof format is `zheng-hypernova-tensor-merkle-v2`. Regenerate
-older artifacts with the authenticated TensorMerkle PCS. Binary and JSON
-representations use the same format identifier.
+Versions in the working branches are development candidates, not new
+published releases. Authenticated state execution, zero knowledge, deployment
+and complete nox support remain unfinished. Three legacy state-proof acceptance
+tests still fail explicitly; passing public execution tests does not hide them.
 
-`verify <artifact>` and `verify <program> --proof <artifact>` check the trace
-statement. Emitted output values and cycle counts in artifact metadata are
-reported as unverified. The final-row hash authenticates arena identifiers,
-not a flattened output vector. Proof verification therefore rejects `--claim`;
-use `verify <program> --claim <values>` for verification by execution. For the
-same reason the generic `Verifier` trait refuses `ProofData.claim` until an
-output-to-arena relation is proved. `verify_artifact` and `verify_zheng` are
-the explicit statement-only library APIs.
+Cyber License: Don't trust. Don't fear. Don't beg.

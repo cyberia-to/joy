@@ -198,32 +198,34 @@ impl Warrior {
         let handle = std::thread::Builder::new()
             .name("joy-reduce".to_string())
             .stack_size(STACK_SIZE)
-            .spawn(move || -> Result<(ExecutionResult, VecTrace, Vec<zheng::HashAux>), String> {
-                let mut reduction = Reduction::<ARENA>::new();
-                let root = formula::parse(&mut reduction, assembly.trim())?;
-                let object = formula::build_subject(&mut reduction, &public)?;
-                let provider = SecretProvider::new(secret);
-                let mut tracer = VecTrace::default();
-                match reduce(&mut reduction, object, root, budget, &provider, &mut tracer) {
-                    Outcome::Ok(result, _remaining) => {
-                        let aux = hash_aux_from_trace(&reduction, &tracer)?;
-                        Ok((
-                            ExecutionResult {
-                                output: formula::leaves(&reduction, result)?,
-                                cycle_count: tracer.0.len() as u64,
-                            },
-                            tracer,
-                            aux,
-                        ))
-                    }
-                    Outcome::Halt(remaining) => Err(format!(
-                        "execution halted (budget remaining: {}) — out of budget, \
+            .spawn(
+                move || -> Result<(ExecutionResult, VecTrace, Vec<zheng::HashAux>), String> {
+                    let mut reduction = Reduction::<ARENA>::new();
+                    let root = formula::parse(&mut reduction, assembly.trim())?;
+                    let object = formula::build_subject(&mut reduction, &public)?;
+                    let provider = SecretProvider::new(secret);
+                    let mut tracer = VecTrace::default();
+                    match reduce(&mut reduction, object, root, budget, &provider, &mut tracer) {
+                        Outcome::Ok(result, _remaining) => {
+                            let aux = hash_aux_from_trace(&reduction, &tracer)?;
+                            Ok((
+                                ExecutionResult {
+                                    output: formula::leaves(&reduction, result)?,
+                                    cycle_count: tracer.0.len() as u64,
+                                },
+                                tracer,
+                                aux,
+                            ))
+                        }
+                        Outcome::Halt(remaining) => Err(format!(
+                            "execution halted (budget remaining: {}) — out of budget, \
                          or a call pattern had no witness (secret inputs exhausted)",
-                        remaining
-                    )),
-                    Outcome::Error(kind) => Err(format!("reduction error: {}", describe(kind))),
-                }
-            })
+                            remaining
+                        )),
+                        Outcome::Error(kind) => Err(format!("reduction error: {}", describe(kind))),
+                    }
+                },
+            )
             .map_err(|e| format!("cannot spawn reduce thread: {}", e))?;
 
         handle
@@ -232,7 +234,7 @@ impl Warrior {
     }
 
     /// Verify a claimed output by re-execution (nox's unconditional mode).
-    /// zheng proof verification replaces this in M4.
+    /// Public execution certificates are verified separately without native replay.
     pub fn verify_by_rerun(
         &self,
         bundle: &ProgramBundle,
@@ -257,7 +259,8 @@ impl Runner for Warrior {
 }
 
 impl Warrior {
-    /// Execute the bundle and produce a zheng proof artifact.
+    /// Legacy trace-statement artifact; does not prove the execution/output relation.
+    /// Use `prove_execution` or the Prover trait for checked public execution.
     ///
     /// The statement binds: program_hash (hemera of the assembly),
     /// input_hash/output_hash (hemera of the first/last trace rows),
@@ -283,7 +286,7 @@ impl Warrior {
         self.finish_proof(bundle, result, trace, hash_aux, Vec::new(), [0u8; 32])
     }
 
-    /// Execute against a live BBG state and produce a zheng proof artifact.
+    /// Legacy state trace path, currently refused by the recursive-opening guard.
     ///
     /// Look rows (tag 17) answer from `state` and record Brakedown openings;
     /// the statement carries `state.root()` as the PUBLIC root — the full
@@ -412,9 +415,7 @@ impl Warrior {
                              or a call pattern had no witness (secret inputs exhausted)",
                             remaining
                         )),
-                        Outcome::Error(kind) => {
-                            Err(format!("reduction error: {}", describe(kind)))
-                        }
+                        Outcome::Error(kind) => Err(format!("reduction error: {}", describe(kind))),
                     }
                 })
                 .map_err(|e| format!("cannot spawn reduce thread: {}", e))?;
@@ -447,10 +448,7 @@ impl Warrior {
     /// checked against the statement first, so a tampered assembly is
     /// rejected exactly like a tampered proof. This is what
     /// `trident verify <artifact>` reaches through the warrior boundary.
-    pub fn verify_artifact(
-        &self,
-        artifact: &crate::proof::ProofArtifact,
-    ) -> Result<bool, String> {
+    pub fn verify_artifact(&self, artifact: &crate::proof::ProofArtifact) -> Result<bool, String> {
         let assembly = artifact.meta.assembly_text()?.ok_or_else(|| {
             "artifact carries no assembly (written before 0.2.0) — verify it \
              against its bundle: joy verify <bundle> --proof <artifact>"
@@ -466,43 +464,23 @@ impl Warrior {
 
 impl Prover for Warrior {
     fn prove(&self, bundle: &ProgramBundle, input: &ProgramInput) -> Result<ProofData, String> {
-        let (artifact, result) = self.prove_zheng(bundle, input)?;
-        let proof_bytes = artifact.to_bytes()?;
-        Ok(ProofData {
-            claim: trident::field::proof::Claim {
-                program_hash: artifact
-                    .statement
-                    .program_hash
-                    .chunks_exact(8)
-                    .map(|c| u64::from_le_bytes([c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7]]))
-                    .collect(),
-                public_input: input.public.clone(),
-                public_output: result.output,
-            },
-            proof_bytes,
-            format: crate::proof::PROOF_FORMAT.to_string(),
-        })
+        let (artifact, _) = self.prove_execution(bundle, input, self.budget)?;
+        artifact.proof_data()
     }
 }
 
 impl Verifier for Warrior {
     fn verify(&self, proof: &ProofData) -> Result<bool, String> {
-        if proof.format != crate::proof::PROOF_FORMAT {
-            return Err(format!(
-                "unknown proof format '{}' (this joy verifies '{}')",
-                proof.format,
-                crate::proof::PROOF_FORMAT
-            ));
-        }
-        // This trait promises verification of ProofData.claim, including the
-        // emitted values. The current circuit binds trace-row hashes instead.
-        // Statement-only callers use verify_artifact or verify_zheng explicitly.
-        Err("zheng cannot authenticate ProofData.claim output values yet; use statement-only verify_artifact or verify_by_rerun".to_string())
+        crate::execution::verify_proof_data(proof)
     }
 }
 
 impl Deployer for Warrior {
-    fn deploy(&self, _bundle: &ProgramBundle, _proof: Option<&ProofData>) -> Result<String, String> {
+    fn deploy(
+        &self,
+        _bundle: &ProgramBundle,
+        _proof: Option<&ProofData>,
+    ) -> Result<String, String> {
         Err("deploy lands after the zheng prover (M4): particle + cyberlink emission".to_string())
     }
 }

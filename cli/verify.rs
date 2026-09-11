@@ -18,6 +18,9 @@ pub struct VerifyArgs {
     /// Verify a zheng proof artifact (no re-execution)
     #[arg(long)]
     pub proof: Option<PathBuf>,
+    /// Inspect an old relaxed trace statement; this does not verify execution or IO
+    #[arg(long)]
+    pub legacy_trace_statement: bool,
     /// Target terrain (nox) or battlefield (cyber)
     #[arg(long, default_value = "nox")]
     pub target: String,
@@ -44,10 +47,19 @@ pub fn cmd_verify(args: VerifyArgs) {
         process::exit(1);
     }
 
+    if let Some(result) = crate::execution_verify::try_verify(&args) {
+        if let Err(error) = result {
+            eprintln!("Verification: FAIL ({error})");
+            process::exit(1);
+        }
+        return;
+    }
+
     // A proof artifact given directly (what `trident verify <artifact>`
     // sends through the warrior boundary): self-contained verification.
     if args.proof.is_none() {
         if let Ok(artifact) = joy_rs::ProofArtifact::load(&args.input) {
+            require_legacy_mode(&args);
             let warrior = Warrior::with_budget(args.budget);
             match warrior.verify_artifact(&artifact) {
                 Ok(true) => {
@@ -55,7 +67,7 @@ pub fn cmd_verify(args: VerifyArgs) {
                         eprintln!("error: {}", e);
                         process::exit(1);
                     }
-                    println!("Verification: PASS (zheng trace statement)");
+                    println!("Legacy statement check: PASS (execution and output unverified)");
                     println!("  program: {}", artifact.meta.program);
                     println!("  reported output (unverified): {:?}", artifact.meta.output);
                     println!(
@@ -88,6 +100,9 @@ pub fn cmd_verify(args: VerifyArgs) {
 
     // Proof mode: verify the zheng artifact against this bundle. No
     // re-execution — the proof carries the whole trace commitment.
+    if args.proof.is_some() {
+        require_legacy_mode(&args);
+    }
     if let Some(proof_path) = args.proof {
         let artifact = match joy_rs::ProofArtifact::load(&proof_path) {
             Ok(a) => a,
@@ -103,7 +118,7 @@ pub fn cmd_verify(args: VerifyArgs) {
                     eprintln!("error: {}", e);
                     process::exit(1);
                 }
-                println!("Verification: PASS (zheng trace statement)");
+                println!("Legacy statement check: PASS (execution and output unverified)");
                 println!("  program: {}", artifact.meta.program);
                 println!("  reported output (unverified): {:?}", artifact.meta.output);
                 println!(
@@ -152,5 +167,20 @@ pub fn cmd_verify(args: VerifyArgs) {
             eprintln!("error: {}", e);
             process::exit(1);
         }
+    }
+}
+
+fn require_legacy_mode(args: &VerifyArgs) {
+    if !args.legacy_trace_statement {
+        eprintln!("error: legacy trace statements do not prove execution; use a new public execution proof, or explicitly inspect with --legacy-trace-statement");
+        process::exit(1);
+    }
+    if args.claim.is_some()
+        || args.input_values.is_some()
+        || args.secret.is_some()
+        || args.state.is_some()
+    {
+        eprintln!("error: legacy trace statements cannot verify requested input, output, secret or state constraints");
+        process::exit(1);
     }
 }

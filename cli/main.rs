@@ -1,5 +1,6 @@
 mod compile;
 mod error;
+mod execution_verify;
 mod prove;
 mod run;
 mod verify;
