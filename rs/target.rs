@@ -1,40 +1,41 @@
-//! target — the nox terrain configuration.
-//!
-//! Trident resolves `vm/nox/target.toml` relative to its binary or the
-//! working directory. When joy runs outside the trident repo that lookup
-//! fails, so joy carries a fallback mirror of the same values.
-//! Sync duty: keep this in step with `trident/vm/nox/target.toml`.
+//! The nox machine contract is owned upstream and resolved by Trident.
+//! Joy adds runtime capabilities, never a second set of machine constants.
 
-use trident::target::{Arch, TerrainConfig, WarriorConfig};
+use trident::target::TerrainConfig;
 
-/// Resolve the nox terrain config, falling back to the built-in mirror.
+/// The same embedded nox machine contract used by the compiler.
 pub fn nox_terrain() -> TerrainConfig {
-    if let Ok(resolved) = trident::target::ResolvedTarget::resolve("nox") {
-        if matches!(resolved.vm.architecture, Arch::Tree) {
-            return resolved.vm;
-        }
+    TerrainConfig::nox()
+}
+
+/// Versioned installed target package. Machine values come from Trident's
+/// upstream nox contract; only warrior capabilities are owned by Joy.
+pub fn target_package(target: &str) -> Result<trident::target::TargetPackage, String> {
+    if !matches!(target, "nox" | "cyber") {
+        return Err(format!("joy does not provide target '{target}'"));
     }
-    // Mirror of trident/vm/nox/target.toml (2026-09-07).
-    TerrainConfig {
-        name: "nox".to_string(),
-        display_name: "NOX".to_string(),
-        architecture: Arch::Tree,
-        field_prime: "2^64 - 2^32 + 1".to_string(),
-        field_bits: 64,
-        field_limbs: 2,
-        emulated_fields: Vec::new(),
-        stack_depth: 0,
-        spill_ram_base: 0,
-        digest_width: 8,
-        xfield_width: 3,
-        hash_rate: 8,
-        output_extension: ".nox".to_string(),
-        cost_tables: vec!["reductions".to_string()],
-        warrior: Some(WarriorConfig {
-            name: "joy".to_string(),
-            crate_name: "joy".to_string(),
-            runner: true,
-            prover: false,
-        }),
+    let terrain = nox_terrain();
+    let runtime = serde_json::from_str(include_str!("../targets/nox/capabilities.json"))
+        .map_err(|error| format!("invalid embedded Joy capabilities: {error}"))?;
+    trident::target::TargetPackage {
+        schema_version: 1,
+        compiler_api: 1,
+        owner: "joy".into(),
+        version: env!("CARGO_PKG_VERSION").into(),
+        intrinsics: terrain.supported_intrinsics(),
+        terrain,
+        union: None,
+        states: Vec::new(),
+        modules: std::collections::BTreeMap::new(),
+        module_hashes: std::collections::BTreeMap::new(),
+        instructions: Vec::new(),
+        runtime,
     }
+    .seal()
+}
+
+/// JSON transport for `joy describe`, independent of the working directory.
+pub fn describe(target: &str) -> Result<String, String> {
+    serde_json::to_string_pretty(&target_package(target)?)
+        .map_err(|error| format!("cannot encode Joy target package: {error}"))
 }

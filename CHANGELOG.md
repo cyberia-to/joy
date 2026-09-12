@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Preserve authenticated TensorMerkle PCS columns and Merkle paths on the wire;
+  use the new `zheng-hypernova-tensor-merkle-v2` artifact identifier.
+- Reject proof-mode output claims until the output-to-arena relation is proved.
+  Label output and cycle metadata as unverified; keep execution claim checking.
+
 ## 0.3.0 — 2026-09-09
 
 - zheng 0.3.1: one universal step CCS for every Layer-1 row, bindings in a

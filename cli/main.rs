@@ -1,5 +1,6 @@
 mod compile;
 mod error;
+mod execution_verify;
 mod prove;
 mod run;
 mod verify;
@@ -12,6 +13,7 @@ use trident::runtime::ProgramInput;
 #[derive(Parser)]
 #[command(
     name = "joy",
+    version,
     about = "nox warrior — execute, prove, verify on the cyber battlefield"
 )]
 struct Cli {
@@ -21,6 +23,11 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Describe the installed target package without executing a program (JSON)
+    Describe {
+        #[arg(long, default_value = "nox")]
+        target: String,
+    },
     /// Execute a Trident program on the nox VM
     Run(run::RunArgs),
     /// Execute and generate a zheng proof artifact
@@ -108,6 +115,13 @@ fn main() {
     let cli = Cli::parse();
 
     match cli.command {
+        Command::Describe { target } => match joy_rs::target::describe(&target) {
+            Ok(description) => println!("{description}"),
+            Err(error) => {
+                eprintln!("error: {error}");
+                std::process::exit(1);
+            }
+        },
         Command::Run(args) => run::cmd_run(args),
         Command::Prove(args) => prove::cmd_prove(args),
         Command::Verify(args) => verify::cmd_verify(args),

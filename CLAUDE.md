@@ -31,7 +31,7 @@ cli/            Binary crate (package name: cyber-joy, binary: joy)
 rs/             CPU backend (crate: joy-rs)
   lib.rs        pub mod formula/target/warrior
   formula.rs    bracket text <-> nox Reduction arena; subject builder
-  target.rs     nox TerrainConfig (resolve or built-in mirror)
+  target.rs     canonical nox TerrainConfig + versioned warrior package
   warrior.rs    Warrior + SecretProvider over nox::reduce; prove/verify
   proof.rs      ProofArtifact (zheng wire form) + program_hash
   tests/
@@ -60,13 +60,22 @@ re-execution, `.tri`/`.json`/`.nox` inputs, `prove` (zheng proof ->
 `<name>.zheng`), `verify --proof` (zheng verification, no
 re-execution).
 
-**Working too**: hash-block proving (HashAux from the arena's cached
-digests) and look proving against a real BbgState
-(`prove_zheng_with_state`, public root in the statement — the
-cross-repo zheng+bbg e2e lives in joy's tests).
+**Public execution certificates**: default `prove` and Prover/Verifier traits
+use `zheng-nox-public-execution-v1`, with exact CCS and authenticated public
+input/output/cost coordinates. Hashing is constrained. Full witness disclosed,
+linear verification, no ZK. `--secret` proof requests fail. See Zheng specs/execution.md.
+
+**Legacy statement APIs**: prove_zheng/verify_zheng/verify_artifact do not prove
+execution/output. CLI inspection requires --legacy-trace-statement and refuses
+IO/state/secret constraints. Never downgrade unsupported new proofs.
+
+**Release blocker**: look/axis proof generation is explicitly refused by
+zheng until authenticated TensorMerkle recursive constraints are implemented.
+The old Tensor gadgets cannot authenticate the current Lens opening format.
+The positive cross-repo state-proof tests remain acceptance requirements.
 
 **Dash**: deploy (post-0.2), CLI `--state` loading (bbg has no
-whole-state file format yet — library path works), consing the live
+whole-state file format yet), consing the live
 root per `ProgramBundle.reads_state` (trident lowers `os.state.read`
 since 0.2.0; joy's look tests still hand-build .nox). The dash
 is the release note — never fake a proof, never print a number the
@@ -88,6 +97,10 @@ system didn't produce.
 
 ## CLI contract
 
+`specs/cli.md` is the CLI contract: implemented baseline plus explicitly
+marked target requirements. Cross-repo jobs and acceptance are specified
+in `cyber/specs/worker.md`; do not duplicate node policy in Joy.
+
 ```
 joy run    <bundle.json | file.tri | file.nox> [--input-values 1,2] [--secret 3] [--budget N]
 joy prove  <input> [--input-values ...] [--secret ...] [--output p.zheng]
@@ -95,6 +108,11 @@ joy verify <p.zheng>                            # self-contained artifact, no re
 joy verify <input> --proof <p.zheng>            # same, bound to this bundle
 joy verify <input> --claim <values> [--input-values ...]  # re-execution
 ```
+
+`joy describe --target nox|cyber` emits a versioned JSON target package.
+`targets/nox/capabilities.json` owns runtime capability declarations;
+machine values come from Trident's upstream nox contract. CLI `--state`
+requests fail; cyber currently aliases stateless nox only.
 
 stdout = machine-readable output, stderr = progress/diagnostics.
 `--target` accepts `nox` (terrain) or `cyber` (battlefield); anything

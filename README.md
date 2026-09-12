@@ -1,78 +1,77 @@
 # Joy
 
-nox warrior — the cyber battlefield. Executes and verifies Trident
-programs on the nox VM, the proof-native machine of the soft3 stack.
+Interface specification: [Joy CLI](specs/cli.md). Node integration and
+acceptance are owned by [cyber's worker contract](../cyber/specs/worker.md).
+Both specs distinguish the implemented baseline from the planned interface.
 
-```
-source .tri → trident → ProgramBundle (.nox formula) → joy
-                                                        ├── run     nox reduce, traced
-                                                        ├── prove   zheng proof -> .zheng
-                                                        └── verify  the proof — no re-execution
-```
+Joy compiles and executes Trident programs on nox. Supported public programs
+can also produce a Zheng execution certificate whose input, output, program
+and reduction count are checked by the verifier.
 
-Trident is the weapon; warriors wield it. Trisha fights on Triton,
-joy fights on nox: terrain nox, battlefield cyber.
-
-## what it does
-
-```
-joy run    program.tri --input-values 3,5       # compile via trident, execute, print output
-joy run    bundle.json                           # execute a compiled bundle
-joy run    formula.nox --secret 42               # execute a raw nox formula
-joy prove  program.tri --input-values 3,5        # execute + zheng proof -> program.zheng
-joy verify program.zheng                   # self-contained artifact, NO re-execution
-joy verify program.tri --proof program.zheng  # same, bound to this bundle
-joy verify bundle.json --claim 8                 # verify by re-execution
+```sh
+joy describe --target nox  # versioned JSON package and runtime capabilities
+joy run program.tri --input-values 3,5
+joy prove program.tri --input-values 3,5 --output program.zheng
+joy verify program.zheng --claim 24 --input-values 3,5
+joy verify program.tri --proof program.zheng --claim 24
+joy verify program.tri --claim 24 --input-values 3,5  # native re-execution
 ```
 
-stdout carries the output values (one per line); stderr reports
-`Executed in N reductions`. The reduction count is the trace row
-count — one row per budget unit, and the trace IS the zheng witness.
+`prove` uses `zheng-nox-public-execution-v1`. Zheng derives a global CCS from
+the canonical program, authenticates the complete public witness and checks
+all constraints and public coordinates. Verification does not run nox.
+Hashing, arithmetic, comparisons, word operations and bounded compiled
+imports/loops/branches are covered within the supported symbolic surface.
 
-## input model
+The certificate reveals the full witness and has linear verification cost.
+It is **not zero knowledge or succinct**. Proving with `--secret`, calls,
+state reads, dynamic continuations or unsupported branch shapes fails;
+ordinary `run --secret` remains available. Both branch arms must have defined
+arithmetic even when unselected. See [Zheng's exact contract](../zheng/specs/execution.md).
 
-- **public inputs** (`--input-values`) bind as the nox subject, the
-  way trident's NoxCompiler binds function parameters:
-  `[p_last [... [p_first 0]]]`.
-- **secret inputs** (`--secret`) are served in order to nox call
-  patterns (tag 16) — the prover-side witness stream.
+Public inputs bind as `[p_last [... [p_first 0]]]`. Proof verification checks
+requested `--claim` and `--input-values`; `--budget` bounds the certificate's
+budget. Self-contained artifacts carry the program; passing a source/bundle
+with `--proof` also checks that the certificate belongs to that program.
 
-## status (0.1.0 · soft3 release M4)
+## Target ownership
 
-| capability | state |
-|---|---|
-| run (nox reduce + Tracer) | works |
-| verify by re-execution | works |
-| .tri / .json / .nox inputs | works |
-| prove (zheng) | works — `<name>.zheng` artifact |
-| verify a zheng proof | works — no re-execution |
-| deploy (particle + cyberlinks) | — after M4 |
-| bbg look (pattern 17) | works via joy-rs API (`prove_zheng_with_state`, public root in the statement); CLI `--state` awaits a bbg state-file format |
-| hash blocks in proofs | works — HashAux built from the arena's cached digests |
+`joy describe --target nox` exports the installed versioned Trident target
+package as JSON without executing user code. `cyber` currently names the same
+stateless nox adapter; it does not advertise a network SDK or deployment.
+Machine constants come from the canonical nox contract through Trident;
+Joy owns [runtime capabilities](targets/nox/capabilities.json), including the
+separate execution and public proof restrictions. No checkout or ambient
+machine descriptor is needed. CLI state requests fail explicitly.
 
-The dashes are the release notes. No gates, no fakes.
+## Legacy trace statements
 
-## proof artifact
+Old `zheng-hypernova-tensor-merkle-v2` artifacts do not establish execution
+or emitted values. Inspection requires an explicit opt-in:
 
-`joy prove` writes `<name>.zheng` next to the input (or `--output`):
-statement (program/input/output hemera hashes, focus bound, bbg root
-sentinel) + the zheng trace proof + metadata. `joy verify --proof`
-recomputes the program hash from the bundle, checks it against the
-statement, and runs `zheng::verify` — the executed outputs in `meta` are
-bound in aggregate through `statement.output_hash` (the hemera hash of
-the final trace row), not value-by-value.
-
-## build
-
-```
-cargo install --path cli --force     # or: cargo install cyber-joy
+```sh
+joy verify old.zheng --legacy-trace-statement
 ```
 
-Depends on sibling repos by path: `../trident` (compiler,
-ProgramBundle), `../nox/rs` (cyber-nox, the VM), `../strata/nebu/rs`
-(Goldilocks), `../zheng/rs` (the prover, `serde` feature for the
-artifact wire form), `../hemera/rs` (program hashing).
+This mode labels execution/output unverified and refuses requested IO, state
+or secret constraints. There is no automatic proof downgrade. The old
+`prove_zheng`/`verify_zheng`/`verify_artifact` library methods remain legacy
+statement APIs; the `Prover`/`Verifier` traits use execution certificates.
 
-## license
+## Build and status
 
-cyber license: don't trust. don't fear. don't beg.
+Use coordinated sibling checkouts of Trident, Zheng, Lens, nox and soft3:
+
+```sh
+cargo check --workspace --all-targets
+cargo test -p cyber-joy --test execution_claim
+cargo test -p joy-rs --test public_execution
+cargo install --path cli --locked
+```
+
+Versions in the working branches are development candidates, not new
+published releases. Authenticated state execution, zero knowledge, deployment
+and complete nox support remain unfinished. Three legacy state-proof acceptance
+tests still fail explicitly; passing public execution tests does not hide them.
+
+Cyber License: Don't trust. Don't fear. Don't beg.
