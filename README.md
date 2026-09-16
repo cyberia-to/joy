@@ -91,13 +91,13 @@ cargo test -p cyber-joy --test state_execution
 cargo install --path cli --locked
 ```
 
-Versions in the working branches are development candidates. The new public,
-private and state protocols replace the old state acceptance path; legacy
-recursive openings remain refused. Native recursive proofs and installed
-public/private/state proof workflows pass on macOS and Linux arm64. Full nox
-coverage, live node/database integration, independent cryptographic review and
-final coordinated distribution remain release gates. Exact receipts are in
-[the release audit](audit/release-validation.md).
+The coordinated CPU release is **Joy 0.5.0, Trident 0.3.0 and Trisha 0.3.0**.
+[Download native macOS, Linux and Windows archives](https://github.com/cyberia-to/joy/releases/tag/v0.5.0)
+or use the coordinated source archive. The supported public/private/state paths
+pass on all six native targets and in the complete cross-platform proof exchange.
+Broader nox execution and live node/database integration remain roadmap work.
+See [release notes](audit/release-notes-v0.5.0.md) and the
+[published validation report](audit/release-2026-09-16.md).
 State commitment v2 changes all BBG roots; regenerate certificates and proofs.
 
 Cyber License: Don't trust. Don't fear. Don't beg.
