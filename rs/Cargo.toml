@@ -11,7 +11,7 @@ path = "lib.rs"
 
 [dependencies]
 trisha-rs = { version = "0.3.0", path = "../../trisha/rs" }
-trident-lang = { version = "0.4.0", path = "../../trident" }
+trident-lang = { version = "0.3.0", path = "../../trident" }
 nox = { package = "cyber-nox", version = "0.3.0", path = "../../nox/rs" }
 nebu = { package = "strata-nebu", version = "0.1", path = "../../strata/nebu/rs" }
 zheng = { version = "0.4.0", path = "../../zheng/rs", features = ["serde"] }
