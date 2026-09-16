@@ -1,4 +1,11 @@
-# Joy coordinated release validation — 2026-09-12
+# Joy published release validation — 2026-09-16
+
+Joy 0.5.0 is published with Trident 0.3.0 and Trisha 0.3.0. The [current report](release-2026-09-16.md) records the exact released artifacts and all completed acceptance gates.
+
+## Historical validation — 2026-09-12
+
+The following checkpoint predates the release and preserves its original scope and evidence.
+
 
 Status: implementation and artifact preparation. No new release is published.
 The active cross-repository gate ledger is
