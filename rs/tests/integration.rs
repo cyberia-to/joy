@@ -32,7 +32,10 @@ fn bundle(assembly: &str) -> ProgramBundle {
             padded_height: 0,
             estimated_proving_ns: 0,
         },
-        source_hash: String::new(),
+        source_hash: trident::hash::ContentHash(trident::hash::content_hash_bytes(
+            assembly.as_bytes(),
+        ))
+        .to_hex(),
         reads_state: false,
     }
 }
@@ -356,149 +359,97 @@ fn tampered_hash_group_rejected() {
     );
 }
 
-// ── look rows (tag 17) against a real BBG state ──────────────────────────────
-// trident cannot express a state read yet (os.state.read is unlowered), so
-// the program is a hand-built .nox: a compose that first CONSES the look
-// object carrying the state root limbs, then runs the look formula against
-// it. Noted for the trident follow-up.
-
-/// `[2 [[cons-tree of root limbs] [1 [17 [[1 ns] [1 key]]]]]]`
+// State acceptance uses the authenticated execution protocol, not the legacy fold.
 fn look_assembly(root: &[u8; 32], ns: u64, key: u64) -> String {
-    let l = bbg::dim::goldilocks_from_bytes32(root);
-    let (l0, l1, l2, l3) = (l[0].as_u64(), l[1].as_u64(), l[2].as_u64(), l[3].as_u64());
-    format!(
-        "[2 [[3 [[3 [[1 {l0}] [3 [[1 {l1}] [3 [[1 {l2}] [1 {l3}]]]]]]] [1 0]]] \
-         [1 [17 [[1 {ns}] [1 {key}]]]]]]"
-    )
+    let l: Vec<_> = root
+        .chunks_exact(8)
+        .map(|b| u64::from_le_bytes(b.try_into().unwrap()))
+        .collect();
+    let (l0, l1, l2, l3) = (l[0], l[1], l[2], l[3]);
+    format!("[2 [[3 [[3 [[1 {l0}] [3 [[1 {l1}] [3 [[1 {l2}] [1 {l3}]]]]]]] [1 0]]] [1 [17 [[1 {ns}] [1 {key}]]]]]]")
 }
-
-/// A BBG state with two particles (mirrors bbg's look_e2e sample).
 fn sample_state() -> bbg::BbgState {
-    use bbg::types::ParticleRecord;
     let mut state = bbg::BbgState::new();
-    state.particles.insert(
-        [1u8; 32],
-        ParticleRecord {
-            energy: 77,
-            pi_star: 0,
-            weight: 0,
-            s_yes: 0,
-            s_no: 0,
-            meta_score: 0,
-        },
-    );
-    state.particles.insert(
-        [2u8; 32],
-        ParticleRecord {
-            energy: 88,
-            pi_star: 0,
-            weight: 0,
-            s_yes: 0,
-            s_no: 0,
-            meta_score: 0,
-        },
-    );
+    for (key, energy) in [(1, 77), (2, 88)] {
+        let mut record = bbg::types::ParticleRecord::zero();
+        record.energy = energy;
+        state.particles.insert([key; 32], record);
+    }
     state
 }
-
 #[test]
 fn look_program_proves_and_verifies_against_state() {
     let state = sample_state();
     let root = state.root();
-    // Particles dimension: cell 4 = first entry's energy (77).
-    let b = bundle(&look_assembly(&root, 0, 4));
+    let b = bundle(&look_assembly(&root, 0, 11));
     let warrior = Warrior::new();
     let (artifact, result) = warrior
-        .prove_zheng_with_state(&b, &input(&[], &[]), &state)
-        .expect("look prove failed");
+        .prove_state_execution(&b, &input(&[], &[]), &state, 1000)
+        .unwrap();
+    assert_eq!(result.output, vec![77]);
     assert_eq!(
-        result.output,
-        vec![77],
-        "the look read the committed energy"
+        artifact
+            .statement
+            .state_root
+            .iter()
+            .flat_map(|v| v.to_le_bytes())
+            .collect::<Vec<_>>(),
+        root
     );
-    assert_eq!(
-        artifact.statement.bbg_root, root,
-        "public root in the statement"
-    );
-    assert!(
-        warrior.verify_zheng(&b, &artifact).expect("verify errored"),
-        "look proof must verify"
-    );
+    assert!(artifact.matches_program(&b).unwrap());
+    artifact.verify().unwrap();
+    let decoded =
+        joy_rs::StateExecutionArtifact::from_bytes(&artifact.to_bytes().unwrap()).unwrap();
+    decoded.verify().unwrap();
+    assert!(warrior.verify(&decoded.proof_data().unwrap()).unwrap());
 }
-
 #[test]
 fn look_against_stale_root_refused_at_prove() {
-    let state = sample_state();
-    let stale_root = state.root();
-
-    // State advances; the program still declares the stale root.
-    let mut state = state;
-    state.particles.insert(
-        [3u8; 32],
-        bbg::types::ParticleRecord {
-            energy: 99,
-            pi_star: 0,
-            weight: 0,
-            s_yes: 0,
-            s_no: 0,
-            meta_score: 0,
-        },
-    );
+    let mut state = sample_state();
+    let old = state.root();
+    state.particles.get_mut(&[1; 32]).unwrap().energy = 99;
+    let b = bundle(&look_assembly(&old, 0, 11));
+    assert!(Warrior::new()
+        .prove_state_execution(&b, &input(&[], &[]), &state, 1000)
+        .is_err());
     state.refresh_root();
-
-    let b = bundle(&look_assembly(&stale_root, 0, 4));
-    let err = Warrior::new().prove_zheng_with_state(&b, &input(&[], &[]), &state);
-    assert!(err.is_err(), "a stale declared root must not prove");
+    assert!(Warrior::new()
+        .prove_state_execution(&b, &input(&[], &[]), &state, 1000)
+        .is_err());
 }
-
 #[test]
 fn look_artifact_root_mismatch_rejected() {
     let state = sample_state();
-    let root = state.root();
-    let b = bundle(&look_assembly(&root, 0, 4));
-    let warrior = Warrior::new();
-    let (artifact, _) = warrior
-        .prove_zheng_with_state(&b, &input(&[], &[]), &state)
-        .expect("look prove failed");
-
-    // Flip a byte of the public root in the artifact.
-    let mut v: serde_json::Value =
-        serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
-    let b0 = v["statement"]["bbg_root"][0].as_u64().unwrap();
-    v["statement"]["bbg_root"][0] = serde_json::Value::from((b0 ^ 1) & 0xff);
-    let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
-    assert!(
-        !warrior.verify_zheng(&b, &tampered).expect("verify errored"),
-        "a proof re-rooted to a different state must be rejected"
-    );
+    let b = bundle(&look_assembly(&state.root(), 0, 11));
+    let (artifact, _) = Warrior::new()
+        .prove_state_execution(&b, &input(&[], &[]), &state, 1000)
+        .unwrap();
+    for i in 0..4 {
+        let mut bad = artifact.clone();
+        bad.statement.state_root[i] ^= 1;
+        assert!(bad.verify().is_err());
+    }
 }
-
 #[test]
-fn look_artifact_tampered_binding_group_rejected() {
+fn look_artifact_tampered_binding_and_table_rejected() {
     let state = sample_state();
-    let root = state.root();
-    let b = bundle(&look_assembly(&root, 0, 4));
-    let warrior = Warrior::new();
-    let (artifact, _) = warrior
-        .prove_zheng_with_state(&b, &input(&[], &[]), &state)
-        .expect("look prove failed");
-
-    // The leaves live in the folded binding steps; tamper the eq-group
-    // witness commitment via the wire form — the cross-group linkage breaks.
-    let mut v: serde_json::Value =
-        serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
-    assert!(
-        !v["proof"]["binding"].is_null(),
-        "an eq-step binding group exists"
-    );
-    let wc = &mut v["proof"]["binding"]["accumulator"]["witness_commitment"];
-    let b0 = wc[0].as_u64().unwrap();
-    wc[0] = serde_json::Value::from((b0 ^ 1) & 0xff);
-    let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
-    assert!(
-        !warrior.verify_zheng(&b, &tampered).expect("verify errored"),
-        "a tampered look binding group must be rejected"
-    );
+    let b = bundle(&look_assembly(&state.root(), 0, 11));
+    let (artifact, _) = Warrior::new()
+        .prove_state_execution(&b, &input(&[], &[]), &state, 1000)
+        .unwrap();
+    for which in 0..7 {
+        let mut bad = artifact.clone();
+        match which {
+            0 => bad.statement.reads[0].namespace = 1,
+            1 => bad.statement.reads[0].key += 1,
+            2 => bad.statement.reads[0].value += 1,
+            3 => bad.statement.execution.public_output[0] += 1,
+            4 => bad.certificate.dimensions[0].fields[11] += 1,
+            5 => bad.statement.reads.clear(),
+            _ => bad.source_hash.push('0'),
+        }
+        assert!(bad.verify().is_err(), "mutation {which}");
+    }
 }
 
 #[test]

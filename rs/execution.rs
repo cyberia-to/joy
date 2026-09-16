@@ -1,12 +1,12 @@
 //! Public nox execution proofs. No private input is accepted by this non-ZK format.
 use crate::Warrior;
 use serde::{Deserialize, Serialize};
-use std::{fs, io::Read, path::Path};
+use std::{fs, path::Path};
 use trident::runtime::{ExecutionResult, ProgramBundle, ProgramInput, ProofData, Runner};
 use zheng::execution::{DirectProof, ExecutionNoun, ExecutionStatement};
 
-pub const EXECUTION_FORMAT: &str = "zheng-nox-public-execution-v1";
-const MAGIC: &[u8] = b"JOYEXEC1";
+pub const EXECUTION_FORMAT: &str = "zheng-nox-public-execution-v2";
+const MAGIC: &[u8] = b"JOYEXEC2";
 const MAX_ARTIFACT_BYTES: usize = 32 * 1024 * 1024;
 const MAX_ASSEMBLY_BYTES: usize = 256 * 1024;
 
@@ -21,7 +21,7 @@ pub struct ExecutionArtifact {
 
 /// Bounded bracket parser shared semantically with nox's binary/n-ary syntax.
 /// Converts atoms canonically exactly as the native field-valued noun parser.
-fn parse_program(text: &str) -> Result<ExecutionNoun, String> {
+pub(crate) fn parse_program(text: &str) -> Result<ExecutionNoun, String> {
     if text.len() > MAX_ASSEMBLY_BYTES {
         return Err("execution program is too large".into());
     }
@@ -97,11 +97,7 @@ fn parse_program(text: &str) -> Result<ExecutionNoun, String> {
 
 impl ExecutionArtifact {
     pub fn has_header(path: &Path) -> bool {
-        let Ok(mut file) = fs::File::open(path) else {
-            return false;
-        };
-        let mut header = [0u8; 8];
-        file.read_exact(&mut header).is_ok() && header == MAGIC
+        crate::file_input::has_header(path, MAGIC, MAX_ARTIFACT_BYTES)
     }
     pub fn to_bytes(&self) -> Result<Vec<u8>, String> {
         let mut bytes = MAGIC.to_vec();
@@ -126,10 +122,7 @@ impl ExecutionArtifact {
         Ok(artifact)
     }
     pub fn load(path: &Path) -> Result<Self, String> {
-        if fs::metadata(path).map_err(|e| e.to_string())?.len() > MAX_ARTIFACT_BYTES as u64 {
-            return Err("execution artifact size limit".into());
-        }
-        Self::from_bytes(&fs::read(path).map_err(|e| e.to_string())?)
+        Self::from_bytes(&crate::file_input::read(path, MAX_ARTIFACT_BYTES)?)
     }
     pub fn save(&self, path: &Path) -> Result<usize, String> {
         let bytes = self.to_bytes()?;

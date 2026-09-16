@@ -1,6 +1,6 @@
 [package]
 name = "cyber-joy"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 description = "joy — the cyber warrior: executes, proves, verifies Trident programs on nox"
 license-file = "../LICENSE"
@@ -14,9 +14,10 @@ name = "joy"
 path = "main.rs"
 
 [dependencies]
-joy-rs = { version = "0.4.0", path = "../rs" }
-trident-lang = { version = "0.3", path = "../../trident" }
+serde_json = "1"
+joy-rs = { version = "0.5.0", path = "../rs" }
+trident-lang = { version = "0.4.0", path = "../../trident" }
 clap = { version = "4", features = ["derive"] }
 
 [dev-dependencies]
-serde_json = "1"
+bbg = { version = "0.3.0", path = "../../bbg/rs", features = ["serde"] }

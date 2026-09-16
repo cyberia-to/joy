@@ -17,17 +17,36 @@ joy verify program.tri --proof program.zheng --claim 24
 joy verify program.tri --claim 24 --input-values 3,5  # native re-execution
 ```
 
-`prove` uses `zheng-nox-public-execution-v1`. Zheng derives a global CCS from
-the canonical program, authenticates the complete public witness and checks
-all constraints and public coordinates. Verification does not run nox.
-Hashing, arithmetic, comparisons, word operations and bounded compiled
-imports/loops/branches are covered within the supported symbolic surface.
+Public proving uses `zheng-nox-public-execution-v2`: Zheng derives the global
+CCS from the canonical program, authenticates the complete public witness and
+checks all constraints and public coordinates. This certificate discloses the
+witness and has linear verification cost. Verification does not run nox.
 
-The certificate reveals the full witness and has linear verification cost.
-It is **not zero knowledge or succinct**. Proving with `--secret`, calls,
-state reads, dynamic continuations or unsupported branch shapes fails;
-ordinary `run --secret` remains available. Both branch arms must have defined
-arithmetic even when unselected. See [Zheng's exact contract](../zheng/specs/execution.md).
+`--secret` automatically selects `joy-nox-ccs-triton7-zk-v3`; `--zk` selects it
+explicitly. Trisha supplies Triton7's randomized STARK for an independently
+regenerated checker of the exact Zheng CCS. Private columns are absent from
+the artifact. Checked atom calls, fixed-shape branches, arithmetic, words,
+structural hashes and equality are supported within the bounded relation.
+Inactive branch errors do not invalidate a successful selected path.
+
+`--state state.json` loads a bounded authenticated public BBG certificate.
+Public state proofs use `joy-nox-public-state-execution-v1`; each actual lookup
+binds namespace, index, returned value and all four root limbs to execution.
+Private state proving (`--state ... --zk` or `--secret`) selects cells inside
+the proved CCS, hiding query coordinates. It requires all ten public namespaces
+and at most2048 total fields; it does not expose private BBG dimensions.
+
+```sh
+joy prove private.tri --secret 11 --output private.zheng
+joy prove state.tri --state state.json --input-values 11 --output state.zheng
+joy verify state.zheng --state state.json --claim 82
+```
+
+Dynamic continuations and variable branch shapes remain unsupported. Budgets
+must cover the authenticated cost of the selected execution path. The relation
+also bounds every possible cost below the field modulus. See
+[Zheng's exact contract](../zheng/specs/execution.md) and
+[proof backend/state contract](../zheng/specs/ccs-execution-backends.md).
 
 Public inputs bind as `[p_last [... [p_first 0]]]`. Proof verification checks
 requested `--claim` and `--input-values`; `--budget` bounds the certificate's
@@ -38,11 +57,11 @@ with `--proof` also checks that the certificate belongs to that program.
 
 `joy describe --target nox` exports the installed versioned Trident target
 package as JSON without executing user code. `cyber` currently names the same
-stateless nox adapter; it does not advertise a network SDK or deployment.
+nox adapter; it does not advertise a network SDK or deployment.
 Machine constants come from the canonical nox contract through Trident;
 Joy owns [runtime capabilities](targets/nox/capabilities.json), including the
-separate execution and public proof restrictions. No checkout or ambient
-machine descriptor is needed. CLI state requests fail explicitly.
+execution and proof restrictions. No checkout or ambient machine descriptor
+is needed. State files are authenticated certificates, not live network sync.
 
 ## Legacy trace statements
 
@@ -60,18 +79,25 @@ statement APIs; the `Prover`/`Verifier` traits use execution certificates.
 
 ## Build and status
 
-Use coordinated sibling checkouts of Trident, Zheng, Lens, nox and soft3:
+Use coordinated sibling checkouts of Trident, Trisha, Zheng, Lens, BBG, nox,
+Hemera and strata. Bootstrap pinned Triton dependencies first:
 
 ```sh
+nu ../trisha/patches/apply.nu
 cargo check --workspace --all-targets
 cargo test -p cyber-joy --test execution_claim
 cargo test -p joy-rs --test public_execution
+cargo test -p cyber-joy --test state_execution
 cargo install --path cli --locked
 ```
 
-Versions in the working branches are development candidates, not new
-published releases. Authenticated state execution, zero knowledge, deployment
-and complete nox support remain unfinished. Three legacy state-proof acceptance
-tests still fail explicitly; passing public execution tests does not hide them.
+Versions in the working branches are development candidates. The new public,
+private and state protocols replace the old state acceptance path; legacy
+recursive openings remain refused. Native recursive proofs and installed
+public/private/state proof workflows pass on macOS and Linux arm64. Full nox
+coverage, live node/database integration, independent cryptographic review and
+final coordinated distribution remain release gates. Exact receipts are in
+[the release audit](audit/release-validation.md).
+State commitment v2 changes all BBG roots; regenerate certificates and proofs.
 
 Cyber License: Don't trust. Don't fear. Don't beg.

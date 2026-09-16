@@ -108,7 +108,7 @@ fn changing_statement_values_cannot_reauthorize_an_execution() {
 }
 
 #[test]
-fn secret_inputs_are_refused_and_single_quote_is_provable() {
+fn excess_secret_inputs_are_refused_and_single_quote_is_provable() {
     let f = Fixture::new();
     assert!(!f
         .run(&[
@@ -162,4 +162,43 @@ fn malformed_execution_artifacts_fail_directly_and_legacy_needs_opt_in() {
         ])
         .status
         .success());
+}
+
+#[test]
+fn private_proof_is_verified_in_fresh_process_without_secret() {
+    let f = Fixture::new();
+    fs::write(f.0.join("private.nox"), "[16 [[1 0] [1 0]]]").unwrap();
+    f.ok(&[
+        "prove",
+        "private.nox",
+        "--secret",
+        "42",
+        "--output",
+        "private.zheng",
+    ]);
+    let artifact = joy_rs::ZkExecutionArtifact::load(&f.0.join("private.zheng")).unwrap();
+    let output = f.ok(&["verify", "private.zheng", "--claim", "42"]);
+    assert!(String::from_utf8_lossy(&output.stdout).contains("Triton ZK"));
+    f.ok(&[
+        "verify",
+        "private.nox",
+        "--proof",
+        "private.zheng",
+        "--claim",
+        "42",
+    ]);
+    assert!(!f
+        .run(&["verify", "private.zheng", "--claim", "43"])
+        .status
+        .success());
+    let mut forged = artifact;
+    forged.statement.execution.public_output[0] = 43;
+    forged.save(&f.0.join("private.zheng")).unwrap();
+    assert!(!f
+        .run(&["verify", "private.zheng", "--claim", "43"])
+        .status
+        .success());
+    fs::write(f.0.join("quote.nox"), "[1 42]").unwrap();
+    f.ok(&["prove", "quote.nox", "--zk", "--output", "quote-zk.zheng"]);
+    f.ok(&["verify", "quote-zk.zheng", "--claim", "42"]);
 }

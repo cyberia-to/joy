@@ -18,8 +18,9 @@ pub fn target_package(target: &str) -> Result<trident::target::TargetPackage, St
     let runtime = serde_json::from_str(include_str!("../targets/nox/capabilities.json"))
         .map_err(|error| format!("invalid embedded Joy capabilities: {error}"))?;
     trident::target::TargetPackage {
+        intrinsic_abis: Default::default(),
         schema_version: 1,
-        compiler_api: 1,
+        compiler_api: trident::COMPILER_API,
         owner: "joy".into(),
         version: env!("CARGO_PKG_VERSION").into(),
         intrinsics: terrain.supported_intrinsics(),
