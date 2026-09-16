@@ -18,9 +18,12 @@ pub struct VerifyArgs {
     /// Verify a zheng proof artifact (no re-execution)
     #[arg(long)]
     pub proof: Option<PathBuf>,
+    /// Inspect an old relaxed trace statement; this does not verify execution or IO
+    #[arg(long)]
+    pub legacy_trace_statement: bool,
     /// Target terrain (nox) or battlefield (cyber)
-    #[arg(long, default_value = "nox")]
-    pub target: String,
+    #[arg(long)]
+    pub target: Option<String>,
     /// Compilation profile for .tri inputs (debug or release)
     #[arg(long, default_value = "debug")]
     pub profile: String,
@@ -33,14 +36,47 @@ pub struct VerifyArgs {
     /// Reduction budget
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
-    /// Chain state (accepted for trident delegation; no chain wiring yet)
+    /// Expected public BBG state certificate (JSON)
     #[arg(long)]
     pub state: Option<String>,
 }
 
 pub fn cmd_verify(args: VerifyArgs) {
-    if let Err(e) = check_target(&args.target) {
+    if let Err(e) = check_target(args.target.as_deref().unwrap_or("nox")) {
         eprintln!("error: {}", e);
+        process::exit(1);
+    }
+
+    let artifact = args.proof.as_ref().unwrap_or(&args.input);
+    match std::fs::symlink_metadata(artifact) {
+        Ok(metadata) if metadata.is_file() || (args.proof.is_none() && metadata.is_dir()) => {}
+        Ok(_) => {
+            eprintln!("error: verification input must be a regular file or source project");
+            process::exit(1);
+        }
+        Err(error) => {
+            eprintln!("error: cannot inspect verification input: {error}");
+            process::exit(1);
+        }
+    }
+
+    if let Some(result) = crate::state_verify::try_verify(&args) {
+        if let Err(error) = result {
+            eprintln!("Verification: FAIL ({error})");
+            process::exit(1);
+        }
+        return;
+    }
+    if let Some(result) = crate::execution_verify::try_verify(&args) {
+        if let Err(error) = result {
+            eprintln!("Verification: FAIL ({error})");
+            process::exit(1);
+        }
+        return;
+    }
+
+    if args.state.is_some() {
+        eprintln!("error: --state requires an authenticated state execution artifact");
         process::exit(1);
     }
 
@@ -48,24 +84,26 @@ pub fn cmd_verify(args: VerifyArgs) {
     // sends through the warrior boundary): self-contained verification.
     if args.proof.is_none() {
         if let Ok(artifact) = joy_rs::ProofArtifact::load(&args.input) {
+            require_legacy_mode(&args);
             let warrior = Warrior::with_budget(args.budget);
             match warrior.verify_artifact(&artifact) {
                 Ok(true) => {
-                    if let Some(claim) = &args.claim {
-                        if *claim != artifact.meta.output {
-                            println!("Verification: FAIL (zheng proof valid, claim mismatch)");
-                            println!("  claimed:  {:?}", claim);
-                            println!("  proven:   {:?}", artifact.meta.output);
-                            process::exit(1);
-                        }
+                    if let Err(e) = joy_rs::proof::require_statement_only(args.claim.as_deref()) {
+                        eprintln!("error: {}", e);
+                        process::exit(1);
                     }
-                    println!("Verification: PASS (zheng proof)");
+                    println!("Legacy statement check: PASS (execution and output unverified)");
                     println!("  program: {}", artifact.meta.program);
-                    println!("  output:  {:?}", artifact.meta.output);
-                    println!("  cycles:  {}", artifact.meta.cycle_count);
+                    println!("  reported output (unverified): {:?}", artifact.meta.output);
+                    println!(
+                        "  reported cycles (unverified): {}",
+                        artifact.meta.cycle_count
+                    );
                 }
                 Ok(false) => {
-                    println!("Verification: FAIL (zheng proof rejected — assembly or proof tampered)");
+                    println!(
+                        "Verification: FAIL (zheng proof rejected — assembly or proof tampered)"
+                    );
                     process::exit(1);
                 }
                 Err(e) => {
@@ -77,7 +115,7 @@ pub fn cmd_verify(args: VerifyArgs) {
         }
     }
 
-    let bundle = match load_bundle(&args.input, &args.profile) {
+    let bundle = match load_bundle(&args.input, &args.profile, args.target.as_deref()) {
         Ok(b) => b,
         Err(e) => {
             eprintln!("error: {}", e);
@@ -87,6 +125,9 @@ pub fn cmd_verify(args: VerifyArgs) {
 
     // Proof mode: verify the zheng artifact against this bundle. No
     // re-execution — the proof carries the whole trace commitment.
+    if args.proof.is_some() {
+        require_legacy_mode(&args);
+    }
     if let Some(proof_path) = args.proof {
         let artifact = match joy_rs::ProofArtifact::load(&proof_path) {
             Ok(a) => a,
@@ -98,18 +139,17 @@ pub fn cmd_verify(args: VerifyArgs) {
         let warrior = Warrior::with_budget(args.budget);
         match warrior.verify_zheng(&bundle, &artifact) {
             Ok(true) => {
-                if let Some(claim) = &args.claim {
-                    if *claim != artifact.meta.output {
-                        println!("Verification: FAIL (zheng proof valid, claim mismatch)");
-                        println!("  claimed:  {:?}", claim);
-                        println!("  proven:   {:?}", artifact.meta.output);
-                        process::exit(1);
-                    }
+                if let Err(e) = joy_rs::proof::require_statement_only(args.claim.as_deref()) {
+                    eprintln!("error: {}", e);
+                    process::exit(1);
                 }
-                println!("Verification: PASS (zheng proof)");
+                println!("Legacy statement check: PASS (execution and output unverified)");
                 println!("  program: {}", artifact.meta.program);
-                println!("  output:  {:?}", artifact.meta.output);
-                println!("  cycles:  {}", artifact.meta.cycle_count);
+                println!("  reported output (unverified): {:?}", artifact.meta.output);
+                println!(
+                    "  reported cycles (unverified): {}",
+                    artifact.meta.cycle_count
+                );
             }
             Ok(false) => {
                 println!("Verification: FAIL (zheng proof rejected for this bundle)");
@@ -126,9 +166,7 @@ pub fn cmd_verify(args: VerifyArgs) {
     let claim = match args.claim {
         Some(c) => c,
         None => {
-            eprintln!(
-                "error: --claim <values> (re-execution) or --proof <artifact> is required"
-            );
+            eprintln!("error: --claim <values> (re-execution) or --proof <artifact> is required");
             process::exit(1);
         }
     };
@@ -136,7 +174,9 @@ pub fn cmd_verify(args: VerifyArgs) {
     let warrior = Warrior::with_budget(args.budget);
     match warrior.verify_by_rerun(&bundle, &pi, &claim) {
         Ok(true) => {
-            println!("Verification: PASS (re-execution; for a zheng proof use joy prove + --proof)");
+            println!(
+                "Verification: PASS (re-execution; for a zheng proof use joy prove + --proof)"
+            );
         }
         Ok(false) => {
             // Re-run once more to show the actual output in the failure report.
@@ -152,5 +192,20 @@ pub fn cmd_verify(args: VerifyArgs) {
             eprintln!("error: {}", e);
             process::exit(1);
         }
+    }
+}
+
+fn require_legacy_mode(args: &VerifyArgs) {
+    if !args.legacy_trace_statement {
+        eprintln!("error: legacy trace statements do not prove execution; use a new public execution proof, or explicitly inspect with --legacy-trace-statement");
+        process::exit(1);
+    }
+    if args.claim.is_some()
+        || args.input_values.is_some()
+        || args.secret.is_some()
+        || args.state.is_some()
+    {
+        eprintln!("error: legacy trace statements cannot verify requested input, output, secret or state constraints");
+        process::exit(1);
     }
 }

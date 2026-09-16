@@ -13,8 +13,8 @@ pub struct RunArgs {
     /// Input: .json bundle, .tri source (or project dir), or raw .nox formula
     pub input: PathBuf,
     /// Target terrain (nox) or battlefield (cyber)
-    #[arg(long, default_value = "nox")]
-    pub target: String,
+    #[arg(long)]
+    pub target: Option<String>,
     /// Compilation profile for .tri inputs (debug or release)
     #[arg(long, default_value = "debug")]
     pub profile: String,
@@ -27,20 +27,17 @@ pub struct RunArgs {
     /// Reduction budget (bounds trace rows one-to-one)
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
-    /// Chain state (accepted for trident delegation; no chain wiring yet)
+    /// Public BBG state certificate (JSON)
     #[arg(long)]
     pub state: Option<String>,
 }
 
 pub fn cmd_run(args: RunArgs) {
-    if let Err(e) = check_target(&args.target) {
+    if let Err(e) = check_target(args.target.as_deref().unwrap_or("nox")) {
         eprintln!("error: {}", e);
         process::exit(1);
     }
-    if let Some(ref s) = args.state {
-        eprintln!("note: state '{}' ignored (chain wiring lands after M4)", s);
-    }
-    let bundle = match load_bundle(&args.input, &args.profile) {
+    let bundle = match load_bundle(&args.input, &args.profile, args.target.as_deref()) {
         Ok(b) => b,
         Err(e) => {
             eprintln!("error: {}", e);
@@ -49,7 +46,14 @@ pub fn cmd_run(args: RunArgs) {
     };
     let pi = make_input(&args.input_values, &args.secret);
     let warrior = Warrior::with_budget(args.budget);
-    match warrior.run(&bundle, &pi) {
+    let result = if let Some(path) = &args.state {
+        joy_rs::state_execution::load_certificate(std::path::Path::new(path)).and_then(
+            |certificate| warrior.run_state_certificate(&bundle, &pi, &certificate, args.budget),
+        )
+    } else {
+        warrior.run(&bundle, &pi)
+    };
+    match result {
         Ok(result) => {
             for val in &result.output {
                 println!("{}", val);

@@ -13,8 +13,8 @@ pub struct ProveArgs {
     /// Input: .json bundle, .tri source, or raw .nox formula
     pub input: PathBuf,
     /// Target terrain (nox) or battlefield (cyber)
-    #[arg(long, default_value = "nox")]
-    pub target: String,
+    #[arg(long)]
+    pub target: Option<String>,
     /// Compilation profile for .tri inputs (debug or release)
     #[arg(long, default_value = "debug")]
     pub profile: String,
@@ -24,13 +24,16 @@ pub struct ProveArgs {
     /// Secret/divine input values (comma-separated field elements)
     #[arg(long, value_delimiter = ',')]
     pub secret: Option<Vec<u64>>,
+    /// Use the Triton-backed zero-knowledge execution proof (automatic with secrets)
+    #[arg(long)]
+    pub zk: bool,
     /// Reduction budget (also the statement's focus bound)
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
     /// Artifact path (default: <input stem>.zheng next to the input)
     #[arg(long)]
     pub output: Option<PathBuf>,
-    /// Chain state (accepted for trident delegation; no chain wiring yet)
+    /// Public BBG state certificate (JSON)
     #[arg(long)]
     pub state: Option<String>,
 }
@@ -45,53 +48,70 @@ fn artifact_path(input: &PathBuf) -> PathBuf {
 }
 
 pub fn cmd_prove(args: ProveArgs) {
-    if let Err(e) = check_target(&args.target) {
+    if let Err(e) = check_target(args.target.as_deref().unwrap_or("nox")) {
         eprintln!("error: {}", e);
         process::exit(1);
     }
-    let bundle = match load_bundle(&args.input, &args.profile) {
+    let bundle = match load_bundle(&args.input, &args.profile, args.target.as_deref()) {
         Ok(b) => b,
         Err(e) => {
             eprintln!("error: {}", e);
             process::exit(1);
         }
     };
-    if args.state.is_some() {
-        // bbg has no whole-state file loader yet (storage is dimension-level
-        // KV behind optional features). The library path is wired:
-        // joy_rs::Warrior::prove_zheng_with_state(bundle, input, &BbgState).
-        eprintln!("error: --state file loading is not wired: bbg has no state-file format yet");
-        eprintln!("state-carrying proofs work through the joy-rs API (prove_zheng_with_state)");
-        process::exit(1);
-    }
     let pi = make_input(&args.input_values, &args.secret);
     let warrior = Warrior::with_budget(args.budget);
 
     let t0 = Instant::now();
-    let (artifact, result) = match warrior.prove_zheng(&bundle, &pi) {
-        Ok(v) => v,
-        Err(e) => {
-            eprintln!("error: {}", e);
-            process::exit(1);
-        }
-    };
-    let prove_ms = t0.elapsed().as_millis();
-
     let path = args.output.unwrap_or_else(|| artifact_path(&args.input));
-    let bytes = match artifact.save(&path) {
-        Ok(n) => n,
-        Err(e) => {
-            eprintln!("error: {}", e);
+    let zk = args.zk || !pi.secret.is_empty();
+    let result = if let Some(state_path) = &args.state {
+        joy_rs::state_execution::load_certificate(std::path::Path::new(state_path)).and_then(
+            |certificate| {
+                if zk {
+                    warrior
+                        .prove_zk_state_certificate(&bundle, &pi, &certificate, args.budget)
+                        .and_then(|(artifact, result)| {
+                            artifact.save(&path).map(|bytes| (result, bytes))
+                        })
+                } else {
+                    warrior
+                        .prove_state_certificate(&bundle, &pi, &certificate, args.budget)
+                        .and_then(|(artifact, result)| {
+                            artifact.save(&path).map(|bytes| (result, bytes))
+                        })
+                }
+            },
+        )
+    } else if zk {
+        warrior
+            .prove_zk_execution(&bundle, &pi, args.budget)
+            .and_then(|(artifact, result)| artifact.save(&path).map(|bytes| (result, bytes)))
+    } else {
+        warrior
+            .prove_execution(&bundle, &pi, args.budget)
+            .and_then(|(artifact, result)| artifact.save(&path).map(|bytes| (result, bytes)))
+    };
+    let (result, bytes) = match result {
+        Ok(value) => value,
+        Err(error) => {
+            eprintln!("error: {error}");
             process::exit(1);
         }
     };
-
-    // stdout: machine-readable artifact location; stderr: the story.
+    let mode = if args.state.is_some() && zk {
+        "private authenticated state execution (Triton ZK)"
+    } else if args.state.is_some() {
+        "authenticated public state execution"
+    } else if zk {
+        "private execution (Triton ZK)"
+    } else {
+        "public execution"
+    };
     eprintln!(
-        "Proved in {} ms: {} reductions, {} accumulator groups, {} bytes",
-        prove_ms,
+        "Proved {mode} in {} ms: {} reductions, {} bytes",
+        t0.elapsed().as_millis(),
         result.cycle_count,
-        artifact.proof.group_count(),
         bytes
     );
     eprintln!("Output: {:?}", result.output);

@@ -1,0 +1,88 @@
+{
+  "all_checks_passed": true,
+  "binary": "/Users/master/cyber/joy/target/release/joy",
+  "binary_sha256": "608d8b842b44bcea5af624c7e17ee5afbdfcbf7e78593c0573b280de6a2d29c7",
+  "proofs": [
+    {
+      "platform": "darwin",
+      "file": "imported.zheng",
+      "sha256": "54c3102d5eed02f517e074fdf13e630f144873622baaf101b871965d65c5a363",
+      "claim": "803",
+      "public_input": "3,5",
+      "verified": true
+    },
+    {
+      "platform": "darwin",
+      "file": "private.zheng",
+      "sha256": "26caef0fced6988a9506e7c1fa49103adc77275b5b7850023d5148cf44fcb144",
+      "claim": "1769",
+      "public_input": "5",
+      "verified": true
+    },
+    {
+      "platform": "darwin",
+      "file": "typed-private.zheng",
+      "sha256": "4dd1e952c523a2d388be28e3a63ce9bc0579189d138e6480cc35d93f4f19174b",
+      "claim": "42",
+      "public_input": "19,0",
+      "verified": true
+    },
+    {
+      "platform": "darwin",
+      "file": "state.zheng",
+      "sha256": "0d188483257e93387c8777838a507a220838f493b13e7ef9b97ebdb7e506d2a2",
+      "claim": "82",
+      "public_input": "11",
+      "verified": true
+    },
+    {
+      "platform": "darwin",
+      "file": "private-state.zheng",
+      "sha256": "597cf2fd72a74d55bf01abf7c2934fedfe69279dce6cd042137768f130e45af3",
+      "claim": "82",
+      "public_input": "5",
+      "verified": true
+    },
+    {
+      "platform": "linux",
+      "file": "imported.zheng",
+      "sha256": "54c3102d5eed02f517e074fdf13e630f144873622baaf101b871965d65c5a363",
+      "claim": "803",
+      "public_input": "3,5",
+      "verified": true
+    },
+    {
+      "platform": "linux",
+      "file": "private.zheng",
+      "sha256": "19ff50917980c653f138334edc65f96c6bae69176bb38e3457c0eb8392bb3fe4",
+      "claim": "1769",
+      "public_input": "5",
+      "verified": true
+    },
+    {
+      "platform": "linux",
+      "file": "typed-private.zheng",
+      "sha256": "1afc359023e99af2c5dbab19c758050105fd105ea89f30d4b00bfcd025780b6f",
+      "claim": "42",
+      "public_input": "19,0",
+      "verified": true
+    },
+    {
+      "platform": "linux",
+      "file": "state.zheng",
+      "sha256": "0d188483257e93387c8777838a507a220838f493b13e7ef9b97ebdb7e506d2a2",
+      "claim": "82",
+      "public_input": "11",
+      "verified": true
+    },
+    {
+      "platform": "linux",
+      "file": "private-state.zheng",
+      "sha256": "89b566ad0481f0a698c495093128ea34cbf39fc5a7eece23d958ec465e69e20e",
+      "claim": "82",
+      "public_input": "5",
+      "verified": true
+    }
+  ],
+  "new_private_proofs_generated": false
+}

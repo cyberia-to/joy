@@ -1,7 +1,10 @@
+mod build_cmd;
 mod compile;
 mod error;
+mod execution_verify;
 mod prove;
 mod run;
+mod state_verify;
 mod verify;
 
 use clap::{Parser, Subcommand};
@@ -12,6 +15,7 @@ use trident::runtime::ProgramInput;
 #[derive(Parser)]
 #[command(
     name = "joy",
+    version,
     about = "nox warrior — execute, prove, verify on the cyber battlefield"
 )]
 struct Cli {
@@ -21,6 +25,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Describe the installed target package without executing a program (JSON)
+    Describe {
+        #[arg(long, default_value = "nox")]
+        target: String,
+    },
+    /// Compile a source or project to a metadata-preserving bundle or nox assembly
+    Build(build_cmd::BuildArgs),
     /// Execute a Trident program on the nox VM
     Run(run::RunArgs),
     /// Execute and generate a zheng proof artifact
@@ -56,17 +67,21 @@ pub(crate) fn check_target(target: &str) -> Result<(), JoyError> {
 pub(crate) fn load_bundle(
     input: &std::path::Path,
     profile: &str,
+    target: Option<&str>,
 ) -> Result<trident::runtime::ProgramBundle, JoyError> {
+    if let Some(target) = target {
+        check_target(target)?;
+    }
     if input.is_dir() {
-        return compile::compile_source(input, profile);
+        return compile::compile_source(input, profile, target);
     }
     match input.extension().and_then(|e| e.to_str()) {
         Some("json") => {
-            let text = std::fs::read_to_string(input)
+            let text = joy_rs::read_program_text(input)
                 .map_err(|e| JoyError::Io(format!("cannot read '{}': {}", input.display(), e)))?;
             trident::runtime::ProgramBundle::from_json(&text).map_err(JoyError::Parse)
         }
-        Some("tri") => compile::compile_source(input, profile),
+        Some("tri") => compile::compile_source(input, profile, target),
         Some("nox") => bundle_from_nox(input),
         _ => Err(JoyError::Io(format!(
             "unsupported input '{}' (expected .json bundle, .tri source, or .nox formula)",
@@ -78,13 +93,17 @@ pub(crate) fn load_bundle(
 /// Wrap a raw .nox formula file into a minimal bundle (trisha's
 /// `bundle_from_tasm` pattern).
 fn bundle_from_nox(path: &std::path::Path) -> Result<trident::runtime::ProgramBundle, JoyError> {
-    let assembly = std::fs::read_to_string(path)
+    let assembly = joy_rs::read_program_text(path)
         .map_err(|e| JoyError::Io(format!("cannot read '{}': {}", path.display(), e)))?;
     let name = path
         .file_stem()
         .unwrap_or_default()
         .to_string_lossy()
         .to_string();
+    let source_hash = trident::hash::content_hash_bytes(assembly.as_bytes())
+        .iter()
+        .map(|b| format!("{b:02x}"))
+        .collect();
     Ok(trident::runtime::ProgramBundle {
         name,
         version: String::new(),
@@ -99,7 +118,7 @@ fn bundle_from_nox(path: &std::path::Path) -> Result<trident::runtime::ProgramBu
             padded_height: 0,
             estimated_proving_ns: 0,
         },
-        source_hash: String::new(),
+        source_hash,
         reads_state: false,
     })
 }
@@ -108,6 +127,14 @@ fn main() {
     let cli = Cli::parse();
 
     match cli.command {
+        Command::Describe { target } => match joy_rs::target::describe(&target) {
+            Ok(description) => println!("{description}"),
+            Err(error) => {
+                eprintln!("error: {error}");
+                std::process::exit(1);
+            }
+        },
+        Command::Build(args) => build_cmd::cmd_build(args),
         Command::Run(args) => run::cmd_run(args),
         Command::Prove(args) => prove::cmd_prove(args),
         Command::Verify(args) => verify::cmd_verify(args),

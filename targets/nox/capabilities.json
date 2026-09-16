@@ -1,0 +1,21 @@
+{
+  "run": true,
+  "prove": true,
+  "verify": true,
+  "deploy": false,
+  "proof_formats": [
+    "zheng-nox-public-execution-v2",
+    "joy-nox-ccs-triton7-zk-v3",
+    "joy-nox-public-state-execution-v1"
+  ],
+  "restrictions": [
+    "run: nox reductions with public inputs and sequential secret call witnesses; no digest stream; --state loads a bounded authenticated public BBG certificate",
+    "prove public: stateless bounded static tags 0..15; full witness disclosure with linear verification and storage, neither zero knowledge nor succinct",
+    "prove private: requires the Trisha Triton7 ZK backend over verifier-derived Zheng CCS; atom call witnesses checked by their continuation; automatic for secret inputs or selected with --zk; old Triton2 private artifacts require regeneration",
+    "prove state: public bounded CCS execution with all lookup coordinates and four root limbs bound to complete authenticated public tables; hidden queries use the separate bounded Triton ZK profile, not a private database",
+    "prove: no dynamic continuations or variable branch shapes; budget must cover the selected execution's bound cost; private queries over complete authenticated public tables require all ten namespaces and at most 2048 fields",
+    "prove: at most 64 public inputs, 4096 program/symbolic noun nodes, depth 128, 4096 symbolic calls, 32768 gates/rows and 4096 output atoms; private checker additionally bounds generated work",
+    "verify: exact public execution or Triton-backed private execution; old trace statements require explicit opt-in and do not authenticate execution or IO",
+    "cyber aliases the nox runtime; public BBG certificate files are supported, live network state synchronization and deployment are not"
+  ]
+}
