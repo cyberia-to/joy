@@ -101,3 +101,12 @@ final coordinated distribution remain release gates. Exact receipts are in
 State commitment v2 changes all BBG roots; regenerate certificates and proofs.
 
 Cyber License: Don't trust. Don't fear. Don't beg.
+
+### Structured native artifacts (0.4 integration)
+
+`joy run-artifact program.dag --input input.dag -o output.dag` executes a complete
+ART1 raw-noun program and preserves the output DAG. It emits a JSON execution
+receipt after atomic publication; `--force` permits replacing an existing file.
+This path uses bounded sequential nox without retaining a trace. See
+[the structured-run contract](specs/structured-run.md) for limits and profiles.
+Compiler JOB1 admission and proofs of dynamic execution are subsequent gates.

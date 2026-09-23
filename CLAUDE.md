@@ -106,8 +106,10 @@ connection or authority to modify state.
 - The `Reduction` arena is stack-allocated; execution runs on a
   dedicated 256 MiB worker thread. Never call `reduce` on the main
   thread with a big arena.
-- Reduction count = trace rows = budget consumed (one row per unit,
-  by nox design).
+- Successful pure L1 charged reductions are initial minus remaining budget;
+  successful traces have that many rows. Failed traces are not a gas counter.
+- `run-artifact` executes complete ART1/raw NOXDAG01 nouns with the bounded
+  sequential heap evaluator and NoTrace; see `specs/structured-run.md`.
 
 ## CLI contract
 
