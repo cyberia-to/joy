@@ -56,3 +56,23 @@ Library API `structured::run` accepts owned program/input bytes and RunLimits;
 `run_files` performs bounded file loading. Both return output bytes and a report,
 without publishing. The CLI alone performs publication. Limits above are worker
 policy and do not redefine the nox or Trident protocol integer ranges.
+
+## Compile source to ART1
+
+`joy build SOURCE --emit artifact [-o PROGRAM.dag] [--force]` uses Trident's
+native raw artifact API. Source has exactly `fn main(input: Noun) -> Noun` and
+may import `vm.nox.noun` and ordinary modules. The result is the complete
+NOXDAG01 ART1(0,0,0,formula) consumed by `run-artifact`; no bracket text or flat
+input adapter is involved. Imports, target selection and named project profiles
+use the same resolution as other build modes. Host services and legacy flat
+I/O declarations are rejected in this profile.
+
+The output defaults to `source.dag`, or PROJECT_NAME.dag for a project directory.
+Encoding completes before atomic publication; `--force` is required to replace
+an existing file. `--format json-v1` reports the usual build envelope with
+format `artifact`, the full `program_particle`, byte length, raw profiles 0/0,
+compiler/target-package identities and selected profile. This format's execution
+identity is the ART1 particle; it does not contain a bundle source hash.
+
+This is seed compilation on the host. Guest compiler JOB1/RES1 admission,
+reusable source loops/calls and native dynamic proofs remain separate gates.

@@ -10,6 +10,7 @@
   ],
   "restrictions": [
     "run: nox reductions with public inputs and sequential secret call witnesses; no digest stream; --state loads a bounded authenticated public BBG certificate",
+    "build --emit artifact: source main(Noun)->Noun to complete ART1 raw profiles(0,0), native SDK imports and atomic publication; seed host compilation, no JOB1 compiler admission",
     "run-artifact: complete NOXDAG01 ART1 raw-noun profile(0,0); bounded sequential pure tags0..15 with dynamic compose, no retained trace or host services; compiler JOB1 profile and dynamic execution proofs remain unsupported",
     "prove public: stateless bounded static tags 0..15; full witness disclosure with linear verification and storage, neither zero knowledge nor succinct",
     "prove private: requires the Trisha Triton7 ZK backend over verifier-derived Zheng CCS; atom call witnesses checked by their continuation; automatic for secret inputs or selected with --zk; old Triton2 private artifacts require regeneration",

@@ -35,6 +35,55 @@ pub fn compile_source_with_metadata(
     profile: &str,
     target: Option<&str>,
 ) -> Result<CompiledSource, JoyError> {
+    let resolved = resolve_source(input, profile, target)?;
+    let ResolvedSource {
+        project,
+        target,
+        metadata,
+        entry,
+        options,
+    } = resolved;
+    let mut bundle = compile_to_bundle(&entry, &options).map_err(diagnostics)?;
+    if input.is_dir() {
+        if let Some(project) = &project {
+            bundle.name = project.name.clone();
+            bundle.version = project.version.clone();
+        }
+    }
+    Ok(CompiledSource {
+        bundle,
+        target,
+        package_owner: metadata.0,
+        package_version: metadata.1,
+        package_hash: metadata.2,
+        compiler_api: metadata.3,
+    })
+}
+
+/// Shared resolution also feeds structured ART1 emission.
+pub struct ResolvedSource {
+    pub project: Option<Project>,
+    pub target: String,
+    pub metadata: (String, String, String, u32),
+    pub entry: std::path::PathBuf,
+    pub options: CompileOptions,
+}
+
+pub fn diagnostics(errors: Vec<trident::Diagnostic>) -> JoyError {
+    JoyError::Compile(
+        errors
+            .into_iter()
+            .map(|d| d.message)
+            .collect::<Vec<_>>()
+            .join("; "),
+    )
+}
+
+pub fn resolve_source(
+    input: &Path,
+    profile: &str,
+    target: Option<&str>,
+) -> Result<ResolvedSource, JoyError> {
     let project = project(input)?;
     let target = target
         .or_else(|| project.as_ref().and_then(|p| p.target.as_deref()))
@@ -59,29 +108,13 @@ pub fn compile_source_with_metadata(
     let options = CompileOptions::for_profile(profile)
         .with_package(package)
         .map_err(JoyError::Compile)?;
-    let diagnostics = |errors: Vec<trident::Diagnostic>| {
-        JoyError::Compile(
-            errors
-                .into_iter()
-                .map(|d| d.message)
-                .collect::<Vec<_>>()
-                .join("; "),
-        )
-    };
     let (entry, options) = trident::source_options(input, &options).map_err(diagnostics)?;
-    let mut bundle = compile_to_bundle(&entry, &options).map_err(diagnostics)?;
-    if input.is_dir() {
-        if let Some(project) = &project {
-            bundle.name = project.name.clone();
-            bundle.version = project.version.clone();
-        }
-    }
-    Ok(CompiledSource {
-        bundle,
-        target: target.to_string(),
-        package_owner: metadata.0,
-        package_version: metadata.1,
-        package_hash: metadata.2,
-        compiler_api: metadata.3,
+    let target = target.to_string();
+    Ok(ResolvedSource {
+        project,
+        target,
+        metadata,
+        entry,
+        options,
     })
 }

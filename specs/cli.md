@@ -43,7 +43,7 @@ authority to modify chain state.
 
 ```text
 joy describe [--target nox|cyber]
-joy build INPUT [--target nox|cyber] [--profile NAME] [--emit bundle|nox] [-o PATH] [--force] [--format human|json-v1]
+joy build INPUT [--target nox|cyber] [--profile NAME] [--emit bundle|nox|artifact] [-o PATH] [--force] [--format human|json-v1]
 joy run INPUT [COMMON]
 joy run-artifact PROGRAM --input INPUT --output OUTPUT [LIMITS] [--force]
 joy prove INPUT [COMMON] [--zk] [--output PATH]
@@ -172,7 +172,7 @@ Preserve the existing command names and add:
 
 ```text
 joy describe --target nox
-joy build INPUT [--target nox|cyber] [--profile NAME] [--emit bundle|nox] [-o PATH] [--force] [--format json-v1]
+joy build INPUT [--target nox|cyber] [--profile NAME] [--emit bundle|nox|artifact] [-o PATH] [--force] [--format json-v1]
 joy run INPUT --input-file public.json --format json-v1
 joy run INPUT --input-file public.json --secret-file private.json
 joy prove INPUT --input-file public.json --output proof.zheng --format json-v1
@@ -414,3 +414,6 @@ result fields are allowed; consumers ignore unknown result fields, while
 request/config parsers reject unknown fields. Keep help, this specification,
 Trident delegation expectations and conformance tests aligned. Requests for
 Trident changes go through `joy/.claude/trident-wiring.md`.
+
+Native source export: `build --emit artifact` produces full ART1 raw-profile
+programs for `run-artifact`; see [structured run](structured-run.md#compile-source-to-art1).

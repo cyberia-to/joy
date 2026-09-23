@@ -1,0 +1,180 @@
+{
+  "schema": "joy/raw-source-observations/v1",
+  "platform": "macOS aarch64",
+  "observations": [
+    {
+      "name": "add14",
+      "source": "program source\nuse vm.nox.noun\nfn main(input: Noun) -> Noun { noun.atom(noun.as_field(input) + 7 + 7) }\n",
+      "input_fixture": "add14",
+      "expected_output": "expected_output",
+      "build": {
+        "command": "build",
+        "error": null,
+        "ok": true,
+        "result": {
+          "artifact": "add14.dag",
+          "artifact_bytes": 2271,
+          "compiler": {
+            "api": 3,
+            "name": "trident",
+            "version": "0.3.0"
+          },
+          "entry_point": "main",
+          "format": "artifact",
+          "input_profile": 0,
+          "kind": "build",
+          "output_profile": 0,
+          "profile": "debug",
+          "program": "source",
+          "program_particle": "bc8f4b34d642fc4f7d5f9b6b41e740030ed92632209cd19ed1ada2fb1a377bde",
+          "reads_state": false,
+          "target": "nox",
+          "target_os": null,
+          "target_package": {
+            "compilation_hash": "8330a1d99c117a6294aced1ba8c9a665a0bd3e70fa643929393e1f6166cce6a2",
+            "owner": "joy",
+            "version": "0.5.0"
+          },
+          "target_vm": "nox"
+        },
+        "schema": "joy/cli/v1"
+      },
+      "run": {
+        "artifact": "add14.result.dag",
+        "execution": {
+          "allocated_nodes": 29,
+          "arena_reserved_bytes": 26214416,
+          "charged_reductions": 12,
+          "elapsed_micros": 1330,
+          "frame_buffer_bytes": 2883584,
+          "input_particle": "47ff2df1749c1a6c30bba58202ddb7dacacdf95db5f2abacff8fcb81202f7702",
+          "output_particle": "0934430c117b91ade2f29fefe8cb8eaa042bd4090f8c1c0f02dadd5fe81409c5",
+          "peak_frames": 5,
+          "program_particle": "bc8f4b34d642fc4f7d5f9b6b41e740030ed92632209cd19ed1ada2fb1a377bde",
+          "trace_mode": "none",
+          "worker_stack_bytes": 268435456
+        },
+        "ok": true,
+        "schema": "joy/artifact-run/v1"
+      },
+      "output_sha256": "cf7fad2787207c4e1152d7d3cc6afb4f4c701877d3530218170b8e326d9aefae",
+      "exact_expected_bytes": true
+    },
+    {
+      "name": "identity_tree",
+      "source": "program source\nuse vm.nox.noun\nfn main(input: Noun) -> Noun { input }\n",
+      "input_fixture": "identity_tree",
+      "expected_output": "expected_output",
+      "build": {
+        "command": "build",
+        "error": null,
+        "ok": true,
+        "result": {
+          "artifact": "identity_tree.dag",
+          "artifact_bytes": 1510,
+          "compiler": {
+            "api": 3,
+            "name": "trident",
+            "version": "0.3.0"
+          },
+          "entry_point": "main",
+          "format": "artifact",
+          "input_profile": 0,
+          "kind": "build",
+          "output_profile": 0,
+          "profile": "debug",
+          "program": "source",
+          "program_particle": "077727066a1761d93ddeb119c3eff58e744b444243928518902bc1e66cdc645d",
+          "reads_state": false,
+          "target": "nox",
+          "target_os": null,
+          "target_package": {
+            "compilation_hash": "8330a1d99c117a6294aced1ba8c9a665a0bd3e70fa643929393e1f6166cce6a2",
+            "owner": "joy",
+            "version": "0.5.0"
+          },
+          "target_vm": "nox"
+        },
+        "schema": "joy/cli/v1"
+      },
+      "run": {
+        "artifact": "identity_tree.result.dag",
+        "execution": {
+          "allocated_nodes": 21,
+          "arena_reserved_bytes": 26214416,
+          "charged_reductions": 6,
+          "elapsed_micros": 944,
+          "frame_buffer_bytes": 2883584,
+          "input_particle": "b14e0812a305a7819cd42aa0382b95e898380e0d5294a9fe592df39c98f8c05e",
+          "output_particle": "b14e0812a305a7819cd42aa0382b95e898380e0d5294a9fe592df39c98f8c05e",
+          "peak_frames": 3,
+          "program_particle": "077727066a1761d93ddeb119c3eff58e744b444243928518902bc1e66cdc645d",
+          "trace_mode": "none",
+          "worker_stack_bytes": 268435456
+        },
+        "ok": true,
+        "schema": "joy/artifact-run/v1"
+      },
+      "output_sha256": "b30f1865769f50dd31508ab9863284922a55b83a70f502d8a680bc9fa707b3c2",
+      "exact_expected_bytes": true
+    },
+    {
+      "name": "field_wrap",
+      "source": "program source\nuse vm.nox.noun\nfn main(input: Noun) -> Noun { noun.atom(18446744069414584321) }\n",
+      "input_fixture": "add14",
+      "expected_output": "input",
+      "build": {
+        "command": "build",
+        "error": null,
+        "ok": true,
+        "result": {
+          "artifact": "field_wrap.dag",
+          "artifact_bytes": 1413,
+          "compiler": {
+            "api": 3,
+            "name": "trident",
+            "version": "0.3.0"
+          },
+          "entry_point": "main",
+          "format": "artifact",
+          "input_profile": 0,
+          "kind": "build",
+          "output_profile": 0,
+          "profile": "debug",
+          "program": "source",
+          "program_particle": "3487d6c4b488f26ff059e8b814e387c3011aeb224429797d8c35a559a48ba2a9",
+          "reads_state": false,
+          "target": "nox",
+          "target_os": null,
+          "target_package": {
+            "compilation_hash": "8330a1d99c117a6294aced1ba8c9a665a0bd3e70fa643929393e1f6166cce6a2",
+            "owner": "joy",
+            "version": "0.5.0"
+          },
+          "target_vm": "nox"
+        },
+        "schema": "joy/cli/v1"
+      },
+      "run": {
+        "artifact": "field_wrap.result.dag",
+        "execution": {
+          "allocated_nodes": 18,
+          "arena_reserved_bytes": 26214416,
+          "charged_reductions": 6,
+          "elapsed_micros": 802,
+          "frame_buffer_bytes": 2883584,
+          "input_particle": "47ff2df1749c1a6c30bba58202ddb7dacacdf95db5f2abacff8fcb81202f7702",
+          "output_particle": "47ff2df1749c1a6c30bba58202ddb7dacacdf95db5f2abacff8fcb81202f7702",
+          "peak_frames": 3,
+          "program_particle": "3487d6c4b488f26ff059e8b814e387c3011aeb224429797d8c35a559a48ba2a9",
+          "trace_mode": "none",
+          "worker_stack_bytes": 268435456
+        },
+        "ok": true,
+        "schema": "joy/artifact-run/v1"
+      },
+      "output_sha256": "7b658a799adf0f027ec2b44fdb463847b2ef4bf49f7f7af1166a3291781f66cd",
+      "exact_expected_bytes": true
+    }
+  ]
+}
