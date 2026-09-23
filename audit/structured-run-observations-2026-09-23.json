@@ -1,0 +1,71 @@
+[
+  {
+    "fixture": "add14",
+    "exit_code": 0,
+    "result": {
+      "artifact": "<temporary output>",
+      "execution": {
+        "allocated_nodes": 14,
+        "arena_reserved_bytes": 26214416,
+        "charged_reductions": 3,
+        "elapsed_micros": 248,
+        "frame_buffer_bytes": 2883584,
+        "input_particle": "47ff2df1749c1a6c30bba58202ddb7dacacdf95db5f2abacff8fcb81202f7702",
+        "output_particle": "0934430c117b91ade2f29fefe8cb8eaa042bd4090f8c1c0f02dadd5fe81409c5",
+        "peak_frames": 2,
+        "program_particle": "c41a82b37d79705a8e32551cd47c00351b6b2c61d6e69799ec7f2fbdce70a307",
+        "trace_mode": "none",
+        "worker_stack_bytes": 268435456
+      },
+      "ok": true,
+      "schema": "joy/artifact-run/v1"
+    },
+    "output_sha256": "cf7fad2787207c4e1152d7d3cc6afb4f4c701877d3530218170b8e326d9aefae"
+  },
+  {
+    "fixture": "identity_tree",
+    "exit_code": 0,
+    "result": {
+      "artifact": "<temporary output>",
+      "execution": {
+        "allocated_nodes": 13,
+        "arena_reserved_bytes": 26214416,
+        "charged_reductions": 1,
+        "elapsed_micros": 256,
+        "frame_buffer_bytes": 2883584,
+        "input_particle": "b14e0812a305a7819cd42aa0382b95e898380e0d5294a9fe592df39c98f8c05e",
+        "output_particle": "b14e0812a305a7819cd42aa0382b95e898380e0d5294a9fe592df39c98f8c05e",
+        "peak_frames": 1,
+        "program_particle": "61f0ab7e02726ceab817a7136558117277c402a8828eaf58dcf568a3e9773ac5",
+        "trace_mode": "none",
+        "worker_stack_bytes": 268435456
+      },
+      "ok": true,
+      "schema": "joy/artifact-run/v1"
+    },
+    "output_sha256": "b30f1865769f50dd31508ab9863284922a55b83a70f502d8a680bc9fa707b3c2"
+  },
+  {
+    "fixture": "loop4097",
+    "exit_code": 0,
+    "result": {
+      "artifact": "<temporary output>",
+      "execution": {
+        "allocated_nodes": 12320,
+        "arena_reserved_bytes": 26214416,
+        "charged_reductions": 61460,
+        "elapsed_micros": 133129,
+        "frame_buffer_bytes": 2883584,
+        "input_particle": "1b80565abee86a46effbc47b821cb8f4250bfb6760de9f5488102c0b72d1ebb5",
+        "output_particle": "f0ca9fd53ae4cafeee4643245c2c34e20db0c7f7c759c543d15a081f549655d9",
+        "peak_frames": 8198,
+        "program_particle": "d4fd20a504228af5c1168bff1e2e39926dcce5a346d7177cf6ffc9404e36150d",
+        "trace_mode": "none",
+        "worker_stack_bytes": 268435456
+      },
+      "ok": true,
+      "schema": "joy/artifact-run/v1"
+    },
+    "output_sha256": "1b2d7a83198515b351822e01665bbb594d257e9b164655105ae717d2fa81b4b6"
+  }
+]

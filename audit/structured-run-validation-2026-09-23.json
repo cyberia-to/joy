@@ -1,0 +1,68 @@
+{
+  "base": "d4d8e3dd587ba8d246f4905c9bb24ce3f75429a3",
+  "host": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)",
+  "pins": {
+    "trident": "9f306c81c0b9f4c810ce7e949e3688be0391a306",
+    "nox": "5271961a72a1f1e9922df36e3e4e3c65d1acff81",
+    "zheng": "80a8ca90208c3b49c4f2a8507d75fd17785fdfe3",
+    "trisha": "ba5fca686c81dbf4c5cd1970b309553b0d875b14",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373"
+  },
+  "files": {
+    "rs/structured.rs": "56e11bfccafe87a6537174955d0e94118fd5a7f1f84ab00e88ae7138f6f4e298",
+    "rs/structured/tests.rs": "48bb8bbd5c698041da3945bf8264337b091dc04e2e262e337a7122b3931e8a70",
+    "rs/structured/tests/admission.rs": "06c3b7c3d1fa613b4057bbf77181a9a208995c9c08f036690c7e467761fdb14e",
+    "rs/examples/artifact_fixtures.rs": "89db3740e29f63f0417277c8d4d7e4361b3a1234291ab9edfc3be02fb2da6208",
+    "rs/lib.rs": "c51ccbb185972475e5581af1b571a03a54c2a2d24084dda1ee850aa8c6b22578",
+    "cli/artifact_run.rs": "b650de4c883a3d3988ee167ce0370b223324714e9b3e7f817dfee9f16256493f",
+    "cli/publication.rs": "7fa4c9a60e6f97b8586bbb879b7d335efe8efa26b153698773b8607e9677f799",
+    "cli/main.rs": "9707ad0173cada217ae9791a54f1dd142c53f9b203ea83900e82d95536dac12c",
+    "cli/build_cmd.rs": "7b7caac3a9b24bfe45b18f61662244f762f7585bd123028adf8e925b2e4cc8d7",
+    "cli/tests/build_pipeline.rs": "82064a6a1d0416777e18b9cc072208a4f1db915e4a77fa924193470adff726c3",
+    "cli/tests/structured_run.rs": "78aa5cdd69e5f5157bcd36d128e1faafb76a910f6a1b20f2cf0465c9e8ea3ad7",
+    "cli/tests/artifact_vectors.json": "ee4acc86cdba0c39731f94c9067f990c43efc714eb79cd62c6bd2df6bf45f152",
+    "targets/nox/capabilities.json": "9afc1243183ae63abe2f6b2a9d4e349a56f05295d2701e160a188292634ac58c",
+    "specs/cli.md": "c3ebc946d6cacff6794ccafd2161bbd8fdb51657efb85d0b15315c966d2cb7ca",
+    "specs/structured-run.md": "c976b2fd1bf0054431ed8f4add0c04aab95b73d981f875ee5327652ed812be23"
+  },
+  "checks": [
+    {
+      "command": "CARGO_TARGET_DIR=../trident/target cargo test --workspace --release --locked -- --test-threads=2",
+      "exit_code": 0,
+      "passed_tests": 85,
+      "log_sha256": "ce9c5a5f14b067cd803875f6b09570311c663d3fa637210a8d513cb41b33714d"
+    },
+    {
+      "command": "CARGO_TARGET_DIR=../trident/target cargo test -p cyber-joy --release --locked --test structured_run -- --test-threads=2",
+      "exit_code": 0,
+      "passed_tests": 3,
+      "log_sha256": "d8c72aa4ed5ab7c848e6a82ba03ef6addac6772463c055695d13f1959997c32d"
+    },
+    {
+      "command": "CARGO_TARGET_DIR=../trident/target cargo test -p cyber-joy --release --locked --test target_package -- --test-threads=2",
+      "exit_code": 0,
+      "passed_tests": 4,
+      "log_sha256": "a8a556af64bd968fed9a7446a9da13e0ad7ea85e2c1238ca0c44ca801dafac94"
+    },
+    {
+      "command": "CARGO_TARGET_DIR=../trident/target cargo check --workspace --all-targets --locked",
+      "exit_code": 0,
+      "passed_tests": null,
+      "log_sha256": "d269ac65f433f6d80d8fc545b32962e82c60b43cd8ddab412fc7dbc8a9e479b5"
+    },
+    {
+      "command": "CARGO_TARGET_DIR=../trident/target cargo run -p joy-rs --release --locked --example artifact_fixtures -- cli/tests/artifact_vectors.json --check",
+      "exit_code": 0,
+      "passed_tests": null,
+      "log_sha256": "3e117b91948b5d56552bf76c3828e068ae7d794ba6c5e151fd0182de6d1a15c7"
+    }
+  ],
+  "observations_sha256": "e92f7e185ecb47f94871015190206f5d31955bc78aad604d0880311a8868c049",
+  "note": "Full85-test suite passed. Subsequent capability text and expanded CLI loop fixture were validated by focused package/CLI tests plus all-target check. Observations use the same release CLI. Trident worktree has only SH0 runtime documentation/example changes over its pinned head; no pending production compiler edits."
+}

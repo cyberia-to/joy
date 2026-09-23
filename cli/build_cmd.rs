@@ -1,11 +1,7 @@
 use crate::error::JoyError;
+use crate::publication::atomic_write;
 use clap::{Args, ValueEnum};
-use std::{
-    fs::{self, OpenOptions},
-    io::Write,
-    path::PathBuf,
-    sync::atomic::{AtomicU64, Ordering},
-};
+use std::path::PathBuf;
 #[derive(Clone, Copy, ValueEnum)]
 pub enum Emit {
     Bundle,
@@ -64,52 +60,6 @@ fn build(args: &BuildArgs) -> Result<(PathBuf, crate::compile::CompiledSource), 
     };
     atomic_write(&output, &bytes, args.force)?;
     Ok((output, compiled))
-}
-fn atomic_write(path: &std::path::Path, bytes: &[u8], replace: bool) -> Result<(), JoyError> {
-    static NEXT: AtomicU64 = AtomicU64::new(0);
-    let parent = path
-        .parent()
-        .filter(|p| !p.as_os_str().is_empty())
-        .unwrap_or(std::path::Path::new("."));
-    let mut temporary = None;
-    for _ in 0..100 {
-        let name = parent.join(format!(
-            ".joy-build-{}-{}.tmp",
-            std::process::id(),
-            NEXT.fetch_add(1, Ordering::Relaxed)
-        ));
-        match OpenOptions::new().write(true).create_new(true).open(&name) {
-            Ok(file) => {
-                temporary = Some((name, file));
-                break;
-            }
-            Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
-            Err(e) => return Err(e.into()),
-        }
-    }
-    let (name, mut file) =
-        temporary.ok_or_else(|| JoyError::Io("cannot allocate build staging file".into()))?;
-    struct Cleanup(PathBuf);
-    impl Drop for Cleanup {
-        fn drop(&mut self) {
-            let _ = fs::remove_file(&self.0);
-        }
-    }
-    let _cleanup = Cleanup(name.clone());
-    file.write_all(bytes)?;
-    file.sync_all()?;
-    drop(file);
-    if replace {
-        fs::rename(&name, path)?;
-    } else {
-        fs::hard_link(&name, path).map_err(|e| {
-            JoyError::Io(format!(
-                "cannot publish '{}': {e}; --force permits replacement",
-                path.display()
-            ))
-        })?;
-    }
-    Ok(())
 }
 pub fn cmd_build(args: BuildArgs) {
     match build(&args) {

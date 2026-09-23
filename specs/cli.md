@@ -45,6 +45,7 @@ authority to modify chain state.
 joy describe [--target nox|cyber]
 joy build INPUT [--target nox|cyber] [--profile NAME] [--emit bundle|nox] [-o PATH] [--force] [--format human|json-v1]
 joy run INPUT [COMMON]
+joy run-artifact PROGRAM --input INPUT --output OUTPUT [LIMITS] [--force]
 joy prove INPUT [COMMON] [--zk] [--output PATH]
 joy verify ARTIFACT [COMMON] [--claim VALUES]
 joy verify INPUT --proof ARTIFACT [COMMON] [--claim VALUES]
@@ -72,8 +73,10 @@ COMMON flags currently appear on run/prove/verify:
 
 `--profile` accepts debug, release or a named `[targets.NAME]` project profile.
 Unknown source profiles fail consistently in build/run/prove/verify. Public inputs become
-the subject `[p_last [... [p_first 0]]]`. One native trace row consumes one
-reduction unit. Budget is not a wall-time or memory limit.
+the subject `[p_last [... [p_first 0]]]`. On successful pure L1 execution, charged reductions equal initial minus
+remaining budget. Failure trace rows are not a gas counter. Budget is not a
+wall-time or memory limit. See [structured run](structured-run.md) for complete
+noun transport and its separate resource limits.
 
 ## current output and exits
 
@@ -82,6 +85,7 @@ reduction unit. Budget is not a wall-time or memory limit.
 | describe | versioned Trident target package JSON | errors |
 | build | artifact path, or one `joy/cli/v1` JSON result | human-mode errors |
 | run | one decimal output value per line | reductions and errors |
+| run-artifact | one joy/artifact-run/v1 JSON success receipt after complete output publication | errors |
 | prove | saved artifact path | timing, reductions, bytes and public output |
 | verify execution certificate | PASS and checked public coordinates | failure diagnostics |
 | verify by rerun | labelled PASS/FAIL; mismatch details | runtime errors |
@@ -90,7 +94,8 @@ reduction unit. Budget is not a wall-time or memory limit.
 Success exits 0. Application failures, proof rejection and claim mismatch
 exit 1. Clap syntax errors exit 2. Help/version exit 0. Verification output
 is human-readable; consumers MUST NOT infer a stable machine schema from it.
-Build alone currently supports the structured `--format json-v1` envelope.
+Build supports the `--format json-v1` envelope. Structured artifact execution
+uses its distinct `joy/artifact-run/v1` receipt.
 Current proof save behavior may overwrite an existing path; target publication
 rules below intentionally tighten this behavior.
 

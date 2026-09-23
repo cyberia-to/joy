@@ -231,7 +231,8 @@ fn publication_requires_force_and_failures_preserve_existing_artifact() {
         .unwrap()
         .file_name()
         .to_string_lossy()
-        .starts_with(".joy-build-")));
+        .chars()
+        .all(|c| c.is_ascii_digit() || c == '.')));
 }
 
 #[test]
