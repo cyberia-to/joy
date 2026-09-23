@@ -1,10 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.5.0 — 2026-09-16
 
-Coordinated candidate: **Joy 0.5.0**, with Trident 0.3.0/compiler API 3,
-Zheng 0.4.0 and Trisha 0.3.0. Final artifact verification and publication remain
-pending.
+Coordinated release: **Joy 0.5.0**, with Trident 0.3.0/compiler API 3,
+Zheng 0.4.0 and Trisha 0.3.0. Validation receipts accompany the release archives.
 
 - Bind canonical nox program, complete public input/output and selected-path
   cost to the verifier-derived Zheng execution relation. `JOYEXEC2` discloses
