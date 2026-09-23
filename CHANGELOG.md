@@ -2,10 +2,32 @@
 
 ## Unreleased
 
-- Preserve authenticated TensorMerkle PCS columns and Merkle paths on the wire;
-  use the new `zheng-hypernova-tensor-merkle-v2` artifact identifier.
-- Reject proof-mode output claims until the output-to-arena relation is proved.
-  Label output and cycle metadata as unverified; keep execution claim checking.
+Coordinated candidate: **Joy 0.5.0**, with Trident 0.3.0/compiler API 3,
+Zheng 0.4.0 and Trisha 0.3.0. Final artifact verification and publication remain
+pending.
+
+- Bind canonical nox program, complete public input/output and selected-path
+  cost to the verifier-derived Zheng execution relation. `JOYEXEC2` discloses
+  its complete witness and checks every constraint; it claims no zero knowledge
+  or succinct verification.
+- Use Trisha's pinned Triton 7 randomized STARK for private execution:
+  `joy-nox-ccs-triton7-zk-v3` / `JOYZK003`. Regenerate older private proofs;
+  acceptance cannot downgrade to a legacy statement or a different checker.
+- Authenticate every public-state lookup and all root coordinates in
+  `JOYST001`. Private queries hide coordinates inside the same proved relation
+  over all ten bounded public state tables. The database remains public.
+- Preserve source/project/target/profile identity through `build`, versioned
+  JSON results and atomic artifact output. Respect target overrides, imported
+  helpers, selected-path budgets and inactive branch semantics.
+- Enforce the compiled entry signature inside the proved computation, including
+  flat aggregate layout, exact public arity and Bool/U32 ranges. Prove the actual
+  selected terminal branch and bounded loop return through both proof formats.
+- Keep legacy trace statements behind explicit inspection opt-in. Those
+  statements do not prove execution or public output. Refuse unsupported
+  dynamic continuations/shapes, recursive legacy openings and live deployment.
+- Distribute the coordinated locked source closure with installed CPU smoke
+  coverage. State commitment v2 and opening v3 require regenerated BBG
+  certificates and proofs. See [validation](audit/release-validation.md).
 
 ## 0.3.0 — 2026-09-09
 
