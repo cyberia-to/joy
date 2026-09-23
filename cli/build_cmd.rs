@@ -6,6 +6,8 @@ use std::path::PathBuf;
 pub enum Emit {
     Bundle,
     Nox,
+    /// Complete ART1 raw-noun program for run-artifact
+    Artifact,
 }
 #[derive(Clone, Copy, ValueEnum)]
 pub enum Format {
@@ -31,11 +33,14 @@ pub struct BuildArgs {
     #[arg(long, value_enum, default_value = "human")]
     pub format: Format,
 }
-fn build(args: &BuildArgs) -> Result<(PathBuf, crate::compile::CompiledSource), JoyError> {
+fn build(args: &BuildArgs) -> Result<(PathBuf, serde_json::Value), JoyError> {
     if !args.input.is_dir() && args.input.extension().and_then(|v| v.to_str()) != Some("tri") {
         return Err(JoyError::Compile(
             "build expects .tri source or project directory".into(),
         ));
+    }
+    if matches!(args.emit, Emit::Artifact) {
+        return crate::raw_build::build(args);
     }
     let compiled = crate::compile::compile_source_with_metadata(
         &args.input,
@@ -46,6 +51,7 @@ fn build(args: &BuildArgs) -> Result<(PathBuf, crate::compile::CompiledSource), 
     let suffix = match args.emit {
         Emit::Bundle => "bundle.json",
         Emit::Nox => "nox",
+        Emit::Artifact => unreachable!("handled above"),
     };
     let output = args.output.clone().unwrap_or_else(|| {
         if args.input.is_dir() {
@@ -57,28 +63,30 @@ fn build(args: &BuildArgs) -> Result<(PathBuf, crate::compile::CompiledSource), 
     let bytes = match args.emit {
         Emit::Bundle => bundle.to_json().into_bytes(),
         Emit::Nox => bundle.assembly.as_bytes().to_vec(),
+        Emit::Artifact => unreachable!("handled above"),
     };
     atomic_write(&output, &bytes, args.force)?;
-    Ok((output, compiled))
+    let result = serde_json::json!({
+        "kind":"build", "artifact":output.to_string_lossy(),
+        "format":match args.emit { Emit::Bundle => "bundle", Emit::Nox => "nox", Emit::Artifact => "artifact" },
+        "program":compiled.bundle.name, "source_hash":compiled.bundle.source_hash,
+        "target":compiled.target, "target_vm":compiled.bundle.target_vm,
+        "target_os":compiled.bundle.target_os, "profile":args.profile,
+        "reads_state":compiled.bundle.reads_state, "entry_point":compiled.bundle.entry_point,
+        "compiler":{"name":"trident", "version":trident::COMPILER_VERSION, "api":compiled.compiler_api},
+        "target_package":{"owner":compiled.package_owner,"version":compiled.package_version,"compilation_hash":compiled.package_hash}
+    });
+    Ok((output, result))
 }
 pub fn cmd_build(args: BuildArgs) {
     match build(&args) {
-        Ok((path, compiled)) => match args.format {
+        Ok((path, result)) => match args.format {
             Format::Human => println!("{}", path.display()),
             Format::JsonV1 => println!(
                 "{}",
                 serde_json::json!({
                     "schema":"joy/cli/v1", "command":"build", "ok":true, "error":null,
-                    "result": {
-                        "kind":"build", "artifact":path.to_string_lossy(),
-                        "format":match args.emit { Emit::Bundle => "bundle", Emit::Nox => "nox" },
-                        "program":compiled.bundle.name, "source_hash":compiled.bundle.source_hash,
-                        "target":compiled.target, "target_vm":compiled.bundle.target_vm,
-                        "target_os":compiled.bundle.target_os, "profile":args.profile,
-                        "reads_state":compiled.bundle.reads_state, "entry_point":compiled.bundle.entry_point,
-                        "compiler":{"name":"trident", "version":trident::COMPILER_VERSION, "api":compiled.compiler_api},
-                        "target_package":{"owner":compiled.package_owner,"version":compiled.package_version,"compilation_hash":compiled.package_hash}
-                    }
+                    "result": result
                 })
             ),
         },
