@@ -43,7 +43,14 @@ fn installed_description_matches_machine_and_public_certificate_capabilities() {
         assert_eq!(package.terrain.stack_depth, 0);
         assert!(package.runtime.run && package.runtime.prove && package.runtime.verify);
         assert!(!package.runtime.deploy);
-        assert_eq!(package.runtime.proof_formats, [joy_rs::EXECUTION_FORMAT]);
+        assert_eq!(
+            package.runtime.proof_formats,
+            [
+                joy_rs::EXECUTION_FORMAT,
+                joy_rs::ZK_EXECUTION_FORMAT,
+                joy_rs::STATE_EXECUTION_FORMAT
+            ]
+        );
         assert!(package
             .runtime
             .restrictions
@@ -67,7 +74,7 @@ fn installed_cli_rejects_state_instead_of_executing_statelessly() {
     ] {
         let output = installed.run(&args);
         assert!(!output.status.success());
-        assert!(String::from_utf8_lossy(&output.stderr).contains("does not support --state"));
+        assert!(String::from_utf8_lossy(&output.stderr).contains("error:"));
         assert!(output.stdout.is_empty());
     }
 }

@@ -19,6 +19,8 @@ use zheng::{Statement, TraceProof};
 
 /// Proof system identifier written into every artifact.
 pub const PROOF_FORMAT: &str = "zheng-hypernova-tensor-merkle-v2";
+const MAX_ARTIFACT_BYTES: usize = 64 * 1024 * 1024;
+const MAX_ASSEMBLY_BYTES: usize = 256 * 1024;
 
 /// A zheng proof artifact: statement + proof + operational metadata.
 #[derive(Debug, Serialize, Deserialize)]
@@ -61,11 +63,18 @@ impl ArtifactMeta {
     /// The formula this proof was generated from, whichever form it travels in.
     pub fn assembly_text(&self) -> Result<Option<String>, String> {
         if let Some(z) = &self.assembly_deflate {
-            let bytes = miniz_oxide::inflate::decompress_to_vec(z)
-                .map_err(|e| format!("corrupt assembly_deflate: {:?}", e))?;
+            let bytes = miniz_oxide::inflate::decompress_to_vec_with_limit(z, MAX_ASSEMBLY_BYTES)
+                .map_err(|_| "corrupt or oversized compressed assembly".to_string())?;
             return String::from_utf8(bytes)
                 .map(Some)
                 .map_err(|e| format!("assembly is not UTF-8: {}", e));
+        }
+        if self
+            .assembly
+            .as_ref()
+            .is_some_and(|text| text.len() > MAX_ASSEMBLY_BYTES)
+        {
+            return Err("assembly size limit".into());
         }
         Ok(self.assembly.clone())
     }
@@ -95,6 +104,9 @@ impl ProofArtifact {
 
     /// Parse the binary wire form or the current-format JSON representation.
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, String> {
+        if bytes.len() > MAX_ARTIFACT_BYTES {
+            return Err("legacy artifact file size limit".into());
+        }
         match postcard::from_bytes::<ProofArtifact>(bytes) {
             Ok(a) => Ok(a),
             Err(bin_err) => serde_json::from_slice::<ProofArtifact>(bytes).map_err(|json_err| {
@@ -109,7 +121,7 @@ impl ProofArtifact {
     /// Read an artifact back. Rejects unknown formats and malformed wire
     /// data (including non-canonical field elements).
     pub fn load(path: &Path) -> Result<Self, String> {
-        let bytes = fs::read(path).map_err(|e| format!("cannot read {}: {}", path.display(), e))?;
+        let bytes = crate::file_input::read(path, MAX_ARTIFACT_BYTES)?;
         let artifact =
             Self::from_bytes(&bytes).map_err(|e| format!("{} ({})", e, path.display()))?;
         if artifact.format != PROOF_FORMAT {

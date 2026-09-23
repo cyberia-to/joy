@@ -1,3 +1,13 @@
 [workspace]
 members = ["cli", "rs"]
 resolver = "2"
+
+[patch.crates-io]
+triton-vm = { path = "../trisha/.vendor/triton-vm" }
+twenty-first = { path = "../trisha/.vendor/twenty-first" }
+triton-air = { path = "../trisha/.vendor/triton-air" }
+triton-isa = { path = "../trisha/.vendor/triton-isa" }
+triton-constraint-circuit = { path = "../trisha/.vendor/triton-constraint-circuit" }
+triton-constraint-builder = { path = "../trisha/.vendor/triton-constraint-builder" }
+tasm-lib = { path = "../trisha/.vendor/tasm-lib" }
+tasm-object-derive = { path = "../trisha/.vendor/tasm-object-derive" }

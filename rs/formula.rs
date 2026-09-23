@@ -97,9 +97,9 @@ pub fn print<const N: usize>(r: &Reduction<N>, id: Order) -> String {
 
 /// Build the execution object (subject) from public inputs.
 ///
-/// Trident's NoxCompiler binds parameters as a right-nested cons list
-/// with the LAST parameter at the head: `[p_last [... [p_first 0]]]`
-/// (`Scope::bind` conses each parameter onto the subject in order).
+/// Public words form `[word_last [... [word_first 0]]]`. Compiled source
+/// entries validate the signature and reconstruct typed parameter nouns before
+/// evaluating the body; raw nox formulas retain their own subject contract.
 /// An empty input list yields the atom 0.
 pub fn build_subject<const N: usize>(
     r: &mut Reduction<N>,

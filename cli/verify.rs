@@ -22,8 +22,8 @@ pub struct VerifyArgs {
     #[arg(long)]
     pub legacy_trace_statement: bool,
     /// Target terrain (nox) or battlefield (cyber)
-    #[arg(long, default_value = "nox")]
-    pub target: String,
+    #[arg(long)]
+    pub target: Option<String>,
     /// Compilation profile for .tri inputs (debug or release)
     #[arg(long, default_value = "debug")]
     pub profile: String,
@@ -36,28 +36,48 @@ pub struct VerifyArgs {
     /// Reduction budget
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
-    /// Chain state (not yet supported; requests fail explicitly)
+    /// Expected public BBG state certificate (JSON)
     #[arg(long)]
     pub state: Option<String>,
 }
 
 pub fn cmd_verify(args: VerifyArgs) {
-    if let Err(e) = check_target(&args.target) {
+    if let Err(e) = check_target(args.target.as_deref().unwrap_or("nox")) {
         eprintln!("error: {}", e);
         process::exit(1);
     }
 
-    if args.state.is_some() {
-        eprintln!("error: joy verify does not support --state; chain state loading is not implemented");
-        process::exit(1);
+    let artifact = args.proof.as_ref().unwrap_or(&args.input);
+    match std::fs::symlink_metadata(artifact) {
+        Ok(metadata) if metadata.is_file() || (args.proof.is_none() && metadata.is_dir()) => {}
+        Ok(_) => {
+            eprintln!("error: verification input must be a regular file or source project");
+            process::exit(1);
+        }
+        Err(error) => {
+            eprintln!("error: cannot inspect verification input: {error}");
+            process::exit(1);
+        }
     }
 
+    if let Some(result) = crate::state_verify::try_verify(&args) {
+        if let Err(error) = result {
+            eprintln!("Verification: FAIL ({error})");
+            process::exit(1);
+        }
+        return;
+    }
     if let Some(result) = crate::execution_verify::try_verify(&args) {
         if let Err(error) = result {
             eprintln!("Verification: FAIL ({error})");
             process::exit(1);
         }
         return;
+    }
+
+    if args.state.is_some() {
+        eprintln!("error: --state requires an authenticated state execution artifact");
+        process::exit(1);
     }
 
     // A proof artifact given directly (what `trident verify <artifact>`
@@ -95,7 +115,7 @@ pub fn cmd_verify(args: VerifyArgs) {
         }
     }
 
-    let bundle = match load_bundle(&args.input, &args.profile) {
+    let bundle = match load_bundle(&args.input, &args.profile, args.target.as_deref()) {
         Ok(b) => b,
         Err(e) => {
             eprintln!("error: {}", e);
