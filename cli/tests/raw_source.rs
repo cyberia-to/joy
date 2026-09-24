@@ -111,6 +111,71 @@ fn imported_source_compiles_to_art1_and_joy_executes_the_complete_output() {
 }
 
 #[test]
+fn explicit_compiler_profile_export_matches_seed_api_and_refuses_other_formats() {
+    let p = Project::new();
+    p.write(
+        "src/main.tri",
+        include_str!("../../rs/tests/fixtures/compiler_transport.tri"),
+    );
+    let build = p.ok(&[
+        "build",
+        ".",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "--format",
+        "json-v1",
+    ]);
+    assert_eq!(build["result"]["input_profile"], 1);
+    assert_eq!(build["result"]["output_profile"], 1);
+    let bytes = fs::read(p.0.join("native.dag")).unwrap();
+    let api = trident::compile_native_artifact_project(
+        &p.0.join("src/main.tri"),
+        &trident::CompileOptions::default()
+            .with_package(joy_rs::target_package("nox").unwrap())
+            .unwrap(),
+        trident::NativeArtifactProfile::CompilerJob,
+        trident::NATIVE_ARTIFACT_LIMITS,
+    )
+    .unwrap();
+    assert_eq!(api.bytes, bytes);
+    for emit in ["bundle", "nox"] {
+        let error = p.bad(&[
+            "build",
+            ".",
+            "--emit",
+            emit,
+            "--artifact-profile",
+            "compiler-job",
+            "--format",
+            "json-v1",
+            "--force",
+            "-o",
+            "native.dag",
+        ]);
+        assert!(error["error"]["message"]
+            .as_str()
+            .unwrap()
+            .contains("requires --emit artifact"));
+        assert_eq!(fs::read(p.0.join("native.dag")).unwrap(), bytes);
+    }
+    // Profile1 does not turn arbitrary nouns into admitted jobs.
+    p.fixture("add14");
+    let output = p.run(&[
+        "run-artifact",
+        "native.dag",
+        "--input",
+        "input.dag",
+        "-o",
+        "out.dag",
+    ]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&output.stderr).contains("compiler job admission"));
+    assert!(!p.0.join("out.dag").exists());
+}
+
+#[test]
 fn named_profile_and_target_override_preserve_exact_nested_input() {
     let p = Project::new();
     p.write("trident.toml", "[project]\nname = \"native\"\nversion = \"0.1.0\"\nentry = \"src/main.tri\"\ntarget = \"triton\"\n[targets.copy]\nflags = [\"copy\"]\n");

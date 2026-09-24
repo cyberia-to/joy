@@ -1,0 +1,107 @@
+{
+  "schema": "joy/compiler-profile-validation/v1",
+  "claim": "source guest constructs bound results; no source compilation by the guest",
+  "binary_sha256": "c2f20413ea77e15ada0f8f78355bc0d20f07a4233e62405a2660e3639a2dd1a0",
+  "commands": [
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "build",
+        "/private/tmp/joy-04-seed-fixtures/compiler.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "--format",
+        "json-v1",
+        "-o",
+        "/private/tmp/joy-04-seed-fixtures/cli-seed.dag",
+        "--force"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"command\":\"build\",\"error\":null,\"ok\":true,\"result\":{\"artifact\":\"/private/tmp/joy-04-seed-fixtures/cli-seed.dag\",\"artifact_bytes\":44756,\"compiler\":{\"api\":3,\"name\":\"trident\",\"version\":\"0.3.0\"},\"entry_point\":\"main\",\"format\":\"artifact\",\"input_profile\":1,\"kind\":\"build\",\"output_profile\":1,\"profile\":\"debug\",\"program\":\"compiler_transport\",\"program_particle\":\"ed1a548d05d42b4a664973b2092d5f3ceea57d12e3cfe794d8fd827796b21e21\",\"reads_state\":false,\"target\":\"nox\",\"target_os\":null,\"target_package\":{\"compilation_hash\":\"8330a1d99c117a6294aced1ba8c9a665a0bd3e70fa643929393e1f6166cce6a2\",\"owner\":\"joy\",\"version\":\"0.5.0\"},\"target_vm\":\"nox\"},\"schema\":\"joy/cli/v1\"}\n",
+      "stderr": "",
+      "matches_independent_reference_bytes": true
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/private/tmp/joy-04-seed-fixtures/cli-seed.dag",
+        "--input",
+        "/private/tmp/joy-04-seed-fixtures/job.dag",
+        "-o",
+        "/private/tmp/joy-04-seed-fixtures/cli-result.dag",
+        "--force"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"artifact\":\"/private/tmp/joy-04-seed-fixtures/cli-result.dag\",\"execution\":{\"allocated_nodes\":690,\"arena_reserved_bytes\":26214416,\"charged_reductions\":708,\"compiler_job\":{\"compiled_particle\":\"55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da\",\"diagnostics\":[],\"entry_function\":\"main\",\"entry_module\":\"demo\",\"input_validation_visits\":183,\"limits\":{\"arena_nodes\":3000,\"artifact_bytes\":1048576,\"artifact_depth\":128,\"artifact_nodes\":3000,\"diagnostics\":16,\"evaluator_frames\":16384,\"modules\":32,\"reductions\":1000000,\"sequence_length\":4096,\"source_bytes\":4096,\"validation_visits\":100000},\"modules\":[{\"logical_path\":\"demo\",\"origin_name\":\"fixture\",\"origin_version\":\"1\",\"particle\":\"c384c638dfbac76b711409d33105b7067eb4a2831d06dfba6fd505d42a3cfa40\",\"source_bytes\":7,\"source_particle\":\"5f1f95d3a0d9c40709dcde8f33afb649d46b2c94b6bc1d79ebcd8def4f21a5fd\"}],\"options\":{\"cfg_flags\":[\"release\"],\"input_profile\":0,\"optimization\":0,\"output_profile\":0,\"target\":0},\"output_validation_visits\":36,\"package_particle\":\"a3d72946a9bce25224d001ae392318117d91d90b8de669083fcd2394863231d6\",\"status\":\"success\"},\"elapsed_micros\":9317,\"frame_buffer_bytes\":2883584,\"input_particle\":\"86fcdf1645ed3563d8222c03a055f9427717c864c40a11456c4fc94bfe03bc3a\",\"output_particle\":\"efc8fc3f2411343d5ffc2c1a692ff5a4c3954963c460b304fd6c4bee263309f5\",\"peak_frames\":39,\"program_particle\":\"ed1a548d05d42b4a664973b2092d5f3ceea57d12e3cfe794d8fd827796b21e21\",\"trace_mode\":\"none\",\"worker_stack_bytes\":268435456},\"ok\":true,\"published_particle\":\"efc8fc3f2411343d5ffc2c1a692ff5a4c3954963c460b304fd6c4bee263309f5\",\"schema\":\"joy/artifact-run/v1\"}\n",
+      "stderr": "",
+      "matches_independent_reference_bytes": true
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/private/tmp/joy-04-seed-fixtures/cli-seed.dag",
+        "--input",
+        "/private/tmp/joy-04-seed-fixtures/job.dag",
+        "--emit",
+        "program",
+        "-o",
+        "/private/tmp/joy-04-seed-fixtures/cli-program.dag",
+        "--force"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"artifact\":\"/private/tmp/joy-04-seed-fixtures/cli-program.dag\",\"execution\":{\"allocated_nodes\":690,\"arena_reserved_bytes\":26214416,\"charged_reductions\":708,\"compiler_job\":{\"compiled_particle\":\"55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da\",\"diagnostics\":[],\"entry_function\":\"main\",\"entry_module\":\"demo\",\"input_validation_visits\":183,\"limits\":{\"arena_nodes\":3000,\"artifact_bytes\":1048576,\"artifact_depth\":128,\"artifact_nodes\":3000,\"diagnostics\":16,\"evaluator_frames\":16384,\"modules\":32,\"reductions\":1000000,\"sequence_length\":4096,\"source_bytes\":4096,\"validation_visits\":100000},\"modules\":[{\"logical_path\":\"demo\",\"origin_name\":\"fixture\",\"origin_version\":\"1\",\"particle\":\"c384c638dfbac76b711409d33105b7067eb4a2831d06dfba6fd505d42a3cfa40\",\"source_bytes\":7,\"source_particle\":\"5f1f95d3a0d9c40709dcde8f33afb649d46b2c94b6bc1d79ebcd8def4f21a5fd\"}],\"options\":{\"cfg_flags\":[\"release\"],\"input_profile\":0,\"optimization\":0,\"output_profile\":0,\"target\":0},\"output_validation_visits\":36,\"package_particle\":\"a3d72946a9bce25224d001ae392318117d91d90b8de669083fcd2394863231d6\",\"status\":\"success\"},\"elapsed_micros\":8915,\"frame_buffer_bytes\":2883584,\"input_particle\":\"86fcdf1645ed3563d8222c03a055f9427717c864c40a11456c4fc94bfe03bc3a\",\"output_particle\":\"efc8fc3f2411343d5ffc2c1a692ff5a4c3954963c460b304fd6c4bee263309f5\",\"peak_frames\":39,\"program_particle\":\"ed1a548d05d42b4a664973b2092d5f3ceea57d12e3cfe794d8fd827796b21e21\",\"trace_mode\":\"none\",\"worker_stack_bytes\":268435456},\"ok\":true,\"published_particle\":\"55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da\",\"schema\":\"joy/artifact-run/v1\"}\n",
+      "stderr": "",
+      "matches_independent_reference_bytes": true
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/private/tmp/joy-04-seed-fixtures/cli-program.dag",
+        "--input",
+        "/private/tmp/joy-04-seed-fixtures/zero.dag",
+        "-o",
+        "/private/tmp/joy-04-seed-fixtures/cli-fourteen.dag",
+        "--force"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"artifact\":\"/private/tmp/joy-04-seed-fixtures/cli-fourteen.dag\",\"execution\":{\"allocated_nodes\":10,\"arena_reserved_bytes\":26214416,\"charged_reductions\":1,\"elapsed_micros\":198,\"frame_buffer_bytes\":2883584,\"input_particle\":\"47ff2df1749c1a6c30bba58202ddb7dacacdf95db5f2abacff8fcb81202f7702\",\"output_particle\":\"0934430c117b91ade2f29fefe8cb8eaa042bd4090f8c1c0f02dadd5fe81409c5\",\"peak_frames\":1,\"program_particle\":\"55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da\",\"trace_mode\":\"none\",\"worker_stack_bytes\":268435456},\"ok\":true,\"published_particle\":\"0934430c117b91ade2f29fefe8cb8eaa042bd4090f8c1c0f02dadd5fe81409c5\",\"schema\":\"joy/artifact-run/v1\"}\n",
+      "stderr": "",
+      "matches_independent_reference_bytes": true
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/private/tmp/joy-04-seed-fixtures/cli-seed.dag",
+        "--input",
+        "/private/tmp/joy-04-seed-fixtures/zero.dag",
+        "-o",
+        "/private/tmp/joy-04-seed-fixtures/cli-result.dag",
+        "--force"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: compiler job admission: expected pair\n",
+      "previous_output_preserved": true
+    }
+  ],
+  "source_revisions": {
+    "trident": "6b8d4e37b1dbbbc86dcb952c38f667f8277a5cea",
+    "joy": "5db7fa3559382de7bc3c93e7712daf28b730e24d",
+    "trisha": "cf89bf3cee97581ba6bd4bae87d42de793045085",
+    "nox": "5271961a72a1f1e9922df36e3e4e3c65d1acff81",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "zheng": "80a8ca90208c3b49c4f2a8507d75fd17785fdfe3"
+  },
+  "kind": "local development; not CI or release candidate"
+}

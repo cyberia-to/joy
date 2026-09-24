@@ -1,0 +1,19 @@
+program compiler_transport
+
+// SH1 transport fixture. It constructs RES1 on nox and quotes a program that
+// returns fourteen. It does not inspect or compile the supplied source text.
+#[pure]
+fn cons(a: Noun, b: Noun) -> Noun { nox_noun_pair(a, b) }
+
+#[pure]
+fn atom(value: Field) -> Noun { nox_noun_atom(value) }
+
+#[pure]
+fn main(input: Noun) -> Noun {
+    let zero = atom(0)
+    let formula = cons(atom(1), atom(14))
+    let artifact = cons(atom(1095914545), cons(zero, cons(zero, cons(zero, cons(formula, zero)))))
+    let (a, b, c, d) = nox_noun_identity(input)
+    let identity = cons(cons(atom(a), atom(b)), cons(atom(c), atom(d)))
+    cons(atom(1380274993), cons(identity, cons(zero, cons(artifact, zero))))
+}

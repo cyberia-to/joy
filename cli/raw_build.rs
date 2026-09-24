@@ -4,10 +4,15 @@ use std::path::PathBuf;
 
 pub fn build(args: &BuildArgs) -> Result<(PathBuf, serde_json::Value), JoyError> {
     let resolved = compile::resolve_source(&args.input, &args.profile, args.target.as_deref())?;
-    let artifact = trident::compile_raw_artifact_project(
+    let profile = args
+        .artifact_profile
+        .unwrap_or(crate::build_cmd::ArtifactProfile::Raw)
+        .native();
+    let artifact = trident::compile_native_artifact_project(
         &resolved.entry,
         &resolved.options,
-        trident::RAW_ARTIFACT_LIMITS,
+        profile,
+        trident::NATIVE_ARTIFACT_LIMITS,
     )
     .map_err(compile::diagnostics)?;
     let name = if args.input.is_dir() {
@@ -38,7 +43,7 @@ pub fn build(args: &BuildArgs) -> Result<(PathBuf, serde_json::Value), JoyError>
         "program":name, "program_particle":particle, "artifact_bytes":artifact.bytes.len(),
         "target":resolved.target, "target_vm":"nox", "target_os":null,
         "profile":args.profile, "reads_state":false, "entry_point":"main",
-        "input_profile":0, "output_profile":0,
+        "input_profile":artifact.profile.value(), "output_profile":artifact.profile.value(),
         "compiler":{"name":"trident","version":trident::COMPILER_VERSION,"api":compiler_api},
         "target_package":{"owner":owner,"version":version,"compilation_hash":package_hash}
     });

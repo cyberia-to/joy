@@ -250,3 +250,57 @@ fn compile_errors_are_valid_results_with_ordered_utf8_diagnostics_and_no_program
     .unwrap();
     assert_eq!(result.output, encoded(&ar, expected));
 }
+
+#[test]
+fn trident_source_seed_exports_compiler_profile_and_executes_bound_job_on_nox() {
+    let source = include_str!("../../tests/fixtures/compiler_transport.tri");
+    let seed = trident::compile_native_artifact(
+        source,
+        "compiler_transport.tri",
+        &trident::CompileOptions::default(),
+        trident::NativeArtifactProfile::CompilerJob,
+        trident::NATIVE_ARTIFACT_LIMITS,
+    )
+    .unwrap();
+    let mut ar = Arena::new();
+    let compiler =
+        artifact::decode(&mut ar, &seed.bytes, RunLimits::default().transport()).unwrap();
+    let generated = generated_program(&mut ar);
+    let job = make_job(&mut ar, compiler, schema::FIXTURE_CAPS);
+    let result = run(seed.bytes.clone(), encoded(&ar, job), RunLimits::default()).unwrap();
+    assert_eq!(result.compiled.as_ref().unwrap(), &encoded(&ar, generated));
+    let expected = schema::success(&mut ar, job, generated).unwrap();
+    assert_eq!(result.output, encoded(&ar, expected));
+    let zero = atom(&mut ar, 0);
+    if let Some(path) = std::env::var_os("JOY_SEED_FIXTURES") {
+        let path = std::path::PathBuf::from(path);
+        std::fs::create_dir_all(&path).unwrap();
+        std::fs::write(path.join("compiler.tri"), source).unwrap();
+        std::fs::write(path.join("compiler.dag"), &seed.bytes).unwrap();
+        for (name, root) in [
+            ("job", job),
+            ("expected-result", expected),
+            ("expected-program", generated),
+            ("zero", zero),
+        ] {
+            std::fs::write(path.join(format!("{name}.dag")), encoded(&ar, root)).unwrap();
+        }
+        std::fs::write(
+            path.join("report.json"),
+            serde_json::to_vec_pretty(&result.report).unwrap(),
+        )
+        .unwrap();
+    }
+    assert_eq!(
+        output_atom(
+            &run(
+                result.compiled.unwrap(),
+                encoded(&ar, zero),
+                RunLimits::default()
+            )
+            .unwrap()
+            .output
+        ),
+        14
+    );
+}
