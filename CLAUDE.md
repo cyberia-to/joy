@@ -108,8 +108,9 @@ connection or authority to modify state.
   thread with a big arena.
 - Successful pure L1 charged reductions are initial minus remaining budget;
   successful traces have that many rows. Failed traces are not a gas counter.
-- `run-artifact` executes complete ART1/raw NOXDAG01 nouns with the bounded
-  sequential heap evaluator and NoTrace; see `specs/structured-run.md`.
+- `run-artifact` executes complete ART1 raw and compiler JOB1/RES1 NOXDAG01
+  nouns with the bounded sequential heap evaluator and NoTrace; see
+  `specs/structured-run.md` and `specs/compiler-jobs.md`.
 
 ## CLI contract
 
@@ -131,7 +132,7 @@ joy verify <input> --claim <values> [--input-values ...]  # re-execution
 machine values come from Trident's upstream nox contract. CLI `--state`
 accepts authenticated public certificates; cyber supplies no live network binding.
 
-Only build JSON-v1 and describe have versioned machine output. Other stdout
+Build JSON-v1, describe and run-artifact have versioned machine output. Other stdout
 is human-readable; stderr carries progress/diagnostics.
 `--target` accepts `nox` (terrain) or `cyber` (battlefield); anything
 else is refused with a pointer to trisha.

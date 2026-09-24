@@ -1,0 +1,79 @@
+{
+  "schema": "joy/selfhost-validation/v1",
+  "date": "2026-09-24",
+  "gate": "SH1 compiler JOB1/RES1 production admission",
+  "kind": "local development; not CI or release candidate",
+  "source_revisions": {
+    "joy": "e67383e8f046015e985ac878dc37611b5f5da5af",
+    "trident": "23d3fdf842eb0024770194eb7469624a94d13ebd",
+    "trisha": "cf89bf3cee97581ba6bd4bae87d42de793045085",
+    "nox": "5271961a72a1f1e9922df36e3e4e3c65d1acff81",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "zheng": "80a8ca90208c3b49c4f2a8507d75fd17785fdfe3"
+  },
+  "host": {
+    "uname -ms": "Darwin arm64",
+    "rustc -Vv": "rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.3",
+    "sw_vers": "ProductName:\t\tmacOS\nProductVersion:\t\t26.4.1\nBuildVersion:\t\t25E253",
+    "sysctl -n machdep.cpu.brand_string": "Apple M4 Max"
+  },
+  "gates": [
+    {
+      "repository": "joy",
+      "revision": "e67383e8f046015e985ac878dc37611b5f5da5af",
+      "command": "CARGO_TARGET_DIR=../trident/target cargo check --workspace --all-targets --locked",
+      "exit_code": 0,
+      "local_log": "/tmp/joy-04-jobs-final-check.log",
+      "log_sha256": "d24c4beb3f314fbcce6f622ed5b0c6b4bf9c6c6b6a743353f9a03d39edf82df6",
+      "rust_warnings": 0
+    },
+    {
+      "repository": "joy",
+      "revision": "e67383e8f046015e985ac878dc37611b5f5da5af",
+      "command": "CARGO_TARGET_DIR=../trident/target cargo test --workspace --release --locked",
+      "exit_code": 0,
+      "local_log": "/tmp/joy-04-jobs-final-tests.log",
+      "log_sha256": "5a0cabe9fb26898421f2be15d830819c3c607d762620a119be0ae25df41f11c2",
+      "rust_warnings": 0,
+      "tests": {
+        "passed": 110,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "repository": "trisha",
+      "revision": "cf89bf3cee97581ba6bd4bae87d42de793045085",
+      "command": "CARGO_TARGET_DIR=../trident/target cargo run --release --locked -p trisha -- bench",
+      "exit_code": 0,
+      "local_log": "/tmp/trisha-04-jobs-bench.log",
+      "log_sha256": "22d5b2dfddb1389af75eb0701eba0c272c21686525c30c836cb1c43226063d28",
+      "rust_warnings": 0,
+      "verified_fixtures": 133,
+      "verified_independent_baselines": 43,
+      "result_and_cycle_rows_unchanged_from_collections_delivery": true,
+      "comparison_log": "/tmp/trisha-04-collections-bench.log"
+    }
+  ],
+  "installed_cli_receipt": "compiler-jobs-cli.json",
+  "provenance": "Source gates ran before source commit; tested source and fixtures committed unchanged. Installed CLI acceptance rerun after committed rebuild.",
+  "earlier_failed_commands": [
+    {
+      "command": "JOY_JOB_VECTORS=cli/tests/compiler_vectors.json CARGO_TARGET_DIR=../trident/target cargo test --release --locked -p joy-rs --lib structured::tests::compiler::vectors",
+      "exit_code": 101,
+      "local_log": "/tmp/joy-04-jobs-vectors.log",
+      "first_error": "No such file or directory at fixture export: Cargo uses rs/ as the library test working directory. Repeated successfully with absolute JOY_JOB_VECTORS."
+    }
+  ],
+  "scope": [
+    "The guest constructs RES1 and returns quoted ART1. No source compilation occurs in these transport fixtures.",
+    "Library and CLI tests include runtime-constructed oversized RES1, compiler-dominant requested transport caps, exact execution and validation limits, and atomic failure preservation.",
+    "No native dynamic execution proof or full compiler-scale RSS bound is claimed.",
+    "No Trident source libraries changed in this delivery; prior collection formal audits remain UNKNOWN."
+  ]
+}

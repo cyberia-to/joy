@@ -1,0 +1,402 @@
+{
+  "schema": "joy/compiler-transport-validation/v1",
+  "claim": "guest result construction and extracted-program execution; no source compilation",
+  "command": [
+    "python3",
+    "/Users/master/cyber/.worktrees/selfhost-0.4/joy/audit/self-hosting/run-compiler-jobs.py",
+    "--joy",
+    "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+    "--output",
+    "audit/self-hosting/compiler-jobs-cli.json"
+  ],
+  "binary_sha256": "73964f345fb524486b8e7278ef9739e5520821c08b30b7278084015d0d136ef0",
+  "commands": [
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/compiler",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"artifact\":\"/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag\",\"execution\":{\"allocated_nodes\":125,\"arena_reserved_bytes\":26214416,\"charged_reductions\":9,\"compiler_job\":{\"compiled_particle\":\"55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da\",\"diagnostics\":[],\"entry_function\":\"main\",\"entry_module\":\"demo\",\"input_validation_visits\":183,\"limits\":{\"arena_nodes\":3000,\"artifact_bytes\":1048576,\"artifact_depth\":128,\"artifact_nodes\":3000,\"diagnostics\":16,\"evaluator_frames\":16384,\"modules\":32,\"reductions\":1000000,\"sequence_length\":4096,\"source_bytes\":4096,\"validation_visits\":100000},\"modules\":[{\"logical_path\":\"demo\",\"origin_name\":\"fixture\",\"origin_version\":\"1\",\"particle\":\"c384c638dfbac76b711409d33105b7067eb4a2831d06dfba6fd505d42a3cfa40\",\"source_bytes\":7,\"source_particle\":\"5f1f95d3a0d9c40709dcde8f33afb649d46b2c94b6bc1d79ebcd8def4f21a5fd\"}],\"options\":{\"cfg_flags\":[\"release\"],\"input_profile\":0,\"optimization\":0,\"output_profile\":0,\"target\":0},\"output_validation_visits\":36,\"package_particle\":\"a3d72946a9bce25224d001ae392318117d91d90b8de669083fcd2394863231d6\",\"status\":\"success\"},\"elapsed_micros\":7166,\"frame_buffer_bytes\":2883584,\"input_particle\":\"f3c6a03f1d57c9f015bf162b3a706fd9d896b670ee5b00ffa1f20d27a00f1be9\",\"output_particle\":\"4e100a50a5c7d5142abaedec6a8a6bc1ee10b38c87798a537b66605e80d4c354\",\"peak_frames\":5,\"program_particle\":\"631934b58b7ebbae91881ae45e0f27a0b94d3427bd08b948059a170c8ab2b58c\",\"trace_mode\":\"none\",\"worker_stack_bytes\":268435456},\"ok\":true,\"published_particle\":\"4e100a50a5c7d5142abaedec6a8a6bc1ee10b38c87798a537b66605e80d4c354\",\"schema\":\"joy/artifact-run/v1\"}\n",
+      "stderr": "",
+      "matches_independent_reference_bytes": true,
+      "execution": {
+        "allocated_nodes": 125,
+        "arena_reserved_bytes": 26214416,
+        "charged_reductions": 9,
+        "compiler_job": {
+          "compiled_particle": "55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da",
+          "diagnostics": [],
+          "entry_function": "main",
+          "entry_module": "demo",
+          "input_validation_visits": 183,
+          "limits": {
+            "arena_nodes": 3000,
+            "artifact_bytes": 1048576,
+            "artifact_depth": 128,
+            "artifact_nodes": 3000,
+            "diagnostics": 16,
+            "evaluator_frames": 16384,
+            "modules": 32,
+            "reductions": 1000000,
+            "sequence_length": 4096,
+            "source_bytes": 4096,
+            "validation_visits": 100000
+          },
+          "modules": [
+            {
+              "logical_path": "demo",
+              "origin_name": "fixture",
+              "origin_version": "1",
+              "particle": "c384c638dfbac76b711409d33105b7067eb4a2831d06dfba6fd505d42a3cfa40",
+              "source_bytes": 7,
+              "source_particle": "5f1f95d3a0d9c40709dcde8f33afb649d46b2c94b6bc1d79ebcd8def4f21a5fd"
+            }
+          ],
+          "options": {
+            "cfg_flags": [
+              "release"
+            ],
+            "input_profile": 0,
+            "optimization": 0,
+            "output_profile": 0,
+            "target": 0
+          },
+          "output_validation_visits": 36,
+          "package_particle": "a3d72946a9bce25224d001ae392318117d91d90b8de669083fcd2394863231d6",
+          "status": "success"
+        },
+        "elapsed_micros": 7166,
+        "frame_buffer_bytes": 2883584,
+        "input_particle": "f3c6a03f1d57c9f015bf162b3a706fd9d896b670ee5b00ffa1f20d27a00f1be9",
+        "output_particle": "4e100a50a5c7d5142abaedec6a8a6bc1ee10b38c87798a537b66605e80d4c354",
+        "peak_frames": 5,
+        "program_particle": "631934b58b7ebbae91881ae45e0f27a0b94d3427bd08b948059a170c8ab2b58c",
+        "trace_mode": "none",
+        "worker_stack_bytes": 268435456
+      }
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/compiler",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force",
+        "--emit",
+        "program"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"artifact\":\"/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag\",\"execution\":{\"allocated_nodes\":125,\"arena_reserved_bytes\":26214416,\"charged_reductions\":9,\"compiler_job\":{\"compiled_particle\":\"55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da\",\"diagnostics\":[],\"entry_function\":\"main\",\"entry_module\":\"demo\",\"input_validation_visits\":183,\"limits\":{\"arena_nodes\":3000,\"artifact_bytes\":1048576,\"artifact_depth\":128,\"artifact_nodes\":3000,\"diagnostics\":16,\"evaluator_frames\":16384,\"modules\":32,\"reductions\":1000000,\"sequence_length\":4096,\"source_bytes\":4096,\"validation_visits\":100000},\"modules\":[{\"logical_path\":\"demo\",\"origin_name\":\"fixture\",\"origin_version\":\"1\",\"particle\":\"c384c638dfbac76b711409d33105b7067eb4a2831d06dfba6fd505d42a3cfa40\",\"source_bytes\":7,\"source_particle\":\"5f1f95d3a0d9c40709dcde8f33afb649d46b2c94b6bc1d79ebcd8def4f21a5fd\"}],\"options\":{\"cfg_flags\":[\"release\"],\"input_profile\":0,\"optimization\":0,\"output_profile\":0,\"target\":0},\"output_validation_visits\":36,\"package_particle\":\"a3d72946a9bce25224d001ae392318117d91d90b8de669083fcd2394863231d6\",\"status\":\"success\"},\"elapsed_micros\":5173,\"frame_buffer_bytes\":2883584,\"input_particle\":\"f3c6a03f1d57c9f015bf162b3a706fd9d896b670ee5b00ffa1f20d27a00f1be9\",\"output_particle\":\"4e100a50a5c7d5142abaedec6a8a6bc1ee10b38c87798a537b66605e80d4c354\",\"peak_frames\":5,\"program_particle\":\"631934b58b7ebbae91881ae45e0f27a0b94d3427bd08b948059a170c8ab2b58c\",\"trace_mode\":\"none\",\"worker_stack_bytes\":268435456},\"ok\":true,\"published_particle\":\"55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da\",\"schema\":\"joy/artifact-run/v1\"}\n",
+      "stderr": "",
+      "matches_independent_reference_bytes": true,
+      "execution": {
+        "allocated_nodes": 125,
+        "arena_reserved_bytes": 26214416,
+        "charged_reductions": 9,
+        "compiler_job": {
+          "compiled_particle": "55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da",
+          "diagnostics": [],
+          "entry_function": "main",
+          "entry_module": "demo",
+          "input_validation_visits": 183,
+          "limits": {
+            "arena_nodes": 3000,
+            "artifact_bytes": 1048576,
+            "artifact_depth": 128,
+            "artifact_nodes": 3000,
+            "diagnostics": 16,
+            "evaluator_frames": 16384,
+            "modules": 32,
+            "reductions": 1000000,
+            "sequence_length": 4096,
+            "source_bytes": 4096,
+            "validation_visits": 100000
+          },
+          "modules": [
+            {
+              "logical_path": "demo",
+              "origin_name": "fixture",
+              "origin_version": "1",
+              "particle": "c384c638dfbac76b711409d33105b7067eb4a2831d06dfba6fd505d42a3cfa40",
+              "source_bytes": 7,
+              "source_particle": "5f1f95d3a0d9c40709dcde8f33afb649d46b2c94b6bc1d79ebcd8def4f21a5fd"
+            }
+          ],
+          "options": {
+            "cfg_flags": [
+              "release"
+            ],
+            "input_profile": 0,
+            "optimization": 0,
+            "output_profile": 0,
+            "target": 0
+          },
+          "output_validation_visits": 36,
+          "package_particle": "a3d72946a9bce25224d001ae392318117d91d90b8de669083fcd2394863231d6",
+          "status": "success"
+        },
+        "elapsed_micros": 5173,
+        "frame_buffer_bytes": 2883584,
+        "input_particle": "f3c6a03f1d57c9f015bf162b3a706fd9d896b670ee5b00ffa1f20d27a00f1be9",
+        "output_particle": "4e100a50a5c7d5142abaedec6a8a6bc1ee10b38c87798a537b66605e80d4c354",
+        "peak_frames": 5,
+        "program_particle": "631934b58b7ebbae91881ae45e0f27a0b94d3427bd08b948059a170c8ab2b58c",
+        "trace_mode": "none",
+        "worker_stack_bytes": 268435456
+      }
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/extracted",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/zero",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"artifact\":\"/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag\",\"execution\":{\"allocated_nodes\":10,\"arena_reserved_bytes\":26214416,\"charged_reductions\":1,\"elapsed_micros\":543,\"frame_buffer_bytes\":2883584,\"input_particle\":\"47ff2df1749c1a6c30bba58202ddb7dacacdf95db5f2abacff8fcb81202f7702\",\"output_particle\":\"0934430c117b91ade2f29fefe8cb8eaa042bd4090f8c1c0f02dadd5fe81409c5\",\"peak_frames\":1,\"program_particle\":\"55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da\",\"trace_mode\":\"none\",\"worker_stack_bytes\":268435456},\"ok\":true,\"published_particle\":\"0934430c117b91ade2f29fefe8cb8eaa042bd4090f8c1c0f02dadd5fe81409c5\",\"schema\":\"joy/artifact-run/v1\"}\n",
+      "stderr": "",
+      "matches_independent_reference_bytes": true,
+      "execution": {
+        "allocated_nodes": 10,
+        "arena_reserved_bytes": 26214416,
+        "charged_reductions": 1,
+        "elapsed_micros": 543,
+        "frame_buffer_bytes": 2883584,
+        "input_particle": "47ff2df1749c1a6c30bba58202ddb7dacacdf95db5f2abacff8fcb81202f7702",
+        "output_particle": "0934430c117b91ade2f29fefe8cb8eaa042bd4090f8c1c0f02dadd5fe81409c5",
+        "peak_frames": 1,
+        "program_particle": "55b07f44e2d65db4e04774a09a7e1f3f4597e6c9ecb30ad20512fa46f44607da",
+        "trace_mode": "none",
+        "worker_stack_bytes": 268435456
+      }
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/diagnostic-compiler",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/diagnostic-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"artifact\":\"/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag\",\"execution\":{\"allocated_nodes\":143,\"arena_reserved_bytes\":26214416,\"charged_reductions\":9,\"compiler_job\":{\"compiled_particle\":null,\"diagnostics\":[{\"code\":6,\"end_byte\":0,\"message\":\"unsupported fixture\",\"module_index\":0,\"start_byte\":0},{\"code\":6,\"end_byte\":0,\"message\":\"unsupported fixture\",\"module_index\":0,\"start_byte\":0}],\"entry_function\":\"main\",\"entry_module\":\"demo\",\"input_validation_visits\":183,\"limits\":{\"arena_nodes\":3000,\"artifact_bytes\":1048576,\"artifact_depth\":128,\"artifact_nodes\":3000,\"diagnostics\":16,\"evaluator_frames\":16384,\"modules\":32,\"reductions\":1000000,\"sequence_length\":4096,\"source_bytes\":4096,\"validation_visits\":100000},\"modules\":[{\"logical_path\":\"demo\",\"origin_name\":\"fixture\",\"origin_version\":\"1\",\"particle\":\"c384c638dfbac76b711409d33105b7067eb4a2831d06dfba6fd505d42a3cfa40\",\"source_bytes\":7,\"source_particle\":\"5f1f95d3a0d9c40709dcde8f33afb649d46b2c94b6bc1d79ebcd8def4f21a5fd\"}],\"options\":{\"cfg_flags\":[\"release\"],\"input_profile\":0,\"optimization\":0,\"output_profile\":0,\"target\":0},\"output_validation_visits\":104,\"package_particle\":\"a3d72946a9bce25224d001ae392318117d91d90b8de669083fcd2394863231d6\",\"status\":\"compile_error\"},\"elapsed_micros\":6157,\"frame_buffer_bytes\":2883584,\"input_particle\":\"7140de5a2e2f92ed3dc575f46e4a0108a2788a856bd3de3a078a6e35790b68a5\",\"output_particle\":\"05bcd4dc611936eabbc3a465b5af834976f9128a34f442a16a3635f5a04a4d05\",\"peak_frames\":5,\"program_particle\":\"f24d4e1e4ff89bf0ee1614dd60fbf9653a570158aaf8d3b50b3359e1f2d329a6\",\"trace_mode\":\"none\",\"worker_stack_bytes\":268435456},\"ok\":true,\"published_particle\":\"05bcd4dc611936eabbc3a465b5af834976f9128a34f442a16a3635f5a04a4d05\",\"schema\":\"joy/artifact-run/v1\"}\n",
+      "stderr": "",
+      "matches_independent_reference_bytes": true,
+      "execution": {
+        "allocated_nodes": 143,
+        "arena_reserved_bytes": 26214416,
+        "charged_reductions": 9,
+        "compiler_job": {
+          "compiled_particle": null,
+          "diagnostics": [
+            {
+              "code": 6,
+              "end_byte": 0,
+              "message": "unsupported fixture",
+              "module_index": 0,
+              "start_byte": 0
+            },
+            {
+              "code": 6,
+              "end_byte": 0,
+              "message": "unsupported fixture",
+              "module_index": 0,
+              "start_byte": 0
+            }
+          ],
+          "entry_function": "main",
+          "entry_module": "demo",
+          "input_validation_visits": 183,
+          "limits": {
+            "arena_nodes": 3000,
+            "artifact_bytes": 1048576,
+            "artifact_depth": 128,
+            "artifact_nodes": 3000,
+            "diagnostics": 16,
+            "evaluator_frames": 16384,
+            "modules": 32,
+            "reductions": 1000000,
+            "sequence_length": 4096,
+            "source_bytes": 4096,
+            "validation_visits": 100000
+          },
+          "modules": [
+            {
+              "logical_path": "demo",
+              "origin_name": "fixture",
+              "origin_version": "1",
+              "particle": "c384c638dfbac76b711409d33105b7067eb4a2831d06dfba6fd505d42a3cfa40",
+              "source_bytes": 7,
+              "source_particle": "5f1f95d3a0d9c40709dcde8f33afb649d46b2c94b6bc1d79ebcd8def4f21a5fd"
+            }
+          ],
+          "options": {
+            "cfg_flags": [
+              "release"
+            ],
+            "input_profile": 0,
+            "optimization": 0,
+            "output_profile": 0,
+            "target": 0
+          },
+          "output_validation_visits": 104,
+          "package_particle": "a3d72946a9bce25224d001ae392318117d91d90b8de669083fcd2394863231d6",
+          "status": "compile_error"
+        },
+        "elapsed_micros": 6157,
+        "frame_buffer_bytes": 2883584,
+        "input_particle": "7140de5a2e2f92ed3dc575f46e4a0108a2788a856bd3de3a078a6e35790b68a5",
+        "output_particle": "05bcd4dc611936eabbc3a465b5af834976f9128a34f442a16a3635f5a04a4d05",
+        "peak_frames": 5,
+        "program_particle": "f24d4e1e4ff89bf0ee1614dd60fbf9653a570158aaf8d3b50b3359e1f2d329a6",
+        "trace_mode": "none",
+        "worker_stack_bytes": 268435456
+      }
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/diagnostic-compiler",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/diagnostic-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force",
+        "--emit",
+        "program"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: guest compilation failed: code6 module0 [0..0): unsupported fixture; code6 module0 [0..0): unsupported fixture\n",
+      "previous_output_preserved": true
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/budget-compiler",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/budget-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: execution budget exhausted\n",
+      "previous_output_preserved": true
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/result-binding-compiler",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/result-binding-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: compiler result: job identity mismatch\n",
+      "previous_output_preserved": true
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/compiler-binding-compiler",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/compiler-binding-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: compiler job admission: compiler identity mismatch\n",
+      "previous_output_preserved": true
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/host-service-compiler",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/host-service-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: execution resource/profile: UnsupportedService(16)\n",
+      "previous_output_preserved": true
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/diagnostic-cap-compiler",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/diagnostic-cap-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: compiler result: collection length limit\n",
+      "previous_output_preserved": true
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4/install/bin/joy",
+        "run-artifact",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/schema-compiler",
+        "--input",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/schema-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-compiler-acceptance-axc6oi53/published.dag",
+        "--force"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: compiler job admission: expected pair\n",
+      "previous_output_preserved": true
+    }
+  ],
+  "source_revisions": {
+    "joy": "e67383e8f046015e985ac878dc37611b5f5da5af",
+    "trident": "23d3fdf842eb0024770194eb7469624a94d13ebd",
+    "trisha": "cf89bf3cee97581ba6bd4bae87d42de793045085",
+    "nox": "5271961a72a1f1e9922df36e3e4e3c65d1acff81",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "zheng": "80a8ca90208c3b49c4f2a8507d75fd17785fdfe3"
+  },
+  "kind": "local development; not CI or release candidate"
+}

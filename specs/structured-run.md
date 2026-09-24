@@ -6,9 +6,10 @@ bounded sequential pure L1 evaluation.
 
 `joy run-artifact PROGRAM --input INPUT --output OUTPUT [--force] [LIMITS]`
 loads two complete NOXDAG01 files. PROGRAM must have exact
-`ART1(0,0,0,formula)` layout from Trident's self-hosting-jobs contract; INPUT is
-an arbitrary native noun, including atom0. Compiler profile(1,1) is rejected
-until production JOB1/RES1 admission exists. This path never parses source,
+`ART1(0,0,0,formula)` layout for arbitrary raw INPUT nouns, including atom0,
+or `ART1(0,1,1,formula)` for validated compiler jobs. See
+[compiler-job admission](compiler-jobs.md) for JOB1/RES1, independent schema
+caps and `--emit result|program`. This path never parses source,
 flattens nouns, invokes the old flat-word Runner ABI or falls back to a prover.
 Reached host call/look services are rejected by the sequential pure profile.
 
@@ -74,5 +75,5 @@ format `artifact`, the full `program_particle`, byte length, raw profiles 0/0,
 compiler/target-package identities and selected profile. This format's execution
 identity is the ART1 particle; it does not contain a bundle source hash.
 
-This is seed compilation on the host. Guest compiler JOB1/RES1 admission,
-reusable source loops/calls and native dynamic proofs remain separate gates.
+This is seed compilation on the host. Guest compiler JOB1/RES1 uses the separate admission path above. Native dynamic
+proofs remain a separate gate.

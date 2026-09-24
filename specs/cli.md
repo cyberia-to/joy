@@ -45,7 +45,7 @@ authority to modify chain state.
 joy describe [--target nox|cyber]
 joy build INPUT [--target nox|cyber] [--profile NAME] [--emit bundle|nox|artifact] [-o PATH] [--force] [--format human|json-v1]
 joy run INPUT [COMMON]
-joy run-artifact PROGRAM --input INPUT --output OUTPUT [LIMITS] [--force]
+joy run-artifact PROGRAM --input INPUT --output OUTPUT [--emit result|program] [LIMITS] [--force]
 joy prove INPUT [COMMON] [--zk] [--output PATH]
 joy verify ARTIFACT [COMMON] [--claim VALUES]
 joy verify INPUT --proof ARTIFACT [COMMON] [--claim VALUES]
