@@ -174,3 +174,61 @@ fn artifact_publication_preserves_existing_output_on_every_compile_failure() {
         .to_string_lossy()
         .starts_with('.')));
 }
+
+#[test]
+fn compact_source_loop_uses_explicit_frames_and_never_publishes_partial_execution() {
+    let p = Project::new();
+    p.write("src/main.tri", "program loop_test\nfn increment(x: Field) -> Field { x + 1 }\nfn main(input: Noun) -> Noun { let mut total: Field = 0\nfor i in 0..5000 { total = increment(total) }\nnox_noun_atom(total) }");
+    p.fixture("add14");
+    let build = p.ok(&["build", ".", "--emit", "artifact", "--format", "json-v1"]);
+    assert!(fs::metadata(p.0.join("native.dag")).unwrap().len() < 30_000);
+    p.write("out.dag", "previous successful result");
+    let args = [
+        "run-artifact",
+        "native.dag",
+        "--input",
+        "input.dag",
+        "-o",
+        "out.dag",
+        "--force",
+    ];
+    let error = p.run(&args);
+    assert_eq!(error.status.code(), Some(1));
+    assert!(
+        String::from_utf8_lossy(&error.stderr).contains("Frames"),
+        "{error:?}"
+    );
+    assert_eq!(
+        fs::read(p.0.join("out.dag")).unwrap(),
+        b"previous successful result"
+    );
+    for extra in [
+        ["--frames", "65536", "--budget", "1"],
+        ["--frames", "65536", "--arena-nodes", "1000"],
+    ] {
+        let mut limited = args.to_vec();
+        limited.extend(extra);
+        assert_eq!(p.run(&limited).status.code(), Some(1));
+        assert_eq!(
+            fs::read(p.0.join("out.dag")).unwrap(),
+            b"previous successful result"
+        );
+    }
+    let mut admitted = args.to_vec();
+    admitted.extend(["--frames", "65536"]);
+    let execution = p.ok(&admitted);
+    assert_eq!(
+        execution["execution"]["program_particle"],
+        build["result"]["program_particle"]
+    );
+    assert!(execution["execution"]["peak_frames"].as_u64().unwrap() > 16384);
+    assert_eq!(execution["execution"]["trace_mode"], "none");
+    let output = fs::read(p.0.join("out.dag")).unwrap();
+    // Canonical one-atom NOXDAG01, independently interpreted as integer 5000.
+    assert_eq!(output.len(), 85);
+    assert_eq!(&output[..8], b"NOXDAG01");
+    assert_eq!(&output[40..44], &1u32.to_le_bytes());
+    assert_eq!(&output[8..40], &output[44..76]);
+    assert_eq!(output[76], 8);
+    assert_eq!(&output[77..85], &5000u64.to_le_bytes());
+}
