@@ -5,7 +5,7 @@ use super::{
     RunLimits,
 };
 use nox::{artifact, Digest, Order, Reduction};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::time::Instant;
 
 #[derive(Debug, Serialize)]
@@ -18,7 +18,8 @@ pub struct ModuleReport {
     pub source_bytes: u32,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Options {
     pub target: u64,
     pub input_profile: u64,

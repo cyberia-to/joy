@@ -1,6 +1,6 @@
 use super::{reader::Result, RunLimits};
 use nox::artifact;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 /// Independent host admission ceilings for the compiler schema.
 #[derive(Debug, Clone, Copy, Serialize)]
@@ -42,7 +42,8 @@ impl CompilerCaps {
 }
 
 /// Exact admitted LIM1 request. Integer conversion follows range checking.
-#[derive(Debug, Clone, Copy, Serialize)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct JobLimits {
     pub source_bytes: u32,
     pub modules: u32,
@@ -58,6 +59,22 @@ pub struct JobLimits {
 }
 
 impl JobLimits {
+    pub(super) fn values(self) -> [u64; 11] {
+        [
+            self.source_bytes as u64,
+            self.modules as u64,
+            self.diagnostics as u64,
+            self.sequence_length as u64,
+            self.validation_visits as u64,
+            self.artifact_bytes as u64,
+            self.artifact_nodes as u64,
+            self.artifact_depth as u64,
+            self.reductions,
+            self.arena_nodes as u64,
+            self.evaluator_frames as u64,
+        ]
+    }
+
     pub(super) fn admit(values: [u64; 11], host: RunLimits) -> Result<Self> {
         let c = host.compiler;
         let caps = [

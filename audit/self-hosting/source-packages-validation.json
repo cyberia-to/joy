@@ -1,0 +1,69 @@
+{
+  "schema": "joy/source-packages-gates/v1",
+  "kind": "local-development",
+  "source_revisions": {
+    "joy": "99474821c893a6f0ff190d4f95f20ee4e3c7289a",
+    "trident": "f4a19b1fcf2dbc09dd944ac05de269d8bcdef1aa",
+    "trisha": "cf89bf3cee97581ba6bd4bae87d42de793045085",
+    "nox": "5271961a72a1f1e9922df36e3e4e3c65d1acff81",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "zheng": "80a8ca90208c3b49c4f2a8507d75fd17785fdfe3"
+  },
+  "host": {
+    "uname -ms": "Darwin arm64",
+    "rustc -Vv": "rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.3",
+    "sw_vers": "ProductName:\t\tmacOS\nProductVersion:\t\t26.4.1\nBuildVersion:\t\t25E253",
+    "sysctl -n machdep.cpu.brand_string": "Apple M4 Max"
+  },
+  "gates": [
+    {
+      "repository": "joy",
+      "revision": "99474821c893a6f0ff190d4f95f20ee4e3c7289a",
+      "command": "CARGO_TARGET_DIR=../trident/target cargo check --workspace --all-targets --locked",
+      "exit_code": 0,
+      "local_log": "/tmp/joy-04-pack-final-check.log",
+      "log_sha256": "24e6a75ec03b5464c005dc95d7f7fa36e8b237d5a91e3b8c1885632ed16e88e4",
+      "rust_warnings": 0
+    },
+    {
+      "repository": "joy",
+      "revision": "99474821c893a6f0ff190d4f95f20ee4e3c7289a",
+      "command": "CARGO_TARGET_DIR=../trident/target cargo test --workspace --release --locked",
+      "exit_code": 0,
+      "local_log": "/tmp/joy-04-pack-final-tests.log",
+      "log_sha256": "d91f3766be689f1992ec26add54038c751fb94a5a98dbaf1daf27030d36804d3",
+      "rust_warnings": 0,
+      "tests": {
+        "passed": 120,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "repository": "trisha",
+      "revision": "cf89bf3cee97581ba6bd4bae87d42de793045085",
+      "command": "CARGO_TARGET_DIR=../trident/target cargo run --release --locked -p trisha -- bench",
+      "exit_code": 0,
+      "local_log": "/tmp/trisha-04-pack-bench.log",
+      "log_sha256": "5c555647292af781800eee115ffc16f237d0699a7a9ddca5d99b413a2399d8b3",
+      "rust_warnings": 0,
+      "verified_fixtures": 133,
+      "verified_independent_baselines": 43,
+      "result_and_cycle_rows_unchanged_from_profile_delivery": true,
+      "comparison_log": "/tmp/trisha-04-profile-bench.log"
+    }
+  ],
+  "installed_cli_receipt": "source-packages-cli.json",
+  "provenance": "Source gates ran before source commit; tested source and fixtures committed unchanged. Installed CLI acceptance rerun after committed rebuild.",
+  "scope": [
+    "Host packaging preserves source bytes and constructs canonical JOB1 without source lexing, parsing, import discovery, type checking or code generation.",
+    "The guest transport fixture returns quoted ART1. Native source compilation remains SH2 work.",
+    "Regular file reads and JSON deserialization precede the cooperative worker timer; temporary manifest storage is bounded by the host byte cap.",
+    "No Trident libraries changed; prior formal collection audits remain UNKNOWN. No native dynamic execution proof is claimed."
+  ]
+}

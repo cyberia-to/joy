@@ -1,5 +1,5 @@
 use clap::{Args, ValueEnum};
-use joy_rs::structured::{self, CompilerCaps, RunLimits};
+use joy_rs::structured;
 use std::path::PathBuf;
 
 #[derive(Clone, Copy, ValueEnum)]
@@ -20,53 +20,15 @@ pub struct RunArgs {
     /// Atomically replace an existing output file after successful execution
     #[arg(long)]
     pub force: bool,
-    #[arg(long, default_value_t = 1_000_000)]
-    pub budget: u64,
-    #[arg(long, default_value_t = 196_608)]
-    pub arena_nodes: u32,
-    #[arg(long, default_value_t = 16_384)]
-    pub frames: u32,
-    #[arg(long, default_value_t = 16_777_216)]
-    pub artifact_bytes: usize,
-    #[arg(long, default_value_t = 196_608)]
-    pub artifact_nodes: u32,
-    #[arg(long, default_value_t = 4096)]
-    pub artifact_depth: u32,
-    /// Cooperative deadline inside the execution worker
-    #[arg(long, default_value_t = 30_000)]
-    pub time_ms: u64,
     /// Publish the complete result noun, or a successfully compiled ART1
     #[arg(long, value_enum, default_value = "result")]
     pub emit: Emit,
-    #[arg(long, default_value_t = 4_194_304)]
-    pub source_bytes: u32,
-    #[arg(long, default_value_t = 4096)]
-    pub modules: u32,
-    #[arg(long, default_value_t = 1024)]
-    pub diagnostics: u32,
-    #[arg(long, default_value_t = 65_536)]
-    pub sequence_length: u32,
-    #[arg(long, default_value_t = 1_000_000)]
-    pub validation_visits: u32,
+    #[command(flatten)]
+    pub limits: crate::artifact_limits::LimitArgs,
 }
 
 fn execute(args: &RunArgs) -> Result<serde_json::Value, String> {
-    let limits = RunLimits {
-        budget: args.budget,
-        arena_nodes: args.arena_nodes,
-        frames: args.frames,
-        artifact_bytes: args.artifact_bytes,
-        artifact_nodes: args.artifact_nodes,
-        artifact_depth: args.artifact_depth,
-        time_ms: args.time_ms,
-        compiler: CompilerCaps {
-            source_bytes: args.source_bytes,
-            modules: args.modules,
-            diagnostics: args.diagnostics,
-            sequence_length: args.sequence_length,
-            validation_visits: args.validation_visits,
-        },
-    };
+    let limits = args.limits.values();
     let result = structured::run_files(&args.program, &args.input, limits)?;
     let (bytes, published_particle) = match args.emit {
         Emit::Result => (&result.output, result.report.output_particle.as_str()),
