@@ -103,9 +103,10 @@ connection or authority to modify state.
   uses0=true/1=false. Raw nox programs retain their own subject contract.
 - Secret inputs are served sequentially by `SecretProvider` to call
   patterns (tag 16).
-- The `Reduction` arena is stack-allocated; execution runs on a
-  dedicated 256 MiB worker thread. Never call `reduce` on the main
-  thread with a big arena.
+- Legacy bundle execution uses a stack-allocated `Reduction` arena on a
+  dedicated 256 MiB worker thread. Structured execution and job packing
+  initialize their fixed arenas directly on the heap; explicit host limits
+  select the capacity. See `specs/structured-run.md`.
 - Successful pure L1 charged reductions are initial minus remaining budget;
   successful traces have that many rows. Failed traces are not a gas counter.
 - `run-artifact` executes complete ART1 raw and compiler JOB1/RES1 NOXDAG01

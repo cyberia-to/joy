@@ -3,7 +3,7 @@ use super::{
     pack_writer::Writer,
     particle,
     reader::{self, Reader, Result},
-    JobLimits, ModuleReport, Options, RunLimits, ARENA, STACK,
+    JobLimits, ModuleReport, Options, RunLimits, ARENA, DEFAULT_ARENA_NODES, LARGE_ARENA, STACK,
 };
 use nox::{artifact, Order, Reduction};
 use serde::{Deserialize, Serialize};
@@ -105,8 +105,8 @@ fn normalize(manifest: &mut Manifest, host: RunLimits) -> Result<()> {
     Ok(())
 }
 
-fn encode_job(
-    w: &mut Writer<'_, ARENA>,
+fn encode_job<const N: usize>(
+    w: &mut Writer<'_, N>,
     compiler: Order,
     manifest: &Manifest,
     directory: &Path,
@@ -161,7 +161,7 @@ fn encode_job(
     )
 }
 
-fn construct(
+fn construct<const N: usize>(
     compiler: Vec<u8>,
     mut manifest: Manifest,
     directory: PathBuf,
@@ -169,7 +169,7 @@ fn construct(
 ) -> Result<PackedJob> {
     let deadline = Instant::now() + Duration::from_millis(host.time_ms);
     normalize(&mut manifest, host)?;
-    let mut ar = Reduction::<ARENA>::new();
+    let mut ar = Reduction::<N>::try_new_boxed().map_err(|e| format!("package arena: {e}"))?;
     if !ar.limit_allocations(manifest.limits.arena_nodes) {
         return Err("package arena allowance".into());
     }
@@ -229,7 +229,13 @@ pub fn pack_job_files(compiler: &Path, manifest: &Path, host: RunLimits) -> Resu
     std::thread::Builder::new()
         .name("joy-job-pack".into())
         .stack_size(STACK)
-        .spawn(move || construct(compiler, request, directory, host))
+        .spawn(move || {
+            if host.arena_nodes > DEFAULT_ARENA_NODES {
+                construct::<LARGE_ARENA>(compiler, request, directory, host)
+            } else {
+                construct::<ARENA>(compiler, request, directory, host)
+            }
+        })
         .map_err(|e| format!("package worker spawn: {e}"))?
         .join()
         .map_err(|_| "package worker panicked".to_string())?

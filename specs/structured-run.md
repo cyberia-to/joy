@@ -18,7 +18,7 @@ Limits (each positive, each with an independent hard ceiling):
 | CLI flag | Default | Worker ceiling |
 |---|---|---|
 | --budget | 1000000 | 100000000 |
-| --arena-nodes | 196608 | 196608 |
+| --arena-nodes | 196608 | 786432 |
 | --frames | 16384 | 65536 |
 | --artifact-bytes | 16777216 | 16777216 |
 | --artifact-nodes | 196608 | 196608 |
@@ -27,10 +27,19 @@ Limits (each positive, each with an independent hard ceiling):
 
 Transport limits apply independently to each program/input/output container.
 Loaded program and input share one arena and lifetime node allowance with all
-execution allocations. Hash-cons sharing is charged once. The fixed262144-slot
-arena reserves its whole array storage regardless of the requested node limit.
-A256MiB worker stack accommodates the existing fixed arena representation.
-Frame-buffer byte accounting comes from nox's actual Frame size. Traces are not
+execution allocations. Hash-cons sharing is charged once. Requests up to 196608
+nodes select a 262144-slot arena; larger explicit requests select 1048576 slots.
+Both use nox's fallible heap constructor, initialized in place. The logical
+allowance stays exactly as requested; choosing a physical capacity never raises
+it. The default remains 196608. Packing JOB1 and executing ART1 use the same
+capacity selection. Allocator failure returns an error before publication.
+
+The arena reserves its full `size_of::<Reduction<N>>()` storage, separately from
+the 256 MiB worker stack. `arena_reserved_bytes` reports that arena storage, rather
+than the size of its owning pointer. Frames and codec workspace have their own
+allowances. Artifact byte/node ceilings remain unchanged: lifetime intermediate
+allocation and exported DAG size are separate bounds. Frame-buffer byte accounting
+comes from nox's actual Frame size. Traces are not
 retained: NoTrace execution reports successful charged reductions as budget
 minus remaining; errors never fabricate cost or produce a successful receipt.
 

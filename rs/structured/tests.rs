@@ -3,6 +3,7 @@ use nebu::Goldilocks;
 
 mod admission;
 mod compiler;
+mod heap;
 
 type Arena = Reduction<4096>;
 fn atom(ar: &mut Arena, value: u64) -> Order {
@@ -289,7 +290,7 @@ fn hard_limits_and_expired_deadlines_are_explicit() {
             ..RunLimits::default()
         },
         RunLimits {
-            arena_nodes: 196_609,
+            arena_nodes: MAX_ARENA_NODES + 1,
             ..RunLimits::default()
         },
         RunLimits {

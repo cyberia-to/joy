@@ -291,3 +291,78 @@ fn aggregate_source_allowance_can_end_with_empty_files_but_cannot_reset() {
     fs::write(f.path.join("empty"), b"x").unwrap();
     f.failed(&manifest, &["--force"]);
 }
+
+#[test]
+fn packing_and_compiler_execution_preserve_bytes_across_physical_arena_sizes() {
+    let f = Fixture::new();
+    let ordinary = f.ok(&f.manifest);
+    let mut baseline = None;
+    for allowance in ["196608", "196609", "786432"] {
+        let packed = f.pack(&f.manifest, &["--force", "--arena-nodes", allowance]);
+        assert!(
+            packed.status.success(),
+            "{}",
+            String::from_utf8_lossy(&packed.stderr)
+        );
+        assert_eq!(fs::read(f.path.join("job")).unwrap(), f.expected);
+        let packed: Value = serde_json::from_slice(&packed.stdout).unwrap();
+        assert_eq!(packed["package"], ordinary["package"]);
+        let run = Command::new(env!("CARGO_BIN_EXE_joy"))
+            .arg("run-artifact")
+            .arg(f.path.join("compiler"))
+            .arg("--input")
+            .arg(f.path.join("job"))
+            .args([
+                "--emit",
+                "program",
+                "--force",
+                "--arena-nodes",
+                allowance,
+                "-o",
+            ])
+            .arg(f.path.join("program"))
+            .output()
+            .unwrap();
+        assert!(
+            run.status.success(),
+            "{}",
+            String::from_utf8_lossy(&run.stderr)
+        );
+        assert_eq!(
+            fs::read(f.path.join("program")).unwrap(),
+            fs::read(f.path.join("generated")).unwrap()
+        );
+        let report: Value = serde_json::from_slice(&run.stdout).unwrap();
+        if let Some(ref old) = baseline {
+            let old: &Value = old;
+            for key in [
+                "program_particle",
+                "input_particle",
+                "output_particle",
+                "charged_reductions",
+                "allocated_nodes",
+                "peak_frames",
+                "compiler_job",
+            ] {
+                assert_eq!(report["execution"][key], old["execution"][key], "{key}");
+            }
+            assert_eq!(report["published_particle"], old["published_particle"]);
+            assert!(
+                report["execution"]["arena_reserved_bytes"]
+                    .as_u64()
+                    .unwrap()
+                    > old["execution"]["arena_reserved_bytes"].as_u64().unwrap()
+            );
+        } else {
+            baseline = Some(report);
+        }
+    }
+    let mut manifest = f.manifest.clone();
+    manifest["limits"]["arena_nodes"] = json!(196609);
+    assert!(f
+        .failed(&manifest, &["--force"])
+        .contains("unsupported job limit at LIM1 field 9"));
+    assert!(f
+        .failed(&f.manifest, &["--force", "--arena-nodes", "786433"])
+        .contains("limit arena_nodes"));
+}
