@@ -7,6 +7,9 @@ use std::{
 };
 
 const ARENA: usize = 1 << 18;
+const LARGE_ARENA: usize = 1 << 20;
+const DEFAULT_ARENA_NODES: u32 = (ARENA / 4 * 3) as u32;
+const MAX_ARENA_NODES: u32 = (LARGE_ARENA / 4 * 3) as u32;
 const STACK: usize = 256 << 20;
 #[cfg(test)]
 const ART1: u64 = 0x41525431;
@@ -38,7 +41,7 @@ impl Default for RunLimits {
     fn default() -> Self {
         Self {
             budget: 1_000_000,
-            arena_nodes: 196_608,
+            arena_nodes: DEFAULT_ARENA_NODES,
             frames: 16_384,
             artifact_bytes: 16 << 20,
             artifact_nodes: 196_608,
@@ -53,7 +56,11 @@ impl RunLimits {
     pub fn validate(self) -> Result<(), String> {
         for (name, value, max) in [
             ("budget", self.budget, 100_000_000),
-            ("arena_nodes", self.arena_nodes as u64, 196_608),
+            (
+                "arena_nodes",
+                self.arena_nodes as u64,
+                u64::from(MAX_ARENA_NODES),
+            ),
             ("frames", self.frames as u64, 65_536),
             ("artifact_bytes", self.artifact_bytes as u64, 16 << 20),
             ("artifact_nodes", self.artifact_nodes as u64, 196_608),
@@ -116,10 +123,14 @@ fn deadline(start: Instant, limits: RunLimits) -> Result<(), String> {
     }
 }
 
-fn execute(program: Vec<u8>, input: Vec<u8>, limits: RunLimits) -> Result<RunResult, String> {
+fn execute<const N: usize>(
+    program: Vec<u8>,
+    input: Vec<u8>,
+    limits: RunLimits,
+) -> Result<RunResult, String> {
     let started = Instant::now();
     let expires = started + Duration::from_millis(limits.time_ms);
-    let mut ar = Reduction::<ARENA>::new();
+    let mut ar = Reduction::<N>::try_new_boxed().map_err(|e| format!("arena: {e}"))?;
     if !ar.limit_allocations(limits.arena_nodes) {
         return Err("arena allowance rejected".into());
     }
@@ -203,7 +214,7 @@ fn execute(program: Vec<u8>, input: Vec<u8>, limits: RunLimits) -> Result<RunRes
             charged_reductions: budget - remaining,
             allocated_nodes: ar.count(),
             peak_frames: execution.peak_frames,
-            arena_reserved_bytes: std::mem::size_of::<Reduction<ARENA>>(),
+            arena_reserved_bytes: std::mem::size_of::<Reduction<N>>(),
             frame_buffer_bytes: sequential::frame_storage_bytes(frames)
                 .ok_or("frame size overflow")?,
             worker_stack_bytes: STACK,
@@ -222,7 +233,13 @@ pub fn run(program: Vec<u8>, input: Vec<u8>, limits: RunLimits) -> Result<RunRes
     std::thread::Builder::new()
         .name("joy-artifact".into())
         .stack_size(STACK)
-        .spawn(move || execute(program, input, limits))
+        .spawn(move || {
+            if limits.arena_nodes > DEFAULT_ARENA_NODES {
+                execute::<LARGE_ARENA>(program, input, limits)
+            } else {
+                execute::<ARENA>(program, input, limits)
+            }
+        })
         .map_err(|e| format!("worker spawn: {e}"))?
         .join()
         .map_err(|_| "artifact worker panicked".to_string())?

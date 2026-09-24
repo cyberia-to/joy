@@ -61,3 +61,10 @@ visits. This receipt establishes packaging, not guest compilation or a proof.
 Failure exits1, writes no success receipt and preserves an existing output even
 with `--force`. The guest owns source declarations, reachable import closure and
 all language diagnostics after packaging.
+
+Packing and structured execution share the physical heap-arena policy in
+[structured run](structured-run.md). An explicit host allowance above 196608
+selects the larger arena; manifest limits still must fit the host and tighten
+the same lifetime allocation counter. Changing only the physical capacity with
+the same manifest preserves JOB1 bytes. Changing manifest LIM1 changes JOB1 and
+RES1 identities, while a successful extracted ART1 remains capacity-independent.
