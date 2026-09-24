@@ -2,6 +2,7 @@ use super::*;
 use nebu::Goldilocks;
 
 mod admission;
+mod compiler;
 
 type Arena = Reduction<4096>;
 fn atom(ar: &mut Arena, value: u64) -> Order {
@@ -257,7 +258,7 @@ fn malformed_containers_profiles_and_host_services_are_rejected() {
     assert!(
         run(encoded(&ar, compiler), input.clone(), RunLimits::default())
             .unwrap_err()
-            .contains("profiles")
+            .contains("compiler job admission")
     );
     assert!(run(input.clone(), input.clone(), RunLimits::default())
         .unwrap_err()

@@ -1,4 +1,4 @@
-//! Complete ART1/raw-noun execution with bounded pure nox and no retained trace.
+//! Complete ART1 execution with bounded pure nox and validated compiler jobs.
 use nox::{artifact, sequential, NoTrace, Order, Outcome, Reduction};
 use serde::Serialize;
 use std::{
@@ -8,7 +8,16 @@ use std::{
 
 const ARENA: usize = 1 << 18;
 const STACK: usize = 256 << 20;
+#[cfg(test)]
 const ART1: u64 = 0x41525431;
+
+mod job;
+mod job_limits;
+mod job_result;
+mod reader;
+pub use job::{ModuleReport, Options};
+pub use job_limits::{CompilerCaps, JobLimits};
+pub use job_result::{CompilerReport, Diagnostic};
 
 #[derive(Debug, Clone, Copy)]
 pub struct RunLimits {
@@ -19,6 +28,7 @@ pub struct RunLimits {
     pub artifact_nodes: u32,
     pub artifact_depth: u32,
     pub time_ms: u64,
+    pub compiler: CompilerCaps,
 }
 
 impl Default for RunLimits {
@@ -31,6 +41,7 @@ impl Default for RunLimits {
             artifact_nodes: 196_608,
             artifact_depth: 4096,
             time_ms: 30_000,
+            compiler: CompilerCaps::default(),
         }
     }
 }
@@ -50,7 +61,7 @@ impl RunLimits {
                 return Err(format!("limit {name} must be in 1..={max}"));
             }
         }
-        Ok(())
+        self.compiler.validate()
     }
 
     fn transport(self) -> artifact::Limits {
@@ -75,47 +86,23 @@ pub struct RunReport {
     pub worker_stack_bytes: usize,
     pub elapsed_micros: u128,
     pub trace_mode: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub compiler_job: Option<CompilerReport>,
 }
 
 #[derive(Debug)]
 pub struct RunResult {
     pub output: Vec<u8>,
+    pub compiled: Option<Vec<u8>>,
     pub report: RunReport,
 }
 
-fn particle(ar: &Reduction<ARENA>, root: Order) -> Result<String, String> {
+fn particle<const N: usize>(ar: &Reduction<N>, root: Order) -> Result<String, String> {
     let digest = ar.digest(root).ok_or("missing particle")?;
     Ok(nox::data::digest_bytes(digest)
         .iter()
         .map(|b| format!("{b:02x}"))
         .collect())
-}
-
-// Exact ART1 record arity, target and raw-noun profiles. The guest job profile
-// requires additional binding/admission and is deliberately not admitted here.
-fn program_formula(ar: &Reduction<ARENA>, root: Order) -> Result<Order, String> {
-    let tag = ar
-        .head(root)
-        .and_then(|n| ar.atom_value(n))
-        .map(|v| v.as_u64());
-    if tag != Some(ART1) {
-        return Err("program must be ART1".into());
-    }
-    let mut cursor = ar.tail(root).ok_or("ART1 fields")?;
-    let mut fields = [0; 4];
-    for field in &mut fields {
-        *field = ar.head(cursor).ok_or("ART1 arity")?;
-        cursor = ar.tail(cursor).ok_or("ART1 arity")?;
-    }
-    if ar.atom_value(cursor).map(|v| v.as_u64()) != Some(0) {
-        return Err("ART1 terminator".into());
-    }
-    for field in &fields[..3] {
-        if ar.atom_value(*field).map(|v| v.as_u64()) != Some(0) {
-            return Err("ART1 requires machine0 and raw input/output profiles(0,0)".into());
-        }
-    }
-    Ok(fields[3])
 }
 
 fn deadline(start: Instant, limits: RunLimits) -> Result<(), String> {
@@ -128,6 +115,7 @@ fn deadline(start: Instant, limits: RunLimits) -> Result<(), String> {
 
 fn execute(program: Vec<u8>, input: Vec<u8>, limits: RunLimits) -> Result<RunResult, String> {
     let started = Instant::now();
+    let expires = started + Duration::from_millis(limits.time_ms);
     let mut ar = Reduction::<ARENA>::new();
     if !ar.limit_allocations(limits.arena_nodes) {
         return Err("arena allowance rejected".into());
@@ -135,19 +123,51 @@ fn execute(program: Vec<u8>, input: Vec<u8>, limits: RunLimits) -> Result<RunRes
     let transport = limits.transport();
     let program = artifact::decode(&mut ar, &program, transport)
         .map_err(|e| format!("program artifact: {e:?}"))?;
-    let formula = program_formula(&ar, program)?;
+    let (formula, profile, program_visits) = {
+        let mut r = reader::Reader {
+            ar: &ar,
+            remaining: limits.compiler.validation_visits,
+            sequence_limit: limits.compiler.sequence_length,
+            deadline: expires,
+        };
+        let (formula, profile) =
+            job::program(&mut r, program).map_err(|e| format!("ART1 admission: {e}"))?;
+        (
+            formula,
+            profile,
+            limits.compiler.validation_visits - r.remaining,
+        )
+    };
     deadline(started, limits)?;
     let input = artifact::decode(&mut ar, &input, transport)
         .map_err(|e| format!("input artifact: {e:?}"))?;
     deadline(started, limits)?;
+    let admitted = if profile == 1 {
+        let job = job::admit(&ar, input, program, limits, expires, program_visits)
+            .map_err(|e| format!("compiler job admission: {e}"))?;
+        if !ar.limit_allocations(job.limits.arena_nodes) {
+            return Err("compiler job arena allowance below loaded nodes".into());
+        }
+        Some(job)
+    } else {
+        None
+    };
+    let budget = admitted
+        .as_ref()
+        .map_or(limits.budget, |j| j.limits.reductions);
+    let transport = admitted
+        .as_ref()
+        .map_or(transport, |j| j.limits.transport());
     let frames = sequential::Limits {
-        max_frames: limits.frames,
+        max_frames: admitted
+            .as_ref()
+            .map_or(limits.frames, |j| j.limits.evaluator_frames),
     };
     let execution = sequential::reduce_controlled(
         &mut ar,
         input,
         formula,
-        limits.budget,
+        budget,
         frames,
         &mut NoTrace,
         &mut || started.elapsed() >= Duration::from_millis(limits.time_ms),
@@ -159,16 +179,25 @@ fn execute(program: Vec<u8>, input: Vec<u8>, limits: RunLimits) -> Result<RunRes
         Outcome::Error(error) => return Err(format!("execution failed: {error:?}")),
     };
     deadline(started, limits)?;
+    let (compiler_job, compiled) = match admitted {
+        Some(job) => {
+            let (report, compiled) = job_result::validate(&ar, result, job, expires)
+                .map_err(|e| format!("compiler result: {e}"))?;
+            (Some(report), compiled)
+        }
+        None => (None, None),
+    };
     let output =
         artifact::encode(&ar, result, transport).map_err(|e| format!("output artifact: {e:?}"))?;
     deadline(started, limits)?;
     Ok(RunResult {
         output,
+        compiled,
         report: RunReport {
             program_particle: particle(&ar, program)?,
             input_particle: particle(&ar, input)?,
             output_particle: particle(&ar, result)?,
-            charged_reductions: limits.budget - remaining,
+            charged_reductions: budget - remaining,
             allocated_nodes: ar.count(),
             peak_frames: execution.peak_frames,
             arena_reserved_bytes: std::mem::size_of::<Reduction<ARENA>>(),
@@ -177,6 +206,7 @@ fn execute(program: Vec<u8>, input: Vec<u8>, limits: RunLimits) -> Result<RunRes
             worker_stack_bytes: STACK,
             elapsed_micros: started.elapsed().as_micros(),
             trace_mode: "none",
+            compiler_job,
         },
     })
 }
