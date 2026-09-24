@@ -46,6 +46,7 @@ joy describe [--target nox|cyber]
 joy build INPUT [--target nox|cyber] [--profile NAME] [--emit bundle|nox|artifact] [-o PATH] [--force] [--format human|json-v1]
 joy run INPUT [COMMON]
 joy run-artifact PROGRAM --input INPUT --output OUTPUT [--emit result|program] [LIMITS] [--force]
+joy pack-job --compiler PROGRAM --manifest PACKAGE.json --output JOB [LIMITS] [--force]
 joy prove INPUT [COMMON] [--zk] [--output PATH]
 joy verify ARTIFACT [COMMON] [--claim VALUES]
 joy verify INPUT --proof ARTIFACT [COMMON] [--claim VALUES]
@@ -86,6 +87,7 @@ noun transport and its separate resource limits.
 | build | artifact path, or one `joy/cli/v1` JSON result | human-mode errors |
 | run | one decimal output value per line | reductions and errors |
 | run-artifact | one joy/artifact-run/v1 JSON success receipt after complete output publication | errors |
+| pack-job | one joy/job-pack/v1 JSON receipt after canonical JOB1 publication | errors |
 | prove | saved artifact path | timing, reductions, bytes and public output |
 | verify execution certificate | PASS and checked public coordinates | failure diagnostics |
 | verify by rerun | labelled PASS/FAIL; mismatch details | runtime errors |
@@ -418,3 +420,6 @@ Trident changes go through `joy/.claude/trident-wiring.md`.
 Native source export: `build --emit artifact` produces full ART1 raw-profile
 programs by default; explicit `--artifact-profile compiler-job` selects JOB1/RES1
 for `run-artifact`; see [structured run](structured-run.md#compile-source-to-art1).
+
+Exact source packaging: [source-packages.md](source-packages.md) specifies explicit
+file manifests and `pack-job`. Guest compilation performs all language work.

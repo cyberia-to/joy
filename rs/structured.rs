@@ -14,10 +14,13 @@ const ART1: u64 = 0x41525431;
 mod job;
 mod job_limits;
 mod job_result;
+mod pack;
+mod pack_writer;
 mod reader;
 pub use job::{ModuleReport, Options};
 pub use job_limits::{CompilerCaps, JobLimits};
 pub use job_result::{CompilerReport, Diagnostic};
+pub use pack::{pack_job_files, PackReport, PackedJob};
 
 #[derive(Debug, Clone, Copy)]
 pub struct RunLimits {

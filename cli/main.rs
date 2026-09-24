@@ -1,11 +1,13 @@
+mod artifact_limits;
 mod artifact_run;
 mod build_cmd;
-mod raw_build;
 mod compile;
 mod error;
 mod execution_verify;
+mod pack_job;
 mod prove;
 mod publication;
+mod raw_build;
 mod run;
 mod state_verify;
 mod verify;
@@ -39,6 +41,8 @@ enum Command {
     Run(run::RunArgs),
     /// Execute an ART1 program on a complete raw noun without retaining a trace
     RunArtifact(artifact_run::RunArgs),
+    /// Package exact source files into JOB1 without compiling them
+    PackJob(pack_job::PackArgs),
     /// Execute and generate a zheng proof artifact
     Prove(prove::ProveArgs),
     /// Verify a zheng proof (--proof) or a claimed output by re-execution (--claim)
@@ -142,6 +146,7 @@ fn main() {
         Command::Build(args) => build_cmd::cmd_build(args),
         Command::Run(args) => run::cmd_run(args),
         Command::RunArtifact(args) => artifact_run::cmd_run(args),
+        Command::PackJob(args) => pack_job::cmd_pack(args),
         Command::Prove(args) => prove::cmd_prove(args),
         Command::Verify(args) => verify::cmd_verify(args),
     }

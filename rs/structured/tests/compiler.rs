@@ -10,6 +10,7 @@ mod reference;
 #[allow(dead_code)]
 mod schema;
 
+mod package;
 mod quotas;
 mod rejection;
 mod vectors;
