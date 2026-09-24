@@ -1,10 +1,10 @@
-//! Exact FINAL4 installed-smoke sources, preserved as regression fixtures.
+//! FINAL4 installed-smoke regressions, with explicit public field visibility.
 use joy_rs::{ExecutionArtifact, Warrior, ZkExecutionArtifact};
 use trident::runtime::ProgramInput;
 
 const HELPER: &str = r#"module release_helper
 const OFFSET:Field=18446744069414584328
-pub struct Pair { a:Field,b:Field }
+pub struct Pair { pub a:Field,pub b:Field }
 fn add(x:Field)->Field {x+OFFSET}
 pub fn fold<N>(words:[Field;N])->Field {let mut value:Field=0
 for i in 0..N {value=value*10+words[i]}
