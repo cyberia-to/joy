@@ -416,4 +416,5 @@ Trident delegation expectations and conformance tests aligned. Requests for
 Trident changes go through `joy/.claude/trident-wiring.md`.
 
 Native source export: `build --emit artifact` produces full ART1 raw-profile
-programs for `run-artifact`; see [structured run](structured-run.md#compile-source-to-art1).
+programs by default; explicit `--artifact-profile compiler-job` selects JOB1/RES1
+for `run-artifact`; see [structured run](structured-run.md#compile-source-to-art1).

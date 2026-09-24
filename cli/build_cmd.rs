@@ -6,13 +6,27 @@ use std::path::PathBuf;
 pub enum Emit {
     Bundle,
     Nox,
-    /// Complete ART1 raw-noun program for run-artifact
+    /// Complete ART1 program for run-artifact
     Artifact,
 }
 #[derive(Clone, Copy, ValueEnum)]
 pub enum Format {
     Human,
     JsonV1,
+}
+#[derive(Clone, Copy, ValueEnum)]
+pub enum ArtifactProfile {
+    Raw,
+    CompilerJob,
+}
+
+impl ArtifactProfile {
+    pub fn native(self) -> trident::NativeArtifactProfile {
+        match self {
+            Self::Raw => trident::NativeArtifactProfile::RawNoun,
+            Self::CompilerJob => trident::NativeArtifactProfile::CompilerJob,
+        }
+    }
 }
 #[derive(Args)]
 pub struct BuildArgs {
@@ -25,6 +39,9 @@ pub struct BuildArgs {
     pub profile: String,
     #[arg(long, value_enum, default_value = "bundle")]
     pub emit: Emit,
+    /// Explicit ART1 entry/result profile; requires --emit artifact
+    #[arg(long, value_enum)]
+    pub artifact_profile: Option<ArtifactProfile>,
     #[arg(short, long)]
     pub output: Option<PathBuf>,
     /// Atomically replace an existing output file
@@ -34,6 +51,11 @@ pub struct BuildArgs {
     pub format: Format,
 }
 fn build(args: &BuildArgs) -> Result<(PathBuf, serde_json::Value), JoyError> {
+    if args.artifact_profile.is_some() && !matches!(args.emit, Emit::Artifact) {
+        return Err(JoyError::Compile(
+            "--artifact-profile requires --emit artifact".into(),
+        ));
+    }
     if !args.input.is_dir() && args.input.extension().and_then(|v| v.to_str()) != Some("tri") {
         return Err(JoyError::Compile(
             "build expects .tri source or project directory".into(),
