@@ -166,8 +166,6 @@ dependencies = [
 [[package]]
 name = "bfieldcodec_derive"
 version = "0.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4f7308e7d82c44dc1acb583abc3d2fc9c6453920312ef98a1c29ced05512a62"
 dependencies = [
  "proc-macro2",
  "quote",
