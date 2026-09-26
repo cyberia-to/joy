@@ -13,7 +13,24 @@ fn physical_arena_capacity_preserves_output_identity_and_execution_accounting() 
         small.report.arena_reserved_bytes,
         std::mem::size_of::<Reduction<ARENA>>()
     );
-    for arena_nodes in [DEFAULT_ARENA_NODES + 1, MAX_ARENA_NODES] {
+    for (arena_nodes, reserved_bytes) in [
+        (
+            DEFAULT_ARENA_NODES + 1,
+            std::mem::size_of::<Reduction<LARGE_ARENA>>(),
+        ),
+        (
+            LARGE_ARENA_NODES,
+            std::mem::size_of::<Reduction<LARGE_ARENA>>(),
+        ),
+        (
+            LARGE_ARENA_NODES + 1,
+            std::mem::size_of::<Reduction<COMPILER_ARENA>>(),
+        ),
+        (
+            MAX_ARENA_NODES,
+            std::mem::size_of::<Reduction<COMPILER_ARENA>>(),
+        ),
+    ] {
         let large = run(
             program.clone(),
             input.clone(),
@@ -34,14 +51,41 @@ fn physical_arena_capacity_preserves_output_identity_and_execution_accounting() 
         );
         assert_eq!(large.report.allocated_nodes, small.report.allocated_nodes);
         assert_eq!(large.report.peak_frames, small.report.peak_frames);
-        assert_eq!(
-            large.report.arena_reserved_bytes,
-            std::mem::size_of::<Reduction<LARGE_ARENA>>()
-        );
+        assert_eq!(large.report.arena_reserved_bytes, reserved_bytes);
         assert_eq!(
             large.report.worker_stack_bytes,
             small.report.worker_stack_bytes
         );
     }
     assert_eq!(RunLimits::default().arena_nodes, 196608);
+}
+
+#[test]
+fn compiler_scale_allowances_are_explicit_and_bounded() {
+    let ordinary = RunLimits::default();
+    assert_eq!(ordinary.budget, 1_000_000);
+    assert_eq!(ordinary.time_ms, 30_000);
+    let maximum = RunLimits {
+        arena_nodes: MAX_ARENA_NODES,
+        budget: MAX_BUDGET,
+        time_ms: MAX_TIME_MS,
+        ..ordinary
+    };
+    maximum.validate().unwrap();
+    for invalid in [
+        RunLimits {
+            arena_nodes: maximum.arena_nodes + 1,
+            ..maximum
+        },
+        RunLimits {
+            budget: maximum.budget + 1,
+            ..maximum
+        },
+        RunLimits {
+            time_ms: maximum.time_ms + 1,
+            ..maximum
+        },
+    ] {
+        assert!(invalid.validate().is_err());
+    }
 }
