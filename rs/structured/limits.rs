@@ -11,7 +11,7 @@ pub struct CompactionPolicy {
 const COMPACT_ALLOCATIONS: u64 = 1_000_000_000;
 const COMPACT_REDUCTIONS: u64 = 20_000_000_000;
 const COMPACT_WORK: u64 = 10_000_000_000;
-const COMPACT_TIME_MS: u64 = 3_600_000;
+const COMPACT_TIME_MS: u64 = 7_200_000;
 
 #[derive(Debug, Clone, Copy)]
 pub struct RunLimits {
