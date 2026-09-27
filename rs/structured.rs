@@ -8,8 +8,12 @@ use std::{
 
 const ARENA: usize = 1 << 18;
 const LARGE_ARENA: usize = 1 << 20;
+const COMPILER_ARENA: usize = 1 << 22;
+const LARGE_ARENA_NODES: u32 = (LARGE_ARENA / 4 * 3) as u32;
 const DEFAULT_ARENA_NODES: u32 = (ARENA / 4 * 3) as u32;
-const MAX_ARENA_NODES: u32 = (LARGE_ARENA / 4 * 3) as u32;
+const MAX_ARENA_NODES: u32 = (COMPILER_ARENA / 4 * 3) as u32;
+const MAX_BUDGET: u64 = 100_000_000;
+const MAX_TIME_MS: u64 = 300_000;
 const STACK: usize = 256 << 20;
 #[cfg(test)]
 const ART1: u64 = 0x41525431;
@@ -55,7 +59,7 @@ impl Default for RunLimits {
 impl RunLimits {
     pub fn validate(self) -> Result<(), String> {
         for (name, value, max) in [
-            ("budget", self.budget, 100_000_000),
+            ("budget", self.budget, MAX_BUDGET),
             (
                 "arena_nodes",
                 self.arena_nodes as u64,
@@ -65,7 +69,7 @@ impl RunLimits {
             ("artifact_bytes", self.artifact_bytes as u64, 16 << 20),
             ("artifact_nodes", self.artifact_nodes as u64, 196_608),
             ("artifact_depth", self.artifact_depth as u64, 4096),
-            ("time_ms", self.time_ms, 60_000),
+            ("time_ms", self.time_ms, MAX_TIME_MS),
         ] {
             if value == 0 || value > max {
                 return Err(format!("limit {name} must be in 1..={max}"));
@@ -234,7 +238,9 @@ pub fn run(program: Vec<u8>, input: Vec<u8>, limits: RunLimits) -> Result<RunRes
         .name("joy-artifact".into())
         .stack_size(STACK)
         .spawn(move || {
-            if limits.arena_nodes > DEFAULT_ARENA_NODES {
+            if limits.arena_nodes > LARGE_ARENA_NODES {
+                execute::<COMPILER_ARENA>(program, input, limits)
+            } else if limits.arena_nodes > DEFAULT_ARENA_NODES {
                 execute::<LARGE_ARENA>(program, input, limits)
             } else {
                 execute::<ARENA>(program, input, limits)

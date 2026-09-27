@@ -3,7 +3,8 @@ use super::{
     pack_writer::Writer,
     particle,
     reader::{self, Reader, Result},
-    JobLimits, ModuleReport, Options, RunLimits, ARENA, DEFAULT_ARENA_NODES, LARGE_ARENA, STACK,
+    JobLimits, ModuleReport, Options, RunLimits, ARENA, COMPILER_ARENA, DEFAULT_ARENA_NODES,
+    LARGE_ARENA, LARGE_ARENA_NODES, STACK,
 };
 use nox::{artifact, Order, Reduction};
 use serde::{Deserialize, Serialize};
@@ -230,7 +231,9 @@ pub fn pack_job_files(compiler: &Path, manifest: &Path, host: RunLimits) -> Resu
         .name("joy-job-pack".into())
         .stack_size(STACK)
         .spawn(move || {
-            if host.arena_nodes > DEFAULT_ARENA_NODES {
+            if host.arena_nodes > LARGE_ARENA_NODES {
+                construct::<COMPILER_ARENA>(compiler, request, directory, host)
+            } else if host.arena_nodes > DEFAULT_ARENA_NODES {
                 construct::<LARGE_ARENA>(compiler, request, directory, host)
             } else {
                 construct::<ARENA>(compiler, request, directory, host)

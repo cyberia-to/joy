@@ -310,7 +310,7 @@ fn hard_limits_and_expired_deadlines_are_explicit() {
             ..RunLimits::default()
         },
         RunLimits {
-            time_ms: 60_001,
+            time_ms: MAX_TIME_MS + 1,
             ..RunLimits::default()
         },
     ] {

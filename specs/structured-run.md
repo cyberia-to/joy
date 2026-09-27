@@ -18,18 +18,19 @@ Limits (each positive, each with an independent hard ceiling):
 | CLI flag | Default | Worker ceiling |
 |---|---|---|
 | --budget | 1000000 | 100000000 |
-| --arena-nodes | 196608 | 786432 |
+| --arena-nodes | 196608 | 3145728 |
 | --frames | 16384 | 65536 |
 | --artifact-bytes | 16777216 | 16777216 |
 | --artifact-nodes | 196608 | 196608 |
 | --artifact-depth | 4096 | 4096 |
-| --time-ms | 30000 | 60000 |
+| --time-ms | 30000 | 300000 |
 
 Transport limits apply independently to each program/input/output container.
 Loaded program and input share one arena and lifetime node allowance with all
 execution allocations. Hash-cons sharing is charged once. Requests up to 196608
-nodes select a 262144-slot arena; larger explicit requests select 1048576 slots.
-Both use nox's fallible heap constructor, initialized in place. The logical
+nodes select a 262144-slot arena; requests through 786432 select 1048576 slots;
+requests from 786433 through 3145728 select 4194304 slots. All tiers use nox's
+fallible heap constructor, initialized in place. The logical
 allowance stays exactly as requested; choosing a physical capacity never raises
 it. The default remains 196608. Packing JOB1 and executing ART1 use the same
 capacity selection. Allocator failure returns an error before publication.

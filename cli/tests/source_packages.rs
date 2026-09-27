@@ -297,7 +297,7 @@ fn packing_and_compiler_execution_preserve_bytes_across_physical_arena_sizes() {
     let f = Fixture::new();
     let ordinary = f.ok(&f.manifest);
     let mut baseline = None;
-    for allowance in ["196608", "196609", "786432"] {
+    for allowance in ["196608", "196609", "786432", "786433", "3145728"] {
         let packed = f.pack(&f.manifest, &["--force", "--arena-nodes", allowance]);
         assert!(
             packed.status.success(),
@@ -363,6 +363,6 @@ fn packing_and_compiler_execution_preserve_bytes_across_physical_arena_sizes() {
         .failed(&manifest, &["--force"])
         .contains("unsupported job limit at LIM1 field 9"));
     assert!(f
-        .failed(&f.manifest, &["--force", "--arena-nodes", "786433"])
+        .failed(&f.manifest, &["--force", "--arena-nodes", "3145729"])
         .contains("limit arena_nodes"));
 }
