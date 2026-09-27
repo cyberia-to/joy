@@ -3,6 +3,7 @@ members = ["cli", "rs"]
 resolver = "2"
 
 [patch.crates-io]
+bfieldcodec_derive = { path = "../trisha/.vendor/bfieldcodec_derive-0.7.1" }
 triton-vm = { path = "../trisha/.vendor/triton-vm" }
 twenty-first = { path = "../trisha/.vendor/twenty-first" }
 triton-air = { path = "../trisha/.vendor/triton-air" }
