@@ -73,6 +73,9 @@ impl Warrior {
                         Outcome::Ok(result, _) => result,
                         _ => return Err("native public state execution failed".into()),
                     };
+                    if calls.next.load(std::sync::atomic::Ordering::Relaxed) != input.secret.len() {
+                        return Err("unused secret inputs".into());
+                    }
                     for row in &trace.0 {
                         if row.r()[0] == 17
                             && [row.r()[4], row.r()[11], row.r()[12], row.r()[13]] != root

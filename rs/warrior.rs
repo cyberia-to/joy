@@ -4,19 +4,19 @@
 //! verification are real. Deploy is an honest dash (post-M4: particle +
 //! cyberlink emission). Never fake a proof.
 
-use std::sync::atomic::{AtomicUsize, Ordering};
-
 use bbg::query::ProofLookProvider;
 use bbg::BbgState;
 use nebu::Goldilocks;
 use nox::{reduce, ErrorKind, Order, Outcome, Reduction, VecTrace};
-use nox::{CallProvider, LookProvider};
 use trident::runtime::{ExecutionResult, ProgramBundle, ProgramInput, Runner};
 
 use crate::formula;
 
+#[path = "call_provider.rs"]
+mod call_provider;
 #[path = "traits.rs"]
 mod traits;
+use call_provider::{SecretProvider, StateCalls};
 
 /// Default reduction budget: bounds trace rows one-to-one.
 pub const DEFAULT_BUDGET: u64 = 1_000_000;
@@ -26,78 +26,6 @@ const ARENA: usize = 1 << 18;
 
 /// Worker thread stack: arena + parse recursion + reduce recursion.
 const STACK_SIZE: usize = 256 * 1024 * 1024;
-
-/// Serves secret inputs to nox call patterns (tag 16), in order.
-///
-/// Trident's `divine()` lowers to a call pattern; the prover-side
-/// witness stream is the `--secret` input list. Each `provide()`
-/// consumes the next value regardless of tag.
-struct SecretProvider {
-    values: Vec<u64>,
-    next: AtomicUsize,
-}
-
-impl SecretProvider {
-    fn new(values: Vec<u64>) -> Self {
-        Self {
-            values,
-            next: AtomicUsize::new(0),
-        }
-    }
-}
-
-impl LookProvider for SecretProvider {
-    fn look(
-        &self,
-        _commitment: Goldilocks,
-        _namespace: Goldilocks,
-        _key: Goldilocks,
-    ) -> Option<Goldilocks> {
-        None // bbg look arrives in M6
-    }
-}
-
-impl<const N: usize> CallProvider<N> for SecretProvider {
-    fn provide(
-        &self,
-        reduction: &mut Reduction<N>,
-        _tag: Goldilocks,
-        _object: Order,
-    ) -> Option<Order> {
-        let i = self.next.fetch_add(1, Ordering::SeqCst);
-        let v = *self.values.get(i)?;
-        reduction.atom(Goldilocks::new(v))
-    }
-}
-
-/// CallProvider over a live BBG state: looks answer (and record openings)
-/// via [`ProofLookProvider`]; secrets serve call patterns as usual.
-struct StateCalls<'a> {
-    looks: ProofLookProvider<'a>,
-    secrets: SecretProvider,
-}
-
-impl<'a> LookProvider for StateCalls<'a> {
-    fn look(
-        &self,
-        commitment: Goldilocks,
-        namespace: Goldilocks,
-        key: Goldilocks,
-    ) -> Option<Goldilocks> {
-        self.looks.look(commitment, namespace, key)
-    }
-}
-
-impl<'a, const N: usize> CallProvider<N> for StateCalls<'a> {
-    fn provide(
-        &self,
-        reduction: &mut Reduction<N>,
-        tag: Goldilocks,
-        object: Order,
-    ) -> Option<Order> {
-        CallProvider::<N>::provide(&self.secrets, reduction, tag, object)
-    }
-}
 
 fn describe(kind: ErrorKind) -> &'static str {
     match kind {
@@ -191,11 +119,17 @@ impl Warrior {
             );
         }
         if !input.digests.is_empty() {
-            return Err(
-                "nox has no digest input stream".to_string(),
-            );
+            return Err("nox has no digest input stream".to_string());
         }
 
+        if input
+            .public
+            .iter()
+            .chain(&input.secret)
+            .any(|&v| v >= nebu::field::P)
+        {
+            return Err("execution inputs must be canonical field elements".into());
+        }
         let assembly = bundle.assembly.clone();
         let public = input.public.clone();
         let secret = input.secret.clone();
@@ -213,6 +147,7 @@ impl Warrior {
                     let mut tracer = VecTrace::default();
                     match reduce(&mut reduction, object, root, budget, &provider, &mut tracer) {
                         Outcome::Ok(result, _remaining) => {
+                            provider.finish()?;
                             let aux = hash_aux_from_trace(&reduction, &tracer)?;
                             Ok((
                                 ExecutionResult {
@@ -282,7 +217,9 @@ impl Warrior {
         input: &ProgramInput,
     ) -> Result<(crate::proof::ProofArtifact, ExecutionResult), String> {
         if !input.secret.is_empty() {
-            return Err("legacy trace statements disclose witnesses; secret inputs are refused".into());
+            return Err(
+                "legacy trace statements disclose witnesses; secret inputs are refused".into(),
+            );
         }
         let (result, trace, hash_aux) = self.execute_traced(bundle, input)?;
         if trace.0.iter().any(|r| r.r()[0] == 17) {
@@ -307,7 +244,9 @@ impl Warrior {
         state: &BbgState,
     ) -> Result<(crate::proof::ProofArtifact, ExecutionResult), String> {
         if !input.secret.is_empty() {
-            return Err("legacy trace statements disclose witnesses; secret inputs are refused".into());
+            return Err(
+                "legacy trace statements disclose witnesses; secret inputs are refused".into(),
+            );
         }
         let (result, trace, hash_aux, look_openings) =
             self.execute_traced_with_state(bundle, input, state)?;
@@ -385,11 +324,17 @@ impl Warrior {
             ));
         }
         if !input.digests.is_empty() {
-            return Err(
-                "nox has no digest input stream".to_string(),
-            );
+            return Err("nox has no digest input stream".to_string());
         }
 
+        if input
+            .public
+            .iter()
+            .chain(&input.secret)
+            .any(|&v| v >= nebu::field::P)
+        {
+            return Err("execution inputs must be canonical field elements".into());
+        }
         let assembly = bundle.assembly.clone();
         let public = input.public.clone();
         let secret = input.secret.clone();
@@ -410,6 +355,7 @@ impl Warrior {
                     let mut tracer = VecTrace::default();
                     match reduce(&mut reduction, object, root, budget, &provider, &mut tracer) {
                         Outcome::Ok(result, _remaining) => {
+                            provider.secrets.finish()?;
                             let aux = hash_aux_from_trace(&reduction, &tracer)?;
                             let openings = provider.looks.take_look_openings();
                             Ok((
