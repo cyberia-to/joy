@@ -128,10 +128,20 @@ fn compiled_helper_state_proof_verifies_in_a_fresh_process_and_rejects_substitut
 }
 
 #[test]
-fn private_state_query_is_proved_and_fresh_verifier_needs_no_key() {
+fn secret_state_query_executes_but_proving_preserves_existing_output() {
     let f = Fixture::new();
-    fs::write(f.0.join("private.tri"),"program hidden_lookup\nfn helper(k: Field) -> Field { os.state.read(k) }\nfn main() -> Field { let k: Field = divine()\n helper(k) + 5 }\n").unwrap();
-    f.ok(&[
+    fs::write(f.0.join("private.tri"), "program hidden_lookup\nfn helper(k: Field) -> Field { os.state.read(k) }\nfn main() -> Field { let k: Field = divine()\n helper(k) + 5 }\n").unwrap();
+    let output = f.ok(&[
+        "run",
+        "private.tri",
+        "--state",
+        "state.json",
+        "--secret",
+        "11",
+    ]);
+    assert_eq!(output.stdout, b"82\n");
+    fs::write(f.0.join("private.zheng"), b"unchanged").unwrap();
+    let output = f.run(&[
         "prove",
         "private.tri",
         "--state",
@@ -141,34 +151,7 @@ fn private_state_query_is_proved_and_fresh_verifier_needs_no_key() {
         "--output",
         "private.zheng",
     ]);
-    let bytes = fs::read(f.0.join("private.zheng")).unwrap();
-    let artifact = joy_rs::ZkExecutionArtifact::from_bytes(&bytes).unwrap();
-    assert_eq!(artifact.statement.execution.public_input, Vec::<u64>::new());
-    assert_eq!(artifact.statement.execution.public_output, vec![82]);
-    assert!(artifact.state.is_some());
-    let json = serde_json::to_value(&artifact).unwrap();
-    assert!(json["statement"]["reads"].is_null());
-    f.ok(&["verify", "private.zheng", "--claim", "82"]);
-    f.ok(&[
-        "verify",
-        "private.tri",
-        "--proof",
-        "private.zheng",
-        "--state",
-        "state.json",
-        "--claim",
-        "82",
-    ]);
-    assert!(!f
-        .run(&["verify", "private.zheng", "--claim", "83"])
-        .status
-        .success());
-    assert!(!f
-        .run(&["verify", "private.zheng", "--state", "other.json"])
-        .status
-        .success());
-    let mut forged = artifact.clone();
-    forged.state.as_mut().unwrap().dimensions[0].fields[11] += 1;
-    forged.save(&f.0.join("forged.zheng")).unwrap();
-    assert!(!f.run(&["verify", "forged.zheng"]).status.success());
+    assert_eq!(output.status.code(), Some(1));
+    assert!(output.stdout.is_empty());
+    assert_eq!(fs::read(f.0.join("private.zheng")).unwrap(), b"unchanged");
 }

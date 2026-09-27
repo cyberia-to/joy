@@ -1,6 +1,6 @@
 //! A source-level loop return must survive native execution and the proved CCS.
 use joy_rs::{ExecutionArtifact, Warrior};
-use trident::runtime::ProgramInput;
+use trident::runtime::{ProgramInput, Prover, Runner};
 
 #[test]
 fn bounded_loop_return_proof_binds_selected_result_input_and_cost() {
@@ -39,7 +39,7 @@ fn bounded_loop_return_proof_binds_selected_result_input_and_cost() {
 }
 
 #[test]
-fn private_loop_return_skips_later_witness_and_binds_real_stark() {
+fn private_loop_return_skips_later_witness_and_refuses_public_proof() {
     let directory =
         std::env::temp_dir().join(format!("joy-private-loop-proof-{}", std::process::id()));
     std::fs::create_dir_all(&directory).unwrap();
@@ -53,23 +53,11 @@ fn private_loop_return_skips_later_witness_and_binds_real_stark() {
         secret: vec![37],
         digests: vec![],
     };
-    let (artifact, native) = Warrior::new()
-        .prove_zk_execution(&bundle, &input, 100_000)
-        .unwrap();
-    assert_eq!(native.output, vec![42]);
-    let decoded = joy_rs::ZkExecutionArtifact::from_bytes(&artifact.to_bytes().unwrap()).unwrap();
-    decoded.verify().unwrap();
-    for mutation in 0..3 {
-        let mut bad = decoded.clone();
-        match mutation {
-            0 => bad.statement.execution.public_output[0] += 1,
-            1 => bad.statement.execution.public_input[0] += 1,
-            _ => bad.statement.execution.cycles += 1,
-        }
-        assert!(
-            bad.verify().is_err(),
-            "private mutation {mutation} accepted"
-        );
-    }
+    let warrior = Warrior::new();
+    assert_eq!(warrior.run(&bundle, &input).unwrap().output, vec![42]);
+    assert!(warrior
+        .prove(&bundle, &input)
+        .unwrap_err()
+        .contains("secret inputs"));
     std::fs::remove_dir_all(directory).unwrap();
 }

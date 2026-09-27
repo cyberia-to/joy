@@ -3,14 +3,13 @@
 nox VM warrior for the cyber battlefield. Build, execute, prove and verify
 Trident programs compiled to nox formulas (the soft3 stack). Live deployment
 is unsupported.
-Built the way trisha is built; trident's CLAUDE.md rules (honesty,
+Trident's CLAUDE.md rules (honesty,
 forbidden patterns, review passes, git workflow) apply here too.
 
 ## Workspace
 
 This repo (`~/cyber/joy`) is a Cargo workspace, companion to
-`~/cyber/trident` (the compiler) and sibling of `~/cyber/trisha`
-(the Triton warrior it copies in shape).
+`~/cyber/trident` (the compiler) and the soft3 execution/proof siblings.
 
 Members:
 - `cli/` — binary crate `joy` (the actual `joy` command)
@@ -18,7 +17,7 @@ Members:
   over cyber-nox)
 
 Each crate uses `[lib] path = "lib.rs"` or `[[bin]] path = "main.rs"` —
-**no `src/` subdirectory anywhere** (trisha convention).
+**no `src/` subdirectory anywhere**.
 
 ```
 cli/            Binary crate (package name: cyber-joy, binary: joy)
@@ -49,8 +48,6 @@ rs/             CPU backend (crate: joy-rs)
   wiring requests go to `.claude/trident-wiring.md`.
 - **nox** (`~/cyber/nox/rs`) — cyber-nox, the execution engine:
   `reduce()`, `Tracer`, `Reduction` arena, `CallProvider`.
-- **trisha** (`~/cyber/trisha`) — the Triton warrior; joy copies its
-  CLI shape and error style.
 - Use repo-qualified paths when referencing across repos
   (e.g. `joy/rs/warrior.rs` vs `trident/src/cli/mod.rs`).
 
@@ -74,11 +71,12 @@ Proof formats and content headers:
 - `joy-nox-public-state-execution-v1` (`JOYST001`): actual compiled state reads,
   all namespace/key/value/root coordinates bound to verified public BBG tables.
   `--state` loads a bounded StateCertificate JSON and may pin the expected root.
-- `joy-nox-ccs-triton7-zk-v3` (`JOYZK003`): Trisha's real Triton ZK checker for
-  the verifier-derived Zheng relation. `--secret` or `--zk` selects this path.
-  Hidden queries require all ten authenticated PUBLIC dimension tables, at
-  most 2048 fields and 32768 CCS gates. Query coordinates remain private;
-  this is not a hidden/private database protocol.
+
+Joy has no foreign VM/prover dependency or embedded foreign target resources.
+Its Trident dependencies disable default features. Never introduce a foreign
+backend fallback: `--zk` and nonempty proving `--secret` requests fail before
+compilation, execution or publication. Secret execution remains supported.
+Retired private envelopes are explicitly refused, including legacy mode.
 
 Execution proofs verify without re-executing nox. Unsupported dynamic
 continuations/shapes and resource excess fail explicitly. See
@@ -136,17 +134,18 @@ accepts authenticated public certificates; cyber supplies no live network bindin
 Build JSON-v1, describe and run-artifact have versioned machine output. Other stdout
 is human-readable; stderr carries progress/diagnostics.
 `--target` accepts `nox` (terrain) or `cyber` (battlefield); anything
-else is refused with a pointer to trisha.
+else is refused as unsupported.
 
 ## Forbidden patterns
 
-Same as trisha: no `HashMap` (use `BTreeMap`), no `.unwrap()` outside
+No `HashMap` (use `BTreeMap`), no `.unwrap()` outside
 tests, no `println!` in library code, no floating point, no file > 500
 lines.
 
 ## Build & Test
 
 ```
+python3 scripts/check-soft3-boundary.py # resolved packages/features exclude foreign backends
 cargo check --workspace --all-targets   # zero warnings
 cargo test
 cargo install --path cli --force        # installs `joy` on PATH

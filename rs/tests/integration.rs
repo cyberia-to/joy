@@ -484,27 +484,6 @@ fn artifact_is_self_contained_and_binds_its_assembly() {
 }
 
 #[test]
-fn divine_secrets_prove_and_verify() {
-    let warrior = Warrior::new();
-    let mut options = trident::CompileOptions::default();
-    options.target_config = joy_rs::nox_terrain();
-    let src = "program hp\nfn main() -> Field {\n    let a: Field = divine()\n    let b: Field = divine()\n    a + b\n}\n";
-    let dir = std::env::temp_dir().join("joy-divine-test");
-    std::fs::create_dir_all(&dir).unwrap();
-    let path = dir.join("hp.tri");
-    std::fs::write(&path, src).unwrap();
-    let b = trident::compile_to_bundle(&path, &options).expect("compile failed");
-    let (artifact, result) = warrior
-        .prove_zheng(&b, &input(&[], &[7, 13]))
-        .expect("prove failed");
-    assert_eq!(result.output, vec![20]);
-    assert!(
-        warrior.verify_artifact(&artifact).expect("verify errored"),
-        "call/divine trace must verify (nox r6 carries the value, not the Order)"
-    );
-}
-
-#[test]
 fn metadata_cannot_authorize_an_output_claim() {
     let b = compiled_add();
     let warrior = Warrior::new();

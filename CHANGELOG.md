@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased — soft3-only Joy
+
+- Remove the foreign private prover and its VM/vendor dependency closure. Joy
+  builds and runs with the soft3 siblings and Trident alone.
+- Compile Trident without external target discovery, Neptune compatibility
+  aliases, foreign catalog entries or historical RAM/TASM compiler resources.
+- Preserve native nox execution, compiler jobs and public Zheng/state
+  certificates. Secret execution and explicit re-execution remain supported.
+- Reject secret/`--zk` proving and retired private artifacts explicitly. The
+  current soft3 backend has no zero-knowledge execution proof; public proof
+  fallback is forbidden. Legacy statement APIs now also refuse secret inputs.
+- Add an executable dependency/feature boundary gate and regression checks
+  for removed capabilities, output preservation and supported execution.
+
 ## 0.5.0 — 2026-09-16
 
 Coordinated release: **Joy 0.5.0**, with Trident 0.3.0/compiler API 3,

@@ -1,0 +1,476 @@
+{
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/joy",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "06aac01d2541c17f5b6295c04fd7eb2f4d7bb9e8\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/trident",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "7b1d4c069961fae099f40bb160328c09b8d15607\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/nox",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "c9f7486a74fe81bfc194b598da40f6343ecb2ef1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/zheng",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "80a8ca90208c3b49c4f2a8507d75fd17785fdfe3\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/bbg",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "1d39975ad199b48c350fa4cc011cbf6f289480ee\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/hemera",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "a931a0a8e7ed369852ce0f8bc6451a59745ee692\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/lens",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "17cafe91431977b738e5b72361187cd01ad93638\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/strata",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/honeycrisp",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "ff735e6c262926bc9bab7534786a575020cbe442\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/neuron",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "fd24e768d623604b67e20b4b93fa8e82c83ac373\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/uname",
+        "-sm"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "Darwin arm64\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/sw_vers"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.4.1\nBuildVersion:\t\t25E253\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "describe"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": 1,\n  \"compiler_api\": 3,\n  \"owner\": \"joy\",\n  \"version\": \"0.5.0\",\n  \"terrain\": {\n    \"name\": \"nox\",\n    \"display_name\": \"NOX\",\n    \"architecture\": \"Tree\",\n    \"field_prime\": \"2^64 - 2^32 + 1\",\n    \"field_bits\": 64,\n    \"field_limbs\": 2,\n    \"emulated_fields\": [],\n    \"stack_depth\": 0,\n    \"spill_ram_base\": 0,\n    \"digest_width\": 4,\n    \"xfield_width\": 3,\n    \"hash_rate\": 8,\n    \"output_extension\": \".nox\",\n    \"cost_tables\": [\n      \"reductions\"\n    ],\n    \"warrior\": {\n      \"name\": \"joy\",\n      \"crate_name\": \"cyber-joy\",\n      \"runner\": true,\n      \"prover\": true\n    }\n  },\n  \"union\": null,\n  \"states\": [],\n  \"modules\": {},\n  \"module_hashes\": {},\n  \"intrinsics\": [\n    \"assert\",\n    \"assert_eq\",\n    \"assert_digest\",\n    \"inv\",\n    \"sub\",\n    \"neg\",\n    \"field_add\",\n    \"field_mul\",\n    \"as_field\",\n    \"as_u32\",\n    \"hash\",\n    \"divine\",\n    \"os.state.read\",\n    \"nox_noun_atom\",\n    \"nox_noun_pair\",\n    \"nox_noun_head\",\n    \"nox_noun_tail\",\n    \"nox_noun_as_field\",\n    \"nox_noun_eq\",\n    \"nox_noun_identity\"\n  ],\n  \"intrinsic_abis\": {},\n  \"instructions\": [],\n  \"runtime\": {\n    \"run\": true,\n    \"prove\": true,\n    \"verify\": true,\n    \"deploy\": false,\n    \"proof_formats\": [\n      \"zheng-nox-public-execution-v2\",\n      \"joy-nox-public-state-execution-v1\"\n    ],\n    \"restrictions\": [\n      \"run: nox reductions with public inputs and sequential secret call witnesses; no digest stream; --state loads a bounded authenticated public BBG certificate\",\n      \"build --emit artifact: source main(Noun)->Noun to complete ART1, default raw(0,0) or explicit --artifact-profile compiler-job(1,1), native SDK imports and atomic publication; seed host compilation\",\n      \"pack-job: exact source files and explicit origins/options/limits to canonical identity-bound JOB1; no source language stages or implicit imports\",\n      \"run-artifact: complete NOXDAG01 ART1 raw(0,0) and compiler JOB1/RES1(1,1) with full identity binding and independent schema/runtime caps; bounded sequential pure tags0..15 with dynamic compose, no retained trace or host services; --emit program publishes a validated guest ART1; dynamic execution proofs remain unsupported\",\n      \"prove public: stateless bounded static tags 0..15; full witness disclosure with linear verification and storage, neither zero knowledge nor succinct\",\n      \"prove private: zero-knowledge execution is unavailable in the current soft3 backend; --zk and secret proving inputs fail before output publication\",\n      \"prove state: public bounded CCS execution with all lookup coordinates and four root limbs bound to complete authenticated public tables; hidden-query proofs are unavailable\",\n      \"prove: no dynamic continuations or variable branch shapes; budget must cover the selected execution's bound cost; only public inputs are accepted\",\n      \"prove: at most 64 public inputs, 4096 program/symbolic noun nodes, depth 128, 4096 symbolic calls, 32768 gates/rows and 4096 output atoms\",\n      \"verify: exact public execution and authenticated public state execution; retired private formats are unsupported; old trace statements require explicit opt-in and do not authenticate execution or IO\",\n      \"cyber aliases the nox runtime; public BBG certificate files are supported, live network state synchronization and deployment are not\"\n    ]\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "build",
+        "public.tri",
+        "--profile",
+        "release",
+        "-o",
+        "public.json"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "public.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "run",
+        "public.json",
+        "--input-values",
+        "3,5"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "24\n",
+      "stderr": "Executed in 28 reductions\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "prove",
+        "public.json",
+        "--input-values",
+        "3,5",
+        "--output",
+        "public.zheng"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "public.zheng\n",
+      "stderr": "Proved public execution in 2 ms: 28 reductions, 2242 bytes\nOutput: [24]\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "verify",
+        "public.zheng",
+        "--input-values",
+        "3,5",
+        "--claim",
+        "24"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "Verification: PASS (public execution; non-ZK)\n  public input: [3, 5]\n  public output: [24]\n  reductions: 28\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "verify",
+        "public.zheng",
+        "--claim",
+        "25"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Verification: FAIL (execution proof differs from requested input, output or budget)\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "verify",
+        "public.zheng",
+        "--budget",
+        "1"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Verification: FAIL (execution proof differs from requested input, output or budget)\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "run",
+        "secret.tri",
+        "--secret",
+        "41"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "42\n",
+      "stderr": "Executed in 20 reductions\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "prove",
+        "missing.tri",
+        "--output",
+        "keep.zheng",
+        "--zk"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: zero-knowledge execution proofs are unavailable in soft3-only Joy; secret inputs cannot be published as public proofs\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "prove",
+        "missing.tri",
+        "--output",
+        "keep.zheng",
+        "--secret",
+        "424242"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: zero-knowledge execution proofs are unavailable in soft3-only Joy; secret inputs cannot be published as public proofs\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "run",
+        "sdk.tri"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "4096\n",
+      "stderr": "Executed in 16 reductions\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "build",
+        "foreign.tri",
+        "-o",
+        "foreign.json"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: compile error: cannot find module 'std.compiler.codegen' (looked at '/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/trident/lib/std/compiler/codegen.tri'): module std.compiler.codegen is not supplied by this target package\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "build",
+        "foreign.tri",
+        "-o",
+        "foreign.json"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: compile error: cannot find module 'std.kernel' (looked at '/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/trident/lib/std/kernel.tri'): module std.kernel is not supplied by this target package\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "build",
+        "foreign.tri",
+        "-o",
+        "foreign.json"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: compile error: cannot find module 'os.neptune.kernel' (looked at 'os/neptune/kernel.tri'): module os.neptune.kernel is not supplied by this target package\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "describe",
+        "--target",
+        "triton"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: joy does not provide target 'triton'\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "describe",
+        "--target",
+        "neptune"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: joy does not provide target 'neptune'\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "build",
+        "hello.tri",
+        "--emit",
+        "nox",
+        "--profile",
+        "release",
+        "-o",
+        "hello.nox"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "hello.nox\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "run",
+        "hello.nox"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "72\n101\n108\n108\n111\n44\n32\n119\n111\n114\n108\n100\n33\n10\n0\n",
+      "stderr": "Executed in 44 reductions\n"
+    },
+    {
+      "command": [
+        "/usr/bin/strip",
+        "-x",
+        "joy.stripped"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/codesign",
+        "--force",
+        "--sign",
+        "-",
+        "joy.stripped"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "joy.stripped: replacing existing signature\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy.stripped",
+        "run",
+        "hello.nox"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "72\n101\n108\n108\n111\n44\n32\n119\n111\n114\n108\n100\n33\n10\n0\n",
+      "stderr": "Executed in 44 reductions\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf/joy",
+        "run",
+        "hello.nox"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+      "exit_code": 0,
+      "stdout": "72\n101\n108\n108\n111\n44\n32\n119\n111\n114\n108\n100\n33\n10\n0\n",
+      "stderr": "Executed in 44 reductions\n"
+    }
+  ],
+  "work": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-soft3-installed-383003uf",
+  "binary": "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/install-committed/bin/joy",
+  "source_revisions": {
+    "joy": "06aac01d2541c17f5b6295c04fd7eb2f4d7bb9e8",
+    "trident": "7b1d4c069961fae099f40bb160328c09b8d15607",
+    "nox": "c9f7486a74fe81bfc194b598da40f6343ecb2ef1",
+    "zheng": "80a8ca90208c3b49c4f2a8507d75fd17785fdfe3",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373"
+  },
+  "status": "passed",
+  "platform": "Darwin arm64",
+  "macos": "ProductName:\t\tmacOS\nProductVersion:\t\t26.4.1\nBuildVersion:\t\t25E253\n",
+  "no_foreign_sibling": true,
+  "binary_sha256": "ac157a417eadfbfa7f37f36432ba8395b33cd914b8e82e0c5b55278cdfdb6a4f",
+  "binary_bytes": 4571120,
+  "stripped_bytes": 4001360,
+  "stripped_sha256": "f333ea54619401232405c0a84c6d9e7bb7429a70c4b0733c83d7a279ba74dce5",
+  "hello_formula_bytes": 292,
+  "hello_formula_sha256": "6b11ba56befaa61b194c469e7b4a174ea6160fda3c21b5a663b816001c03c9cd",
+  "symbols": {
+    "command": [
+      "/usr/bin/xcrun",
+      "nm",
+      "--demangle",
+      "--defined-only",
+      "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/install-committed/bin/joy"
+    ],
+    "output_sha256": "3448b6966ca159616da72a4e6a6d66c748ad2802bdb7d685bccfeaaee1e1f8bb",
+    "forbidden": []
+  },
+  "embedded_resources": {
+    "legacy_compiler_files_absent": 7,
+    "native_compiler_files_present": 87
+  }
+}

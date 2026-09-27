@@ -68,7 +68,7 @@ COMMON flags currently appear on run/prove/verify:
 | --target nox\|cyber | project target, then nox | explicit flag overrides the source project; other targets fail |
 | --profile NAME | debug | passed to compilation for source inputs |
 | --input-values V1,V2 | empty | ordered public u64 values |
-| --secret V1,V2 | empty | sequential private call witnesses; selects Triton-backed ZK proving |
+| --secret V1,V2 | empty | sequential execution witnesses for run/re-execution; proving refuses secrets |
 | --budget N | 1000000 | reduction limit; proof verification also checks the certificate budget |
 | --state VALUE | absent | path to an authenticated public BBG certificate (JSON) |
 
@@ -118,19 +118,22 @@ the caller must still establish that this is the intended computation.
 
 Public state requests use `joy-nox-public-state-execution-v1`, with namespace,
 key, returned value and all four root limbs constrained to the execution.
-Secret inputs or `--zk` select `joy-nox-ccs-triton7-zk-v3`: the verifier regenerates
-a Triton checker for the exact Zheng relation. Private state queries are selected
-inside that relation from authenticated public tables (all10 namespaces,
-maximum2048 fields). Query coordinates remain private. Both formats verify
-without native execution. Complete nox coverage and live deployment remain open.
+Joy uses only the soft3 execution/proof stack. Public stateless and public
+state certificates verify without native execution. `prove --secret` and
+`prove --zk` fail before compilation, execution or output publication; the
+current soft3 proof backend provides no zero-knowledge execution protocol.
+Secret-bearing programs still execute through `run` and explicit re-execution.
+The `Prover` trait also refuses secret inputs; no path discloses them through
+a public certificate as a fallback.
 
-Private envelope `JOYZK003` requires the Trisha backend format
-`zheng-ccs-triton7-zk-v2`, which pins Triton VM7/native proof version5. Its
-statement-binding domain is `joy-private-execution-statement-v3`. Both prover
-and verifier reject a differently compiled backend before cryptographic work.
-Earlier `JOYZK001`/`JOYZK002` private artifacts require regeneration; they have
-no compatibility verification mode because their Triton2 AIR is superseded by
-soundness fixes. The public `JOYEXEC2` and `JOYST001` protocols are unchanged.
+Historical `JOYZK001`/`JOYZK002`/`JOYZK003` envelopes are unsupported and fail
+explicitly, including with `--legacy-trace-statement` or `--claim`. They have
+no compatibility verifier in Joy. The public `JOYEXEC2` and `JOYST001`
+protocols retain their execution/input/output/cost binding.
+
+The Cargo dependency closure, including all features, excludes foreign VM
+warriors and proving engines. Building Joy requires only the soft3 siblings
+and Trident, without a foreign warrior checkout or vendored dependency bootstrap.
 
 Legacy `zheng-hypernova-tensor-merkle-v2` artifacts require
 `--legacy-trace-statement`. This checks a legacy statement and reports
@@ -162,7 +165,7 @@ Concurrent working-tree integration introduces `joy describe --target
 nox|cyber`, emitting the versioned Trident target package as JSON. Runtime
 declarations live in `joy/targets/nox/capabilities.json`; machine constants
 come from Trident's upstream nox contract. Runtime declarations include the
-public, private and authenticated state proof profiles and their concrete limits.
+public stateless and authenticated public state proof profiles and their concrete limits.
 CLI state certificate acceptance is covered by fresh-process conformance tests.
 
 Use `describe` as the discovery command. Extend its versioned runtime
@@ -362,7 +365,7 @@ the standalone CLI envelope.
 
 Proof artifacts and public state certificates are bounded regular files. Header
 inspection and loading reject directories, symbolic links, FIFOs and devices.
-Public execution artifacts are limited to32MiB; private/state/legacy artifacts
+Public execution artifacts are limited to32MiB; state/legacy artifacts
 and state certificates to64MiB. Raw `.nox` formulas and JSON bundle reads use
 the same64MiB admission, including verification's source fallback. Reads retain
 a byte cap even if the file grows.
@@ -385,8 +388,8 @@ Implement in this order:
 5. Wire public stateless jobs through the cyber worker adapter.
 6. Define the Cyber deployment format/policy and signer/receipt contract;
    implement dry-run preparation, then authorized submission.
-7. Public state and bounded hidden-query profiles now have authenticated
-   proof support; private databases and live synchronization remain outside it.
+7. Public state has authenticated proof support. Zero-knowledge execution,
+   hidden queries, private databases and live synchronization remain open.
 
 Required cases: native output and rerun agreement; proof verification without
 rerun; wrong program/input/output/budget rejection; corrupt proof rejection
