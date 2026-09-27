@@ -171,7 +171,7 @@ fn construct<const N: usize>(
     let deadline = Instant::now() + Duration::from_millis(host.time_ms);
     normalize(&mut manifest, host)?;
     let mut ar = Reduction::<N>::try_new_boxed().map_err(|e| format!("package arena: {e}"))?;
-    if !ar.limit_allocations(manifest.limits.arena_nodes) {
+    if !ar.limit_allocations(manifest.limits.arena_nodes.min(host.resident_nodes())) {
         return Err("package arena allowance".into());
     }
     let compiler = artifact::decode(&mut ar, &compiler, manifest.limits.transport())
@@ -231,9 +231,9 @@ pub fn pack_job_files(compiler: &Path, manifest: &Path, host: RunLimits) -> Resu
         .name("joy-job-pack".into())
         .stack_size(STACK)
         .spawn(move || {
-            if host.arena_nodes > LARGE_ARENA_NODES {
+            if host.resident_nodes() > LARGE_ARENA_NODES {
                 construct::<COMPILER_ARENA>(compiler, request, directory, host)
-            } else if host.arena_nodes > DEFAULT_ARENA_NODES {
+            } else if host.resident_nodes() > DEFAULT_ARENA_NODES {
                 construct::<LARGE_ARENA>(compiler, request, directory, host)
             } else {
                 construct::<ARENA>(compiler, request, directory, host)

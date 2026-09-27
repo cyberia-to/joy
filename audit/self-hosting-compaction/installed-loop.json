@@ -1,0 +1,101 @@
+{
+  "schema": "joy/compaction-smoke/v1",
+  "scope": "bounded native loop and failed-publication regression; no C2 claim",
+  "nox_revision": "1eaa8a494f994e4da6b20509469c1e62624f3f2d",
+  "joy_base": "4e814a9b7e5d0515803ce394341785c0aa0e4b0a",
+  "trident_revision": "97539fbbeb599e000ec037c427c5b5c5e775e0cd",
+  "binary": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/install-compacting-reviewed/bin/joy",
+  "binary_sha256": "8c07d11e236a74a3bf6610105bcdb163674aa116a8dcd282a8723417713bcfa3",
+  "commands": [
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/install-compacting-reviewed/bin/joy",
+        "run-artifact",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/program.dag",
+        "--input",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/input.dag",
+        "-o",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/output.dag",
+        "--arena-nodes",
+        "256"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: execution failed: Unavailable\n"
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/install-compacting-reviewed/bin/joy",
+        "run-artifact",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/program.dag",
+        "--input",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/input.dag",
+        "-o",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/output.dag",
+        "--resident-nodes",
+        "256",
+        "--collection-work",
+        "100000000"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"artifact\":\"/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/output.dag\",\"execution\":{\"allocated_nodes\":16344,\"arena_reserved_bytes\":26214416,\"charged_reductions\":61460,\"compaction\":{\"allocation_limit\":196608,\"collection_checkpoints\":5187,\"collection_work\":45551664,\"collection_work_limit\":100000000,\"collections\":76,\"evaluator_checkpoints\":122921,\"peak_resident_nodes\":256,\"pinned_nodes\":38,\"profile\":\"bounded-compaction-v1\",\"reclaimed_nodes\":16112,\"resident_limit\":256,\"resident_nodes\":232,\"scratch_bytes\":1049600,\"total_allocations\":16344},\"elapsed_micros\":191716,\"finalizer_cache_bytes\":1048576,\"frame_buffer_bytes\":2883584,\"input_particle\":\"1b80565abee86a46effbc47b821cb8f4250bfb6760de9f5488102c0b72d1ebb5\",\"output_particle\":\"f0ca9fd53ae4cafeee4643245c2c34e20db0c7f7c759c543d15a081f549655d9\",\"peak_frames\":8198,\"program_particle\":\"d4fd20a504228af5c1168bff1e2e39926dcce5a346d7177cf6ffc9404e36150d\",\"trace_mode\":\"none\",\"worker_stack_bytes\":268435456},\"ok\":true,\"published_particle\":\"f0ca9fd53ae4cafeee4643245c2c34e20db0c7f7c759c543d15a081f549655d9\",\"schema\":\"joy/artifact-run/v1\"}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/install-compacting-reviewed/bin/joy",
+        "run-artifact",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/program.dag",
+        "--input",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/input.dag",
+        "-o",
+        "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/output.dag",
+        "--resident-nodes",
+        "256",
+        "--collection-work",
+        "1",
+        "--force"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error: execution resource/profile: CompactionFailure { kind: CollectionWork, stats: CompactionStats { pinned_nodes: 38, resident_nodes: 256, peak_resident_nodes: 256, total_allocations: 256, reclaimed_nodes: 0, collections: 0, collection_work: 1, scratch_bytes: 1049600, evaluator_checkpoints: 1593, collection_checkpoints: 1 }, peak_frames: 118 }\n"
+    }
+  ],
+  "observed": {
+    "artifact": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-compaction-smoke-6b6ane6l/output.dag",
+    "execution": {
+      "allocated_nodes": 16344,
+      "arena_reserved_bytes": 26214416,
+      "charged_reductions": 61460,
+      "compaction": {
+        "allocation_limit": 196608,
+        "collection_checkpoints": 5187,
+        "collection_work": 45551664,
+        "collection_work_limit": 100000000,
+        "collections": 76,
+        "evaluator_checkpoints": 122921,
+        "peak_resident_nodes": 256,
+        "pinned_nodes": 38,
+        "profile": "bounded-compaction-v1",
+        "reclaimed_nodes": 16112,
+        "resident_limit": 256,
+        "resident_nodes": 232,
+        "scratch_bytes": 1049600,
+        "total_allocations": 16344
+      },
+      "elapsed_micros": 191716,
+      "finalizer_cache_bytes": 1048576,
+      "frame_buffer_bytes": 2883584,
+      "input_particle": "1b80565abee86a46effbc47b821cb8f4250bfb6760de9f5488102c0b72d1ebb5",
+      "output_particle": "f0ca9fd53ae4cafeee4643245c2c34e20db0c7f7c759c543d15a081f549655d9",
+      "peak_frames": 8198,
+      "program_particle": "d4fd20a504228af5c1168bff1e2e39926dcce5a346d7177cf6ffc9404e36150d",
+      "trace_mode": "none",
+      "worker_stack_bytes": 268435456
+    },
+    "ok": true,
+    "published_particle": "f0ca9fd53ae4cafeee4643245c2c34e20db0c7f7c759c543d15a081f549655d9",
+    "schema": "joy/artifact-run/v1"
+  },
+  "preserved_output": true
+}

@@ -176,3 +176,53 @@ fn invalid_input_has_no_published_output() {
     }
     f.no_staging();
 }
+
+#[test]
+fn explicit_compaction_finishes_with_bounded_resident_storage_and_preserves_failed_outputs() {
+    let f = Fixture::new("loop4097");
+    let flags = ["--resident-nodes", "256", "--collection-work", "100000000"];
+    let report = f.ok(&flags);
+    let stats = &report["execution"]["compaction"];
+    assert_eq!(stats["profile"], "bounded-compaction-v1");
+    assert!(stats["collections"].as_u64().unwrap() > 1);
+    assert!(stats["peak_resident_nodes"].as_u64().unwrap() <= 256);
+    assert_eq!(report["execution"]["charged_reductions"], 61_460);
+    assert_eq!(
+        fs::read(f.path.join("out.dag")).unwrap(),
+        f.bytes("expected_output")
+    );
+    fs::write(f.path.join("out.dag"), b"previous").unwrap();
+    for extra in [
+        vec![
+            "--force",
+            "--resident-nodes",
+            "256",
+            "--collection-work",
+            "1",
+        ],
+        vec![
+            "--force",
+            "--resident-nodes",
+            "256",
+            "--collection-work",
+            "100000000",
+            "--arena-nodes",
+            "300",
+        ],
+        vec![
+            "--force",
+            "--resident-nodes",
+            "1",
+            "--collection-work",
+            "100000000",
+        ],
+    ] {
+        f.fails(&extra);
+        assert_eq!(fs::read(f.path.join("out.dag")).unwrap(), b"previous");
+        f.no_staging();
+    }
+    for incomplete in [["--resident-nodes", "256"], ["--collection-work", "100"]] {
+        assert_eq!(f.run(&incomplete).status.code(), Some(2));
+        assert_eq!(fs::read(f.path.join("out.dag")).unwrap(), b"previous");
+    }
+}

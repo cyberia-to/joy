@@ -76,6 +76,54 @@ Library API `structured::run` accepts owned program/input bytes and RunLimits;
 without publishing. The CLI alone performs publication. Limits above are worker
 policy and do not redefine the nox or Trident protocol integer ranges.
 
+## Explicit compacting execution
+
+`--resident-nodes N --collection-work W` selects bounded compacting execution.
+Both flags are required together. Omitting them retains the append-only
+execution above, including all defaults and ceilings. Compaction is a general
+pure-nox execution policy; it contains no compiler stages or source recognition.
+
+In this mode `--arena-nodes` and JOB1 LIM1 arena_nodes bound cumulative fresh
+allocations, including loaded nodes and allocations left by failed operations.
+Hash-cons hits in the current arena are free. Reconstructing a previously
+collected value charges again. This is a conservative allocation allowance,
+separate from resident storage; no collection replenishes it. The host ceiling
+is 1,000,000,000 allocations, 10,000,000,000 reductions and 3,600,000 ms in this
+explicit mode. Defaults remain unchanged. All transport, frame and compiler
+schema ceilings remain unchanged. No JOB1 field or source option is added.
+
+Resident nodes must be positive and at most 3,145,728. Physical tier selection
+uses this resident bound, capped by the cumulative allowance. JOB1 admission
+tightens the cumulative bound and resident bound to the smaller allowance.
+Packing uses the same resident storage policy and does not collect. Loading or
+packing that exceeds resident storage rejects before execution. The entire
+loaded arena is pinned: program/input Orders and all admitted job references
+remain valid until output validation finishes.
+
+Collection only reclaims unreachable nodes created during this execution.
+Nox traces precise live continuation operands, remaps internal references,
+rebuilds the canonical hash-cons index and clears its weak finalizer cache.
+Successful output identity, charged reductions, evaluation order and peak
+frames agree with append-only execution whenever both complete. Internal node
+numbers and allocation history may differ. Traced/proving APIs keep their
+existing execution policy.
+
+Collection work has its own positive ceiling of 10,000,000,000 units. Nox
+charges node/index scans, actual index probes and the bounded commit work;
+this does not consume guest reductions. Scratch allocation is fallible before
+execution; its reserved bytes are reported separately. Cancellation before
+mutation leaves the arena intact. Once a preplanned commit begins, it finishes
+its admitted bounded work before cancellation returns, preserving a valid
+arena. This adds one nonpreemptible collection commit to the existing
+cooperative deadline contract; it is not a hard wall-clock deadline.
+
+`allocated_nodes` reports cumulative fresh allocations in this mode. An
+additional `compaction` report names the profile and limits and reports pinned,
+resident and peak nodes, cumulative allocations, reclaimed nodes, completed
+passes, charged collection work and reserved scratch bytes. Failures publish
+no artifact and include available resource counters in the diagnostic; failed
+gas remains unavailable. Requests never retry with greater limits.
+
 ## Compile source to ART1
 
 `joy build SOURCE --emit artifact [--artifact-profile raw|compiler-job] [-o PROGRAM.dag] [--force]`

@@ -1,5 +1,5 @@
 use clap::Args;
-use joy_rs::structured::{CompilerCaps, RunLimits};
+use joy_rs::structured::{CompactionPolicy, CompilerCaps, RunLimits};
 
 #[derive(Args)]
 pub struct LimitArgs {
@@ -7,6 +7,12 @@ pub struct LimitArgs {
     pub budget: u64,
     #[arg(long, default_value_t = 196_608)]
     pub arena_nodes: u32,
+    /// Enable bounded compaction with this resident node ceiling
+    #[arg(long, requires = "collection_work")]
+    pub resident_nodes: Option<u32>,
+    /// Maximum collection work; separate from guest reductions
+    #[arg(long, requires = "resident_nodes")]
+    pub collection_work: Option<u64>,
     #[arg(long, default_value_t = 16_384)]
     pub frames: u32,
     #[arg(long, default_value_t = 16_777_216)]
@@ -47,6 +53,12 @@ impl LimitArgs {
                 sequence_length: self.sequence_length,
                 validation_visits: self.validation_visits,
             },
+            compaction: self.resident_nodes.zip(self.collection_work).map(
+                |(resident_nodes, collection_work)| CompactionPolicy {
+                    resident_nodes,
+                    collection_work,
+                },
+            ),
         }
     }
 }
