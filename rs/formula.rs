@@ -8,80 +8,90 @@ use nebu::Goldilocks;
 use nox::{Order, Reduction};
 
 const ARENA_FULL: &str = "reduction arena full (formula too large)";
+/// Raw text admission is independent of the VM reduction budget.
+pub const MAX_FORMULA_BYTES: usize = 64 * 1024 * 1024;
+pub const MAX_FORMULA_DEPTH: usize = 4096;
+pub const MAX_FORMULA_NODES: usize = 1 << 20;
+/// Flat CLI/runtime output is at most 8 MiB of canonical field words.
+pub const MAX_OUTPUT_WORDS: usize = 1 << 20;
 
 /// Parse bracket text into the arena. Returns the root `Order`.
 pub fn parse<const N: usize>(r: &mut Reduction<N>, text: &str) -> Result<Order, String> {
+    if text.len() > MAX_FORMULA_BYTES {
+        return Err("formula byte limit".into());
+    }
     let bytes = text.as_bytes();
     let mut pos = 0usize;
-    let id = parse_data(r, bytes, &mut pos)?;
-    skip_ws(bytes, &mut pos);
-    if pos != bytes.len() {
-        return Err(format!("trailing input at byte {} of formula", pos));
+    let mut nodes = 0usize;
+    let mut frames: Vec<Vec<(Order, usize)>> = vec![Vec::new()];
+    while pos < bytes.len() {
+        match bytes[pos] {
+            c if c.is_ascii_whitespace() => pos += 1,
+            b'[' => {
+                if frames.len() > MAX_FORMULA_DEPTH {
+                    return Err("formula depth limit".into());
+                }
+                frames.push(Vec::new());
+                pos += 1;
+            }
+            b']' => {
+                if frames.len() == 1 {
+                    return Err("unexpected closing bracket".into());
+                }
+                let mut elems = frames.pop().ok_or("formula frame missing")?;
+                let (mut tail, mut depth) =
+                    elems.pop().ok_or("cell needs at least two elements")?;
+                if elems.is_empty() {
+                    return Err("cell needs at least two elements".into());
+                }
+                while let Some((head, head_depth)) = elems.pop() {
+                    depth = 1 + depth.max(head_depth);
+                    if depth > MAX_FORMULA_DEPTH {
+                        return Err("formula depth limit".into());
+                    }
+                    charge_node(&mut nodes)?;
+                    tail = r.pair(head, tail).ok_or(ARENA_FULL)?;
+                }
+                frames
+                    .last_mut()
+                    .ok_or("formula frame missing")?
+                    .push((tail, depth));
+                pos += 1;
+            }
+            b'0'..=b'9' => {
+                let start = pos;
+                while pos < bytes.len() && bytes[pos].is_ascii_digit() {
+                    pos += 1;
+                }
+                let value = text[start..pos]
+                    .parse::<u64>()
+                    .map_err(|_| "invalid atom")?;
+                charge_node(&mut nodes)?;
+                let node = r.atom(Goldilocks::new(value)).ok_or(ARENA_FULL)?;
+                frames
+                    .last_mut()
+                    .ok_or("formula frame missing")?
+                    .push((node, 0));
+            }
+            _ => return Err(format!("invalid formula character at byte {pos}")),
+        }
     }
-    Ok(id)
+    if frames.len() != 1 {
+        return Err("unclosed '[' in formula".into());
+    }
+    let roots = frames.pop().ok_or("empty formula")?;
+    if roots.len() != 1 {
+        return Err("formula must contain exactly one noun".into());
+    }
+    Ok(roots[0].0)
 }
 
-fn skip_ws(b: &[u8], pos: &mut usize) {
-    while *pos < b.len() && b[*pos].is_ascii_whitespace() {
-        *pos += 1;
+fn charge_node(nodes: &mut usize) -> Result<(), String> {
+    if *nodes == MAX_FORMULA_NODES {
+        return Err("formula node limit".into());
     }
-}
-
-fn parse_data<const N: usize>(
-    r: &mut Reduction<N>,
-    b: &[u8],
-    pos: &mut usize,
-) -> Result<Order, String> {
-    skip_ws(b, pos);
-    if *pos >= b.len() {
-        return Err("unexpected end of formula".to_string());
-    }
-    match b[*pos] {
-        b'[' => {
-            *pos += 1;
-            let mut elems: Vec<Order> = Vec::new();
-            loop {
-                skip_ws(b, pos);
-                if *pos >= b.len() {
-                    return Err("unclosed '[' in formula".to_string());
-                }
-                if b[*pos] == b']' {
-                    *pos += 1;
-                    break;
-                }
-                elems.push(parse_data(r, b, pos)?);
-            }
-            if elems.len() < 2 {
-                return Err(format!(
-                    "cell needs at least 2 elements, got {}",
-                    elems.len()
-                ));
-            }
-            // Fold right: [a b c] = [a [b c]]
-            let mut acc = elems[elems.len() - 1];
-            for &e in elems[..elems.len() - 1].iter().rev() {
-                acc = r.pair(e, acc).ok_or_else(|| ARENA_FULL.to_string())?;
-            }
-            Ok(acc)
-        }
-        b'0'..=b'9' => {
-            let start = *pos;
-            while *pos < b.len() && b[*pos].is_ascii_digit() {
-                *pos += 1;
-            }
-            let s = core::str::from_utf8(&b[start..*pos])
-                .map_err(|e| format!("invalid utf8 in atom: {}", e))?;
-            let v: u64 = s
-                .parse()
-                .map_err(|e| format!("invalid atom '{}': {}", s, e))?;
-            r.atom(Goldilocks::new(v))
-                .ok_or_else(|| ARENA_FULL.to_string())
-        }
-        c => Err(format!(
-            "unexpected character '{}' at byte {}",
-            c as char, *pos
-        )),
-    }
+    *nodes += 1;
+    Ok(())
 }
 
 /// Print data in bracket notation (inverse of `parse`).
@@ -119,7 +129,13 @@ pub fn build_subject<const N: usize>(
 
 /// Flatten a result tree into its atom leaves, left-to-right.
 pub fn leaves<const N: usize>(r: &Reduction<N>, id: Order) -> Result<Vec<u64>, String> {
+    if let Some(value) = r.atom_value(id) {
+        return Ok(vec![value.as_u64()]);
+    }
+    let length = output_length(r, id)?;
     let mut out = Vec::new();
+    out.try_reserve_exact(length)
+        .map_err(|_| "output allocation failed")?;
     let mut stack = vec![id];
     while let Some(n) = stack.pop() {
         if let Some(v) = r.atom_value(n) {
@@ -132,6 +148,43 @@ pub fn leaves<const N: usize>(r: &Reduction<N>, id: Order) -> Result<Vec<u64>, S
         }
     }
     Ok(out)
+}
+
+/// Count each shared node once before expanding it. Native arena pairs only
+/// reference earlier nodes, so that invariant also rejects invalid/cyclic data.
+fn output_length<const N: usize>(r: &Reduction<N>, id: Order) -> Result<usize, String> {
+    if r.get(id).is_none() {
+        return Err("invalid data id in result".into());
+    }
+    let mut counts = vec![0usize; r.count() as usize];
+    let mut pending = vec![id];
+    while let Some(&node) = pending.last() {
+        if counts[node as usize] != 0 {
+            pending.pop();
+        } else if r.atom_value(node).is_some() {
+            counts[node as usize] = 1;
+            pending.pop();
+        } else {
+            let head = r.head(node).ok_or("invalid result pair")?;
+            let tail = r.tail(node).ok_or("invalid result pair")?;
+            if head >= node || tail >= node {
+                return Err("invalid result DAG ordering".into());
+            }
+            if counts[head as usize] == 0 {
+                pending.push(head);
+            } else if counts[tail as usize] == 0 {
+                pending.push(tail);
+            } else {
+                let length = counts[head as usize] + counts[tail as usize];
+                if length > MAX_OUTPUT_WORDS {
+                    return Err("expanded output word limit".into());
+                }
+                counts[node as usize] = length;
+                pending.pop();
+            }
+        }
+    }
+    Ok(counts[id as usize])
 }
 
 #[cfg(test)]

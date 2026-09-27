@@ -109,7 +109,8 @@ connection or authority to modify state.
 - Legacy bundle execution uses a stack-allocated `Reduction` arena on a
   dedicated 256 MiB worker thread. Structured execution and job packing
   initialize their fixed arenas directly on the heap; explicit host limits
-  select the capacity. See `specs/structured-run.md`.
+  select the capacity. See `specs/structured-run.md`. Raw text parsing and
+  expanded output also have explicit limits in `specs/raw-execution-limits.md`.
 - Successful pure L1 charged reductions are initial minus remaining budget;
   successful traces have that many rows. Failed traces are not a gas counter.
 - `run-artifact` executes complete ART1 raw and compiler JOB1/RES1 NOXDAG01
