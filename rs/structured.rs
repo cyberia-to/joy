@@ -1,5 +1,5 @@
 //! Complete ART1 execution with bounded pure nox and validated compiler jobs.
-use nox::{artifact, sequential, Order, Outcome, Reduction};
+use nox::{artifact, sequential, Order, Reduction};
 use serde::Serialize;
 use std::{
     path::Path,
@@ -18,74 +18,20 @@ const STACK: usize = 256 << 20;
 #[cfg(test)]
 const ART1: u64 = 0x41525431;
 
+mod execution;
 mod job;
 mod job_limits;
 mod job_result;
+mod limits;
 mod pack;
 mod pack_writer;
 mod reader;
+pub use execution::CompactionReport;
 pub use job::{ModuleReport, Options};
 pub use job_limits::{CompilerCaps, JobLimits};
 pub use job_result::{CompilerReport, Diagnostic};
+pub use limits::{CompactionPolicy, RunLimits};
 pub use pack::{pack_job_files, PackReport, PackedJob};
-
-#[derive(Debug, Clone, Copy)]
-pub struct RunLimits {
-    pub budget: u64,
-    pub arena_nodes: u32,
-    pub frames: u32,
-    pub artifact_bytes: usize,
-    pub artifact_nodes: u32,
-    pub artifact_depth: u32,
-    pub time_ms: u64,
-    pub compiler: CompilerCaps,
-}
-
-impl Default for RunLimits {
-    fn default() -> Self {
-        Self {
-            budget: 1_000_000,
-            arena_nodes: DEFAULT_ARENA_NODES,
-            frames: 16_384,
-            artifact_bytes: 16 << 20,
-            artifact_nodes: 196_608,
-            artifact_depth: 4096,
-            time_ms: 30_000,
-            compiler: CompilerCaps::default(),
-        }
-    }
-}
-
-impl RunLimits {
-    pub fn validate(self) -> Result<(), String> {
-        for (name, value, max) in [
-            ("budget", self.budget, MAX_BUDGET),
-            (
-                "arena_nodes",
-                self.arena_nodes as u64,
-                u64::from(MAX_ARENA_NODES),
-            ),
-            ("frames", self.frames as u64, 65_536),
-            ("artifact_bytes", self.artifact_bytes as u64, 16 << 20),
-            ("artifact_nodes", self.artifact_nodes as u64, 196_608),
-            ("artifact_depth", self.artifact_depth as u64, 4096),
-            ("time_ms", self.time_ms, MAX_TIME_MS),
-        ] {
-            if value == 0 || value > max {
-                return Err(format!("limit {name} must be in 1..={max}"));
-            }
-        }
-        self.compiler.validate()
-    }
-
-    fn transport(self) -> artifact::Limits {
-        artifact::Limits {
-            max_bytes: self.artifact_bytes,
-            max_nodes: self.artifact_nodes,
-            max_depth: self.artifact_depth,
-        }
-    }
-}
 
 #[derive(Debug, Serialize)]
 pub struct RunReport {
@@ -101,6 +47,8 @@ pub struct RunReport {
     pub worker_stack_bytes: usize,
     pub elapsed_micros: u128,
     pub trace_mode: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub compaction: Option<CompactionReport>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub compiler_job: Option<CompilerReport>,
 }
@@ -136,7 +84,7 @@ fn execute<const N: usize>(
     let started = Instant::now();
     let expires = started + Duration::from_millis(limits.time_ms);
     let mut ar = Reduction::<N>::try_new_boxed().map_err(|e| format!("arena: {e}"))?;
-    if !ar.limit_allocations(limits.arena_nodes) {
+    if !ar.limit_allocations(limits.resident_nodes()) {
         return Err("arena allowance rejected".into());
     }
     let transport = limits.transport();
@@ -164,7 +112,7 @@ fn execute<const N: usize>(
     let admitted = if profile == 1 {
         let job = job::admit(&ar, input, program, limits, expires, program_visits)
             .map_err(|e| format!("compiler job admission: {e}"))?;
-        if !ar.limit_allocations(job.limits.arena_nodes) {
+        if !ar.limit_allocations(job.limits.arena_nodes.min(limits.resident_nodes())) {
             return Err("compiler job arena allowance below loaded nodes".into());
         }
         Some(job)
@@ -182,20 +130,21 @@ fn execute<const N: usize>(
             .as_ref()
             .map_or(limits.frames, |j| j.limits.evaluator_frames),
     };
-    let execution = sequential::reduce_cached_controlled(
+    let execution = execution::run(
         &mut ar,
-        input,
-        formula,
-        budget,
-        frames,
-        &mut || started.elapsed() >= Duration::from_millis(limits.time_ms),
-    )
-    .map_err(|e| format!("execution resource/profile: {e:?}"))?;
-    let (result, remaining) = match execution.outcome {
-        Outcome::Ok(result, remaining) => (result, remaining),
-        Outcome::Halt(_) => return Err("execution budget exhausted".into()),
-        Outcome::Error(error) => return Err(format!("execution failed: {error:?}")),
-    };
+        execution::Request {
+            input,
+            formula,
+            budget,
+            frames,
+            allocations: admitted
+                .as_ref()
+                .map_or(limits.arena_nodes, |job| job.limits.arena_nodes),
+        },
+        limits,
+        started,
+    )?;
+    let (result, remaining) = (execution.result, execution.remaining);
     deadline(started, limits)?;
     let (compiler_job, compiled) = match admitted {
         Some(job) => {
@@ -216,7 +165,7 @@ fn execute<const N: usize>(
             input_particle: particle(&ar, input)?,
             output_particle: particle(&ar, result)?,
             charged_reductions: budget - remaining,
-            allocated_nodes: ar.count(),
+            allocated_nodes: execution.allocated_nodes,
             peak_frames: execution.peak_frames,
             arena_reserved_bytes: std::mem::size_of::<Reduction<N>>(),
             frame_buffer_bytes: sequential::frame_storage_bytes(frames)
@@ -225,6 +174,7 @@ fn execute<const N: usize>(
             worker_stack_bytes: STACK,
             elapsed_micros: started.elapsed().as_micros(),
             trace_mode: "none",
+            compaction: execution.compaction,
             compiler_job,
         },
     })
@@ -239,9 +189,9 @@ pub fn run(program: Vec<u8>, input: Vec<u8>, limits: RunLimits) -> Result<RunRes
         .name("joy-artifact".into())
         .stack_size(STACK)
         .spawn(move || {
-            if limits.arena_nodes > LARGE_ARENA_NODES {
+            if limits.resident_nodes() > LARGE_ARENA_NODES {
                 execute::<COMPILER_ARENA>(program, input, limits)
-            } else if limits.arena_nodes > DEFAULT_ARENA_NODES {
+            } else if limits.resident_nodes() > DEFAULT_ARENA_NODES {
                 execute::<LARGE_ARENA>(program, input, limits)
             } else {
                 execute::<ARENA>(program, input, limits)

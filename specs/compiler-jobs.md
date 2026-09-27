@@ -28,6 +28,10 @@ Compiler and JOB1 containers must also fit requested transport limits. The
 arena's lifetime allowance is tightened to the request; already loaded nodes
 remain charged. Evaluation uses exactly requested reduction and frame limits.
 The host deadline covers admission, execution and result validation cooperatively.
+Explicit compacting execution uses the conservative cumulative allocation and
+separate resident-storage policy in [structured-run](structured-run.md#explicit-compacting-execution).
+LIM1 still tightens the cumulative allowance; already loaded nodes stay charged
+and pinned through complete RES1 and compiled-artifact validation.
 
 Input and output validation receive separate visit allowances. Every checked
 record charges head/tail reads, tag and terminator reads; each scalar/digest

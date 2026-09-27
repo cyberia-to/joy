@@ -1,0 +1,67 @@
+{
+  "kind": "local-development",
+  "base_revision": "4e814a9b7e5d0515803ce394341785c0aa0e4b0a",
+  "nox_revision": "1eaa8a494f994e4da6b20509469c1e62624f3f2d",
+  "trident_revision": "97539fbbeb599e000ec037c427c5b5c5e775e0cd",
+  "checks": {
+    "tests": {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "exit_code": 0,
+      "output": "tests.log",
+      "sha256": "0c4dbf3f896da354d62580ebe16ff6a5e3a0c5ba830ae377d7d9ddd123426572",
+      "env": {
+        "CARGO_TARGET_DIR": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/target-joy-check"
+      },
+      "passed": 168
+    },
+    "check": {
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "exit_code": 0,
+      "output": "check.log",
+      "sha256": "867b89b6574add265845dc510fc32c864d890006c1fabbf587c15931b282040f",
+      "env": {
+        "CARGO_TARGET_DIR": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/target-joy-check"
+      }
+    },
+    "boundary": {
+      "command": [
+        "python3",
+        "scripts/check-soft3-boundary.py"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "exit_code": 0,
+      "output": "boundary.log",
+      "sha256": "3cbcca0afbaa0029acb4405cfc2ad7a7f3bc92f6e418456dba19a667f4bc5638"
+    }
+  },
+  "source_sha256": {
+    "cli/artifact_limits.rs": "7382132380d17fe08dccd7f05f7433094210f26db39b2c56cd78aa71bd80b9b2",
+    "cli/tests/structured_run.rs": "a592bd680359ff5534a6f74682f2223033d90de596ef2f45442b6c06bace6d8f",
+    "rs/structured.rs": "eaaf1bf4bfaa6eb3f9a822b263ff30418912b24b8303462f032697511c99fa68",
+    "rs/structured/pack.rs": "ffb4228200db93f86d885fbba7b99f215d8286382b18d945943144092a16d766",
+    "rs/structured/tests.rs": "a294b24fb8721d1de38e77a41e9e136a0647cc360af548db9d082f1ede54b21b",
+    "rs/structured/tests/compiler.rs": "c525631ce4041f0c130418b9846e1d1498f368130ef5ffaa083b3cecc651aad1",
+    "rs/structured/execution.rs": "230db7f1ea69597a3b9ed4b6f2e87a3e5a4dd12cda7e99e44c7f1d9350a0d014",
+    "rs/structured/limits.rs": "45b180b82fb89460ac84d2ac3fc8c40350432babca68ae878b3f0d1dd1e57ec8",
+    "rs/structured/tests/compaction.rs": "1ad18fde4873c7454e22a2ef588ef1d30a9f7ecd71eee9eedeff688845754cc8",
+    "rs/structured/tests/compiler/compaction.rs": "fa8a5b5c9f87f736762286e7adec22ce6a49eb8a001d20406fa020049e2aff58",
+    "specs/compiler-jobs.md": "84e71513bcb694f0d4d56d232e9c1f36958f3c0a777f3660fc78d4071624ec9e",
+    "specs/structured-run.md": "7ff48fd11e239a0273ebc3abcad49f87c401a35bed2f17319a54f7603124fcc0"
+  }
+}
