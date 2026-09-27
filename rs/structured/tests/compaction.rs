@@ -153,7 +153,7 @@ fn compacting_policy_keeps_resource_and_service_rejections() {
 fn extended_caps_require_explicit_compaction_and_remain_bounded() {
     let maximum = RunLimits {
         arena_nodes: 1_000_000_000,
-        budget: 10_000_000_000,
+        budget: 20_000_000_000,
         time_ms: 3_600_000,
         compaction: Some(CompactionPolicy {
             resident_nodes: MAX_ARENA_NODES,
@@ -162,6 +162,12 @@ fn extended_caps_require_explicit_compaction_and_remain_bounded() {
         ..RunLimits::default()
     };
     maximum.validate().unwrap();
+    RunLimits {
+        budget: 10_000_000_000,
+        ..maximum
+    }
+    .validate()
+    .unwrap();
     assert_eq!(maximum.resident_nodes(), MAX_ARENA_NODES);
     assert_eq!(limits().resident_nodes(), 256);
     for invalid in [
@@ -211,5 +217,47 @@ fn extended_caps_require_explicit_compaction_and_remain_bounded() {
         },
     ] {
         assert!(invalid.validate().is_err(), "{invalid:?}");
+    }
+}
+
+#[test]
+fn explicit_larger_reduction_allowance_preserves_prior_execution_and_defaults() {
+    let defaults = RunLimits::default();
+    assert_eq!(defaults.budget, 1_000_000);
+    assert!(defaults.compaction.is_none());
+    assert_eq!(MAX_BUDGET, 100_000_000);
+    let ordinary_maximum = RunLimits {
+        budget: MAX_BUDGET,
+        ..defaults
+    };
+    ordinary_maximum.validate().unwrap();
+    assert!(RunLimits {
+        budget: MAX_BUDGET + 1,
+        ..ordinary_maximum
+    }
+    .validate()
+    .is_err());
+
+    let (program, input) = fixture(|ar| loop_fixture(ar, 100, false));
+    let prior = run(program.clone(), input.clone(), limits()).unwrap();
+    for budget in [10_000_000_000, 20_000_000_000] {
+        let result = run(
+            program.clone(),
+            input.clone(),
+            RunLimits { budget, ..limits() },
+        )
+        .unwrap();
+        assert_eq!(result.output, prior.output);
+        assert_eq!(
+            result.report.charged_reductions,
+            prior.report.charged_reductions
+        );
+        assert_eq!(result.report.allocated_nodes, prior.report.allocated_nodes);
+        assert_eq!(result.report.peak_frames, prior.report.peak_frames);
+        let old_stats = prior.report.compaction.as_ref().unwrap();
+        let stats = result.report.compaction.unwrap();
+        assert_eq!(stats.total_allocations, old_stats.total_allocations);
+        assert_eq!(stats.collection_work, old_stats.collection_work);
+        assert_eq!(stats.collections, old_stats.collections);
     }
 }
