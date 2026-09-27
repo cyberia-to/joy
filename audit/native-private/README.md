@@ -95,6 +95,38 @@ DAG metadata. C1 is9,191,495bytes; SHA-256
 This establishes regression-free bounded compiler operation. The complete
 compiler's C2/C3 self-compilation milestone remains open.
 
+## Integrated compiler/warrior CLI
+
+Native Zheng [PR35](https://github.com/cyberia-to/zheng/pull/35), Joy
+[PR16](https://github.com/cyberia-to/joy/pull/16) and Trident
+[PR107](https://github.com/cyberia-to/trident/pull/107) were merged into
+`release/0.4`. The source trees for each feature delivery match its fetched
+origin integration tree. Their default branches were unchanged.
+
+The paired installed commands are recorded in [paired.json](paired.json), with
+source revisions and both binary SHA-256 values:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 audit/native-private/check-paired.py --bin ../install-committed/bin --trident-source ../../selfhost-0.4-native-private-docs/trident --output audit/native-private/paired.json
+```
+
+All7commands passed their expected success/rejection result. Trident delegates
+native input-file run/prove and self-contained proof verification to Joy. Joy
+also binds that artifact to the supplied source and independent expected result.
+Trident's default prove profile is release, so this source-bound check explicitly
+uses `--profile release`. The different debug profile is rejected. A changed
+result and damaged artifact are rejected as well. Trident's verify command takes
+a proof path; source/claim comparisons use Joy's richer verification interface.
+
+Trident source was frozen at90f42b4 while its documentation changed tob027c27.
+`CARGO_TARGET_DIR=../target cargo test --release --locked --offline` from the
+Trident documentation worktree passed1,171tests across37suite result lines, with
+zero failed/ignored and zero Rust warnings. The existing native compiler UTF-8
+capacity case dominates that run. The preceding interrupted debug run supplies
+no full-suite acceptance claim. Full command/log identity is recorded in
+`integration.json`. Code acceptance for Joy and Zheng remains the separately
+recorded151and219tests above and in Zheng's native-private receipt.
+
 ## Remaining boundaries
 
 The protocol is arithmetic MPC-in-the-head with219repetitions, fresh OS entropy,

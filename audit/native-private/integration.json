@@ -1,0 +1,30 @@
+{
+  "schema": "joy/native-private-integration/v1",
+  "trident_tests": {
+    "source_revision": "90f42b4da4fe02c003333460bb4ccfa5fcf0e73c",
+    "documentation_revision": "b027c27e70047b29c2f29f031b221063c29082ed",
+    "command": "CARGO_TARGET_DIR=../target cargo test --release --locked --offline",
+    "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-native-private-docs/trident",
+    "log": "/tmp/trident-native-private-docs-release-tests.log",
+    "log_sha256": "d774bfb2e5c8de81a50e8f3392e935983c4bf48d9454b657f8fa39f104d4738b",
+    "passed": 1171,
+    "failed": 0,
+    "ignored": 0,
+    "rust_warnings": 0
+  },
+  "integration_revisions": {
+    "joy": "ba100a55c3730b3a1fc67503702e370e687c311a",
+    "zheng": "2a9e9ccc83fed4a39e0d7c81c8b4034b223edba6",
+    "trident": "c15f328d8265ef128e26008f0d31076d5a0cfb45"
+  },
+  "unchanged_default_revisions": {
+    "joy": "10844a890e2939d529a1003474298a09be30b75c",
+    "zheng": "44bd5bfec5cb6764123ea513a33a26c0877a488c",
+    "trident": "360b737e073ca2f969ab0c78460b4228bcac7b78"
+  },
+  "origin_tree_check_command": "git fetch origin refs/heads/release/0.4:refs/remotes/origin/release/0.4 && git diff --exit-code HEAD origin/release/0.4",
+  "default_branch_check_command": "git ls-remote origin refs/heads/main refs/heads/master",
+  "paired_command": "PYTHONDONTWRITEBYTECODE=1 python3 audit/native-private/check-paired.py --bin ../install-committed/bin --trident-source ../../selfhost-0.4-native-private-docs/trident --output audit/native-private/paired.json",
+  "status": "passed",
+  "release_promoted": false
+}
