@@ -222,6 +222,7 @@ fn compact_4097_iteration_program_runs_through_joy() {
     let result = run(program.clone(), input.clone(), RunLimits::default()).unwrap();
     assert_eq!(output_atom(&result.output), 4097);
     assert_eq!(result.report.charged_reductions, 61_460);
+    assert_eq!(result.report.finalizer_cache_bytes, 1_048_576);
     assert!(program.len() < 5000);
     assert!(result.report.peak_frames > 4097);
     assert_eq!(

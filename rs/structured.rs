@@ -1,5 +1,5 @@
 //! Complete ART1 execution with bounded pure nox and validated compiler jobs.
-use nox::{artifact, sequential, NoTrace, Order, Outcome, Reduction};
+use nox::{artifact, sequential, Order, Outcome, Reduction};
 use serde::Serialize;
 use std::{
     path::Path,
@@ -97,6 +97,7 @@ pub struct RunReport {
     pub peak_frames: u32,
     pub arena_reserved_bytes: usize,
     pub frame_buffer_bytes: usize,
+    pub finalizer_cache_bytes: usize,
     pub worker_stack_bytes: usize,
     pub elapsed_micros: u128,
     pub trace_mode: &'static str,
@@ -181,13 +182,12 @@ fn execute<const N: usize>(
             .as_ref()
             .map_or(limits.frames, |j| j.limits.evaluator_frames),
     };
-    let execution = sequential::reduce_controlled(
+    let execution = sequential::reduce_cached_controlled(
         &mut ar,
         input,
         formula,
         budget,
         frames,
-        &mut NoTrace,
         &mut || started.elapsed() >= Duration::from_millis(limits.time_ms),
     )
     .map_err(|e| format!("execution resource/profile: {e:?}"))?;
@@ -221,6 +221,7 @@ fn execute<const N: usize>(
             arena_reserved_bytes: std::mem::size_of::<Reduction<N>>(),
             frame_buffer_bytes: sequential::frame_storage_bytes(frames)
                 .ok_or("frame size overflow")?,
+            finalizer_cache_bytes: sequential::finalizer_cache_storage_bytes(),
             worker_stack_bytes: STACK,
             elapsed_micros: started.elapsed().as_micros(),
             trace_mode: "none",
