@@ -1,0 +1,846 @@
+{
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/joy",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 8709167,
+      "stdout": "ea10f8ac28a6e005e9f5c81f6f85aaa0a9692fae\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/trident",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 8282041,
+      "stdout": "c15f328d8265ef128e26008f0d31076d5a0cfb45\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/nox",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 7820875,
+      "stdout": "c9f7486a74fe81bfc194b598da40f6343ecb2ef1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/zheng",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 7891417,
+      "stdout": "deb5b8defdbee16e1acf1c1e2d7ffe56f7a90d9c\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/bbg",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 7458500,
+      "stdout": "1d39975ad199b48c350fa4cc011cbf6f289480ee\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/hemera",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 7539333,
+      "stdout": "a931a0a8e7ed369852ce0f8bc6451a59745ee692\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/lens",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 7678208,
+      "stdout": "17cafe91431977b738e5b72361187cd01ad93638\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/strata",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 7824500,
+      "stdout": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/honeycrisp",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 7560208,
+      "stdout": "ff735e6c262926bc9bab7534786a575020cbe442\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "-C",
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/neuron",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 7629208,
+      "stdout": "fd24e768d623604b67e20b4b93fa8e82c83ac373\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/uname",
+        "-sm"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 1946750,
+      "stdout": "Darwin arm64\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/sw_vers"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 5917833,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.4.1\nBuildVersion:\t\t25E253\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "describe"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 358174375,
+      "stdout": "{\n  \"schema_version\": 1,\n  \"compiler_api\": 3,\n  \"owner\": \"joy\",\n  \"version\": \"0.5.0\",\n  \"terrain\": {\n    \"name\": \"nox\",\n    \"display_name\": \"NOX\",\n    \"architecture\": \"Tree\",\n    \"field_prime\": \"2^64 - 2^32 + 1\",\n    \"field_bits\": 64,\n    \"field_limbs\": 2,\n    \"emulated_fields\": [],\n    \"stack_depth\": 0,\n    \"spill_ram_base\": 0,\n    \"digest_width\": 4,\n    \"xfield_width\": 3,\n    \"hash_rate\": 8,\n    \"output_extension\": \".nox\",\n    \"cost_tables\": [\n      \"reductions\"\n    ],\n    \"warrior\": {\n      \"name\": \"joy\",\n      \"crate_name\": \"cyber-joy\",\n      \"runner\": true,\n      \"prover\": true\n    }\n  },\n  \"union\": null,\n  \"states\": [],\n  \"modules\": {},\n  \"module_hashes\": {},\n  \"intrinsics\": [\n    \"assert\",\n    \"assert_eq\",\n    \"assert_digest\",\n    \"inv\",\n    \"sub\",\n    \"neg\",\n    \"field_add\",\n    \"field_mul\",\n    \"as_field\",\n    \"as_u32\",\n    \"hash\",\n    \"divine\",\n    \"os.state.read\",\n    \"nox_noun_atom\",\n    \"nox_noun_pair\",\n    \"nox_noun_head\",\n    \"nox_noun_tail\",\n    \"nox_noun_as_field\",\n    \"nox_noun_eq\",\n    \"nox_noun_identity\"\n  ],\n  \"intrinsic_abis\": {},\n  \"instructions\": [],\n  \"runtime\": {\n    \"run\": true,\n    \"prove\": true,\n    \"verify\": true,\n    \"deploy\": false,\n    \"proof_formats\": [\n      \"zheng-nox-public-execution-v2\",\n      \"joy-nox-public-state-execution-v1\",\n      \"joy-nox-zheng-private-execution-v1\"\n    ],\n    \"restrictions\": [\n      \"run: nox reductions with public inputs and sequential secret call witnesses; no digest stream; --state loads a bounded authenticated public BBG certificate\",\n      \"build --emit artifact: source main(Noun)->Noun to complete ART1, default raw(0,0) or explicit --artifact-profile compiler-job(1,1), native SDK imports and atomic publication; seed host compilation\",\n      \"pack-job: exact source files and explicit origins/options/limits to canonical identity-bound JOB1; no source language stages or implicit imports\",\n      \"run-artifact: complete NOXDAG01 ART1 raw(0,0) and compiler JOB1/RES1(1,1) with full identity binding and independent schema/runtime caps; bounded sequential pure tags0..15 with dynamic compose, no retained trace or host services; --emit program publishes a validated guest ART1; dynamic execution proofs remain unsupported\",\n      \"prove public: stateless bounded static tags 0..15; full witness disclosure with linear verification and storage, neither zero knowledge nor succinct\",\n      \"prove private: native Zheng randomized CCS over Goldilocks/Hemera with 219 MPC-in-the-head repetitions; secret calls and intermediate witness hidden, public program/IO/cost; linear proof and verification costs; 256 MiB artifact bound\",\n      \"prove state: public bounded CCS execution with all lookup coordinates and four root limbs bound to complete authenticated public tables; private profiles hide query coordinates over the same public tables, limited to 2048 field values\",\n      \"prove: no dynamic continuations or variable branch shapes; budget must cover the selected execution's bound cost; secret calls select the private profile; explicit public proof APIs reject secrets\",\n      \"prove: at most 64 public inputs, 4096 program/symbolic noun nodes, depth 128, 4096 symbolic calls, 32768 gates/rows and 4096 output atoms\",\n      \"verify: exact public/private execution and authenticated public/private-query state execution; retired foreign private formats are unsupported; old trace statements require explicit opt-in and do not authenticate execution or IO\",\n      \"cyber aliases the nox runtime; public BBG certificate files are supported, live network state synchronization and deployment are not\"\n    ]\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "build",
+        "public.tri",
+        "--profile",
+        "release",
+        "-o",
+        "public.json"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 10540167,
+      "stdout": "public.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "run",
+        "public.json",
+        "--input-values",
+        "3,5"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 5309750,
+      "stdout": "24\n",
+      "stderr": "Executed in 28 reductions\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "prove",
+        "public.json",
+        "--input-values",
+        "3,5",
+        "--output",
+        "public.zheng"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 10213417,
+      "stdout": "public.zheng\n",
+      "stderr": "Proved public execution in 7 ms: 28 reductions, 2242 bytes\nOutput: [24]\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "public.zheng",
+        "--input-values",
+        "3,5",
+        "--claim",
+        "24"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 3966125,
+      "stdout": "Verification: PASS (public execution; non-ZK)\n  public input: [3, 5]\n  public output: [24]\n  reductions: 28\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "public.zheng",
+        "--claim",
+        "25"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 2550167,
+      "stdout": "",
+      "stderr": "Verification: FAIL (execution proof differs from requested input, output or budget)\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "public.zheng",
+        "--budget",
+        "1"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 2602041,
+      "stdout": "",
+      "stderr": "Verification: FAIL (execution proof differs from requested input, output or budget)\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "run",
+        "private.tri",
+        "--input-file",
+        "witness.json"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 5410750,
+      "stdout": "91\n",
+      "stderr": "Executed in 32 reductions\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 219002542,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 215 ms: 32 reductions, 286431 bytes\nOutput: [91]\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 102113041,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "private.tri",
+        "--proof",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 102799583,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "92"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 3440375,
+      "stdout": "",
+      "stderr": "Verification: FAIL (private proof differs from requested input, output or budget)\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "private.zheng",
+        "--input-file",
+        "witness.json"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 3004167,
+      "stdout": "",
+      "stderr": "Verification: FAIL (private proof verification uses only public inputs and expected state)\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "second.zheng"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 217489834,
+      "stdout": "second.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 213 ms: 32 reductions, 282847 bytes\nOutput: [91]\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "bad-input.json",
+        "--output",
+        "keep.zheng",
+        "--force"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 4020375,
+      "stdout": "",
+      "stderr": "error: private execution witness stream does not match the program\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "bad-input.json",
+        "--output",
+        "keep.zheng",
+        "--force"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 3530709,
+      "stdout": "",
+      "stderr": "error: private execution witness stream does not match the program\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "keep.zheng"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 218721917,
+      "stdout": "",
+      "stderr": "error: I/O error: cannot publish 'keep.zheng': File exists (os error 17); --force permits replacement\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "keep.zheng",
+        "--force"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 216784000,
+      "stdout": "keep.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 212 ms: 32 reductions, 284895 bytes\nOutput: [91]\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "keep.zheng",
+        "--claim",
+        "91"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 101591250,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "batch",
+        "prove",
+        "private.tri",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "batch"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 226031208,
+      "stdout": "batch/0000/proof.zheng\nbatch/0001/proof.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 215 ms: 32 reductions, 296671 bytes\nOutput: [91]\n[0] PASS\nProved native private execution (Zheng) in 219 ms: 32 reductions, 290015 bytes\nOutput: [91]\n[1] PASS\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "batch",
+        "verify",
+        "batch/0000/proof.zheng",
+        "batch/0001/proof.zheng"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 104295458,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\nVerification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": "[0] PASS\n[1] PASS\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "test",
+        "tests.tri"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 5182667,
+      "stdout": "running 1 test on nox\n  test checks.works ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 skipped\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "test",
+        "tests.tri"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 4765500,
+      "stdout": "",
+      "stderr": "compile error: running 1 test on nox\n  test checks.fails ... FAILED\n    error: nox execution failed: InvZero\n\ntest result: FAILED. 0 passed; 1 failed; 0 skipped\n\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "bench",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--claim",
+        "91",
+        "--repeat",
+        "3"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 9128834,
+      "stdout": "{\"budget\":\"1000000\",\"compilation_profile\":\"debug\",\"expected_output_checked\":true,\"kind\":\"native-execution\",\"median_ns\":\"1774833\",\"min_ns\":\"1748125\",\"output\":[\"91\"],\"program\":\"private\",\"program_particle\":\"07b9e6b8ae4c80f39454c1bf7bc00e29cc8fa20e0b231c6509da6e4527e87cdb\",\"program_particle_profile\":\"hemera-trimmed-nox-assembly/1\",\"program_preparation_ns\":\"823917\",\"proof_generated\":false,\"reductions\":\"32\",\"repeat\":3,\"samples\":[{\"elapsed_ns\":\"1816333\",\"reductions\":\"32\"},{\"elapsed_ns\":\"1774833\",\"reductions\":\"32\"},{\"elapsed_ns\":\"1748125\",\"reductions\":\"32\"}],\"schema\":\"joy/bench/v1\",\"source_hash\":\"e861796ca635d9e3128b2ab15d2d46047216486fc32c86b84212bdadcee44000\",\"state_root\":null,\"target\":\"nox\",\"total_ns\":\"5339291\"}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "retired.zheng"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 3122000,
+      "stdout": "",
+      "stderr": "Verification: FAIL (retired foreign private proof format; regenerate with native Zheng proving)\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "retired.zheng"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 3117875,
+      "stdout": "",
+      "stderr": "Verification: FAIL (retired foreign private proof format; regenerate with native Zheng proving)\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "retired.zheng"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 2644875,
+      "stdout": "",
+      "stderr": "Verification: FAIL (retired foreign private proof format; regenerate with native Zheng proving)\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "run",
+        "sdk.tri"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 12662125,
+      "stdout": "4096\n",
+      "stderr": "Executed in 16 reductions\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "build",
+        "foreign.tri",
+        "-o",
+        "foreign.json"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 3161000,
+      "stdout": "",
+      "stderr": "error: compile error: cannot find module 'std.compiler.codegen' (looked at '/Users/master/cyber/.worktrees/joy-size-baseline/trident/lib/std/compiler/codegen.tri'): module std.compiler.codegen is not supplied by this target package\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "build",
+        "foreign.tri",
+        "-o",
+        "foreign.json"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 2854542,
+      "stdout": "",
+      "stderr": "error: compile error: cannot find module 'std.kernel' (looked at '/Users/master/cyber/.worktrees/joy-size-baseline/trident/lib/std/kernel.tri'): module std.kernel is not supplied by this target package\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "build",
+        "foreign.tri",
+        "-o",
+        "foreign.json"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 2856000,
+      "stdout": "",
+      "stderr": "error: compile error: cannot find module 'os.neptune.kernel' (looked at 'os/neptune/kernel.tri'): module os.neptune.kernel is not supplied by this target package\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "describe",
+        "--target",
+        "triton"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 2705083,
+      "stdout": "",
+      "stderr": "error: joy does not provide target 'triton'\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "describe",
+        "--target",
+        "neptune"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 1,
+      "elapsed_ns": 2722208,
+      "stdout": "",
+      "stderr": "error: joy does not provide target 'neptune'\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "build",
+        "hello.tri",
+        "--emit",
+        "nox",
+        "--profile",
+        "release",
+        "-o",
+        "hello.nox"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 8308917,
+      "stdout": "hello.nox\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "run",
+        "hello.nox"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 4898250,
+      "stdout": "72\n101\n108\n108\n111\n44\n32\n119\n111\n114\n108\n100\n33\n10\n0\n",
+      "stderr": "Executed in 44 reductions\n"
+    },
+    {
+      "command": [
+        "/usr/bin/strip",
+        "-x",
+        "joy.stripped"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 8380125,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/codesign",
+        "--force",
+        "--sign",
+        "-",
+        "joy.stripped"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 15501292,
+      "stdout": "",
+      "stderr": "joy.stripped: replacing existing signature\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy.stripped",
+        "run",
+        "hello.nox"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 357756333,
+      "stdout": "72\n101\n108\n108\n111\n44\n32\n119\n111\n114\n108\n100\n33\n10\n0\n",
+      "stderr": "Executed in 44 reductions\n"
+    },
+    {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "run",
+        "hello.nox"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 5646041,
+      "stdout": "72\n101\n108\n108\n111\n44\n32\n119\n111\n114\n108\n100\n33\n10\n0\n",
+      "stderr": "Executed in 44 reductions\n"
+    }
+  ],
+  "work": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+  "binary": "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+  "status": "passed",
+  "platform": "Darwin arm64",
+  "macos": "ProductName:\t\tmacOS\nProductVersion:\t\t26.4.1\nBuildVersion:\t\t25E253\n",
+  "no_foreign_sibling": true,
+  "binary_sha256": "5f8bcca394579064e87c84d995c1ba9bda5ffefe6a6c7c245cab1b64f1668012",
+  "binary_bytes": 3906336,
+  "private_product": {
+    "artifact_bytes": 286431,
+    "artifact_sha256": "e83ab1de5a04e9c4701c202a9acede806a060b6967cec92e3eb155268e3f560c",
+    "prove_command": {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 219002542,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 215 ms: 32 reductions, 286431 bytes\nOutput: [91]\n"
+    },
+    "verify_command": {
+      "command": [
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "cwd": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-native-private-installed-9lkt_4o8",
+      "exit_code": 0,
+      "elapsed_ns": 102113041,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    }
+  },
+  "bench": {
+    "budget": "1000000",
+    "compilation_profile": "debug",
+    "expected_output_checked": true,
+    "kind": "native-execution",
+    "median_ns": "1774833",
+    "min_ns": "1748125",
+    "output": [
+      "91"
+    ],
+    "program": "private",
+    "program_particle": "07b9e6b8ae4c80f39454c1bf7bc00e29cc8fa20e0b231c6509da6e4527e87cdb",
+    "program_particle_profile": "hemera-trimmed-nox-assembly/1",
+    "program_preparation_ns": "823917",
+    "proof_generated": false,
+    "reductions": "32",
+    "repeat": 3,
+    "samples": [
+      {
+        "elapsed_ns": "1816333",
+        "reductions": "32"
+      },
+      {
+        "elapsed_ns": "1774833",
+        "reductions": "32"
+      },
+      {
+        "elapsed_ns": "1748125",
+        "reductions": "32"
+      }
+    ],
+    "schema": "joy/bench/v1",
+    "source_hash": "e861796ca635d9e3128b2ab15d2d46047216486fc32c86b84212bdadcee44000",
+    "state_root": null,
+    "target": "nox",
+    "total_ns": "5339291"
+  },
+  "stripped_bytes": 3495232,
+  "stripped_sha256": "a5afdfb86cb8ccd91fd635bc8cd7f4cb6bf9ba52565560b6de36549b7d42574c",
+  "hello_formula_bytes": 292,
+  "hello_formula_sha256": "6b11ba56befaa61b194c469e7b4a174ea6160fda3c21b5a663b816001c03c9cd",
+  "symbols": {
+    "command": [
+      "/usr/bin/xcrun",
+      "nm",
+      "--demangle",
+      "--defined-only",
+      "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy"
+    ],
+    "output_sha256": "16bba34e444c86679c5d87db36bb35d3782f55d0a69ef32c299b4a439f991706",
+    "forbidden": []
+  },
+  "embedded_resources": {
+    "legacy_compiler_files_absent": 7,
+    "native_compiler_files_present": 87
+  },
+  "witness_files_removed": true,
+  "runner_workspace_revisions": {
+    "joy": "ea10f8ac28a6e005e9f5c81f6f85aaa0a9692fae",
+    "trident": "c15f328d8265ef128e26008f0d31076d5a0cfb45",
+    "nox": "c9f7486a74fe81bfc194b598da40f6343ecb2ef1",
+    "zheng": "deb5b8defdbee16e1acf1c1e2d7ffe56f7a90d9c",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373"
+  },
+  "binary_source_revisions": {
+    "joy": "ea10f8ac28a6e005e9f5c81f6f85aaa0a9692fae",
+    "trident": "c15f328d8265ef128e26008f0d31076d5a0cfb45",
+    "zheng": "2a9e9ccc83fed4a39e0d7c81c8b4034b223edba6",
+    "nox": "c9f7486a74fe81bfc194b598da40f6343ecb2ef1",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "tade": "c1d81c75725df0a666c36d81ef33c3a60eb007f3"
+  },
+  "source_provenance_note": "CLI fixture runner queries its workspace HEADs; frozen binary build inputs are separately recorded in binary_source_revisions and baseline-sources.json."
+}

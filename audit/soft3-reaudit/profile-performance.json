@@ -1,0 +1,1619 @@
+{
+  "work": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw",
+  "commands": [
+    {
+      "label": "baseline",
+      "kind": "prove",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 906984167,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 225 ms: 32 reductions, 291551 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "thin",
+      "kind": "prove",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 441704916,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 211 ms: 32 reductions, 290015 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "small",
+      "kind": "prove",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 422527875,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 215 ms: 32 reductions, 286943 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "fat",
+      "kind": "prove",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 593119500,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 216 ms: 32 reductions, 287455 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "fat",
+      "kind": "verify",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 101076334,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "verify",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 105023666,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "verify",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 123784459,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "verify",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 113671917,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "compile",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/baseline.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3394004416,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/baseline.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "compile",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/thin.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3345226916,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/thin.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "compile",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/small.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3408767000,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/small.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "compile",
+      "measured": false,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/fat.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3385836625,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/fat.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 218494375,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 214 ms: 32 reductions, 280799 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "small",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 218014042,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 213 ms: 32 reductions, 286943 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "thin",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 215231750,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 211 ms: 32 reductions, 287455 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "baseline",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 218987125,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 214 ms: 32 reductions, 286943 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "baseline",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 103758708,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 102616709,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 103904875,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 104275709,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/fat.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3383698583,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/fat.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/small.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3409906250,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/small.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/thin.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3348402292,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/thin.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/baseline.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3292394042,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/baseline.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 216972958,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 212 ms: 32 reductions, 286431 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "thin",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 213080375,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 209 ms: 32 reductions, 286943 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "small",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 217814958,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 213 ms: 32 reductions, 291039 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "fat",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 216725834,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 212 ms: 32 reductions, 284383 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "fat",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 101780875,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 103032500,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 103836708,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 104086792,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/baseline.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3310853583,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/baseline.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/thin.dag",
+        "--force"
+      ],
+      "elapsed_ns": 4773108041,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/thin.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/small.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3334830750,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/small.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/fat.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3329614917,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/fat.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 214829583,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 210 ms: 32 reductions, 289503 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "small",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 216864875,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 213 ms: 32 reductions, 284895 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "thin",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 214013292,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 210 ms: 32 reductions, 281311 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "baseline",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 211496208,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 207 ms: 32 reductions, 293599 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "baseline",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 100004792,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 100851042,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 101299458,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 100251791,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/fat.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3336950083,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/fat.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/small.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3312421291,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/small.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/thin.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3242686500,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/thin.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "compile",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "build",
+        "/Users/master/cyber/.worktrees/joy-size-baseline/trident/compiler/nox/main.tri",
+        "--emit",
+        "artifact",
+        "--artifact-profile",
+        "compiler-job",
+        "-o",
+        "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/baseline.dag",
+        "--force"
+      ],
+      "elapsed_ns": 3245331667,
+      "exit_code": 0,
+      "stdout": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/joy-size-bench-firnwoaw/baseline.dag\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 213639250,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 209 ms: 32 reductions, 284383 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "thin",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 217465209,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 213 ms: 32 reductions, 290015 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "small",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 218269791,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 214 ms: 32 reductions, 296671 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "fat",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 216078042,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 212 ms: 32 reductions, 286943 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "fat",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 101655917,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 103264166,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 104129458,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 101265291,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 215491542,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 211 ms: 32 reductions, 281311 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "small",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 214477375,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 210 ms: 32 reductions, 284895 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "thin",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 215731500,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 211 ms: 32 reductions, 285919 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "baseline",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 213282959,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 209 ms: 32 reductions, 286943 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "baseline",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 101559333,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 103019834,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 103297375,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 103724375,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 214186250,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 210 ms: 32 reductions, 290015 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "thin",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 211216792,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 207 ms: 32 reductions, 285407 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "small",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 214316792,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 210 ms: 32 reductions, 287455 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "fat",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 216040500,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 212 ms: 32 reductions, 291039 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "fat",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 100657958,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 102310041,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 101579709,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "baseline",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 101444125,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 219867667,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 215 ms: 32 reductions, 290527 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "small",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 218771916,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 214 ms: 32 reductions, 284895 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "thin",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 212082583,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 208 ms: 32 reductions, 285919 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "baseline",
+      "kind": "prove",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "prove",
+        "private.tri",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "private.zheng",
+        "--force"
+      ],
+      "elapsed_ns": 213094417,
+      "exit_code": 0,
+      "stdout": "private.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 209 ms: 32 reductions, 289503 bytes\nOutput: [91]\n"
+    },
+    {
+      "label": "baseline",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 101535792,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "thin",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 100802042,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "small",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 102415042,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "label": "fat",
+      "kind": "verify",
+      "measured": true,
+      "command": [
+        "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+        "verify",
+        "private.zheng",
+        "--claim",
+        "91"
+      ],
+      "elapsed_ns": 103574125,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    }
+  ],
+  "binaries": {
+    "baseline": {
+      "path": "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-baseline",
+      "bytes": 4910992,
+      "sha256": "b4e1e8fb3f5aef406325e0ff8b3cd4fc02a12da03881f2229507daba04abb820"
+    },
+    "thin": {
+      "path": "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+      "bytes": 4117984,
+      "sha256": "bed4dd0b953db8bc5b3e9d64c01397265da0250f8cd4d915cb6a20e107e75963"
+    },
+    "small": {
+      "path": "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+      "bytes": 3391392,
+      "sha256": "642a1037a727bd2dbb8e55bfe5045725d0191ec309d5602e3b6e005e704c18b9"
+    },
+    "fat": {
+      "path": "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+      "bytes": 3906336,
+      "sha256": "5f8bcca394579064e87c84d995c1ba9bda5ffefe6a6c7c245cab1b64f1668012"
+    }
+  },
+  "sources": {
+    "joy": "ea10f8ac28a6e005e9f5c81f6f85aaa0a9692fae",
+    "trident": "c15f328d8265ef128e26008f0d31076d5a0cfb45",
+    "zheng": "2a9e9ccc83fed4a39e0d7c81c8b4034b223edba6",
+    "nox": "c9f7486a74fe81bfc194b598da40f6343ecb2ef1",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638"
+  },
+  "median_ns": {
+    "baseline": {
+      "prove": 213639250,
+      "verify": 101535792,
+      "compile": 3292394042
+    },
+    "thin": {
+      "prove": 214013292,
+      "verify": 102616709,
+      "compile": 3348402292
+    },
+    "small": {
+      "prove": 217814958,
+      "verify": 103032500,
+      "compile": 3334830750
+    },
+    "fat": {
+      "prove": 216078042,
+      "verify": 101780875,
+      "compile": 3336950083
+    }
+  },
+  "compiler_artifact_sha256": "4aed7fc83be96156fcb65c3bbb369c192ad27f894ab78a030e3588056a66d112",
+  "samples_ns": {
+    "baseline": {
+      "prove": [
+        218987125,
+        216972958,
+        211496208,
+        213639250,
+        213282959,
+        214186250,
+        213094417
+      ],
+      "verify": [
+        103758708,
+        104086792,
+        100004792,
+        101265291,
+        101559333,
+        101444125,
+        101535792
+      ],
+      "compile": [
+        3292394042,
+        3310853583,
+        3245331667
+      ]
+    },
+    "thin": {
+      "prove": [
+        215231750,
+        213080375,
+        214013292,
+        217465209,
+        215731500,
+        211216792,
+        212082583
+      ],
+      "verify": [
+        102616709,
+        103836708,
+        100851042,
+        104129458,
+        103019834,
+        101579709,
+        100802042
+      ],
+      "compile": [
+        3348402292,
+        4773108041,
+        3242686500
+      ]
+    },
+    "small": {
+      "prove": [
+        218014042,
+        217814958,
+        216864875,
+        218269791,
+        214477375,
+        214316792,
+        218771916
+      ],
+      "verify": [
+        103904875,
+        103032500,
+        101299458,
+        103264166,
+        103297375,
+        102310041,
+        102415042
+      ],
+      "compile": [
+        3409906250,
+        3334830750,
+        3312421291
+      ]
+    },
+    "fat": {
+      "prove": [
+        218494375,
+        216725834,
+        214829583,
+        216078042,
+        215491542,
+        216040500,
+        219867667
+      ],
+      "verify": [
+        104275709,
+        101780875,
+        100251791,
+        101655917,
+        103724375,
+        100657958,
+        103574125
+      ],
+      "compile": [
+        3383698583,
+        3329614917,
+        3336950083
+      ]
+    }
+  },
+  "status": "passed"
+}

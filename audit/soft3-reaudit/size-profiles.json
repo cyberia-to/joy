@@ -1,0 +1,90 @@
+[
+  {
+    "label": "thin",
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked",
+      "--offline",
+      "-p",
+      "cyber-joy",
+      "--bin",
+      "joy",
+      "--config",
+      "profile.release.lto=\"thin\"",
+      "--config",
+      "profile.release.codegen-units=1"
+    ],
+    "env": {
+      "CARGO_TARGET_DIR": "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin"
+    },
+    "exit_code": 0,
+    "build_ns": 43672663583,
+    "bytes": 4117984,
+    "sha256": "bed4dd0b953db8bc5b3e9d64c01397265da0250f8cd4d915cb6a20e107e75963",
+    "binary": "/Users/master/cyber/.worktrees/joy-size-baseline/target-thin/release/joy",
+    "stripped_bytes": 3732368,
+    "stripped_sha256": "46a1a104c88edcabe67cede3bd15e92e9f6218d35e2513324251bd50e84806e4",
+    "stripped_binary": "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-thin-stripped"
+  },
+  {
+    "label": "small",
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked",
+      "--offline",
+      "-p",
+      "cyber-joy",
+      "--bin",
+      "joy",
+      "--config",
+      "profile.release.lto=\"fat\"",
+      "--config",
+      "profile.release.codegen-units=1",
+      "--config",
+      "profile.release.opt-level=\"s\""
+    ],
+    "env": {
+      "CARGO_TARGET_DIR": "/Users/master/cyber/.worktrees/joy-size-baseline/target-small"
+    },
+    "exit_code": 0,
+    "build_ns": 42962088958,
+    "bytes": 3391392,
+    "sha256": "642a1037a727bd2dbb8e55bfe5045725d0191ec309d5602e3b6e005e704c18b9",
+    "binary": "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+    "stripped_bytes": 2921104,
+    "stripped_sha256": "1a004fbe6215326ece1d0ca4cc54345a73bbcb852ea727f0a9b32ace823b16d9",
+    "stripped_binary": "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-small-stripped"
+  },
+  {
+    "label": "fat",
+    "command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked",
+      "--offline",
+      "-p",
+      "cyber-joy",
+      "--bin",
+      "joy",
+      "--config",
+      "profile.release.lto=\"fat\"",
+      "--config",
+      "profile.release.codegen-units=1"
+    ],
+    "env": {
+      "CARGO_TARGET_DIR": "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat"
+    },
+    "exit_code": 0,
+    "bytes": 3906336,
+    "sha256": "5f8bcca394579064e87c84d995c1ba9bda5ffefe6a6c7c245cab1b64f1668012",
+    "binary": "/Users/master/cyber/.worktrees/joy-size-baseline/target-fat/release/joy",
+    "stripped_bytes": 3495248,
+    "stripped_sha256": "ed10186262111f1a8d1a7876a7b6b87d48c7288d40cf089ff308c5277e7dbe96",
+    "stripped_binary": "/Users/master/cyber/.worktrees/joy-soft3-reaudit/measurements/joy-fat-stripped"
+  }
+]

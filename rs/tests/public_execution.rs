@@ -112,3 +112,15 @@ fn artifact_format_and_claim_filters_are_exact() {
     bad.proof.spartan.eval_value += nebu::Goldilocks::ONE;
     assert!(bad.verify().is_err());
 }
+
+#[test]
+fn explicit_public_budget_controls_native_confirmation() {
+    let program = bundle("[5 [[1 19] [1 23]]]");
+    let (artifact, result) = Warrior::with_budget(1)
+        .prove_execution(&program, &input(&[]), 3)
+        .expect("explicit proof budget must also govern native confirmation");
+    assert_eq!(result.output, [42]);
+    assert_eq!(result.cycle_count, 3);
+    assert_eq!(artifact.statement.budget, 3);
+    artifact.verify().unwrap();
+}

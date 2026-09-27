@@ -1,0 +1,57 @@
+{
+  "joy": {
+    "revision": "ea10f8ac28a6e005e9f5c81f6f85aaa0a9692fae",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/joy-size-baseline/joy"
+  },
+  "trident": {
+    "revision": "c15f328d8265ef128e26008f0d31076d5a0cfb45",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/joy-size-baseline/trident"
+  },
+  "zheng": {
+    "revision": "2a9e9ccc83fed4a39e0d7c81c8b4034b223edba6",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/joy-size-baseline/zheng"
+  },
+  "nox": {
+    "revision": "c9f7486a74fe81bfc194b598da40f6343ecb2ef1",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-clean/nox"
+  },
+  "lens": {
+    "revision": "17cafe91431977b738e5b72361187cd01ad93638",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-clean/lens"
+  },
+  "bbg": {
+    "revision": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-clean/bbg"
+  },
+  "hemera": {
+    "revision": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-clean/hemera"
+  },
+  "strata": {
+    "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-clean/strata"
+  },
+  "neuron": {
+    "revision": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-clean/neuron"
+  },
+  "honeycrisp": {
+    "revision": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-clean/honeycrisp"
+  },
+  "tade": {
+    "revision": "c1d81c75725df0a666c36d81ef33c3a60eb007f3",
+    "working_tree": "",
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-native-private/tade"
+  }
+}

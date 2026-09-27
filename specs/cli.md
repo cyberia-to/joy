@@ -77,8 +77,9 @@ COMMON flags currently appear on run/prove/verify:
 Unknown source profiles fail consistently in build/run/prove/verify. Public inputs become
 the subject `[p_last [... [p_first 0]]]`. On successful pure L1 execution, charged reductions equal initial minus
 remaining budget. Failure trace rows are not a gas counter. Budget is not a
-wall-time or memory limit. See [structured run](structured-run.md) for complete
-noun transport and its separate resource limits.
+wall-time or memory limit. Raw parsing and flattened output have separate
+[host limits](raw-execution-limits.md). See [structured run](structured-run.md)
+for complete noun transport and its resource limits.
 
 ## current output and exits
 

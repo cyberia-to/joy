@@ -1,3 +1,31 @@
+# Active request: bounded source and project loading
+
+The Joy re-audit at `ea10f8ac28a6e005e9f5c81f6f85aaa0a9692fae` found that
+`run pipe.tri --budget 1` and a project with FIFO `trident.toml` block in
+Trident's `read_to_string`, before native execution admission. Parent authorized
+the fix in the isolated Trident sibling at `c15f328d8265ef128e26008f0d31076d5a0cfb45`,
+branch `fix/0.4-bounded-source-loading`; original repositories remain untouched.
+
+Fix plan:
+
+1. Add one compiler-owned bounded regular-file UTF-8 reader. Keep legitimate
+   source symlinks: inspect the resolved regular target, open nonblocking on the
+   supported Unix platforms, check the opened descriptor and identity, then read
+   at most the byte bound plus one. No check-then-unbounded-read preflight.
+2. Route source entry/module reads, project manifests and dependency lockfiles
+   through the reader. Set a 4 MiB per-source bound and 1 MiB per-project/lockfile
+   bound. These are per-file transport bounds, not an overall compilation cost
+   or aggregate module-count limit.
+3. Preserve existing errors' path/context; update the compiler's reference
+   contract. Validate exact bound, excess, invalid UTF-8, directories, FIFO entry,
+   FIFO import/manifest and regular source symlinks. Joy's CLI regression checks
+   refusal happens before its runtime budget and before output publication.
+4. Run focused compiler/CLI tests and checks, then report exact paths and results
+   for root review/commit. Keep parser redesign and runtime formula/output bounds
+   with their separate owners.
+
+The prior requests below are preserved as historical wiring context.
+
 # trident-side wiring for the joy warrior (M3)
 
 ## Foundation alignment request
