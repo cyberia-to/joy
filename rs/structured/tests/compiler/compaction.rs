@@ -42,3 +42,50 @@ fn compiler_job_binding_and_extracted_artifact_survive_repeated_collection() {
     let error = run(encoded(&ar, compiler), encoded(&ar, tight), limits).unwrap_err();
     assert!(error.contains("TotalAllocations"), "{error}");
 }
+
+#[test]
+fn larger_host_allowance_still_admits_and_enforces_explicit_job_reductions() {
+    let mut ar = Arena::new();
+    let generated = generated_program(&mut ar);
+    let compiler = compiler(&mut ar, generated, 0, None);
+    let limits = RunLimits {
+        budget: 20_000_000_000,
+        compaction: Some(CompactionPolicy {
+            resident_nodes: 512,
+            collection_work: 100_000_000,
+        }),
+        ..RunLimits::default()
+    };
+    let mut caps = schema::FIXTURE_CAPS;
+    let ordinary_job = make_job(&mut ar, compiler, caps);
+    let ordinary = execute_job(&ar, compiler, ordinary_job).unwrap();
+    for budget in [caps[8], 10_000_000_000, 20_000_000_000] {
+        caps[8] = budget;
+        let job = make_job(&mut ar, compiler, caps);
+        let result = run(encoded(&ar, compiler), encoded(&ar, job), limits).unwrap();
+        assert_eq!(result.compiled, ordinary.compiled);
+        assert_eq!(
+            result.report.charged_reductions,
+            ordinary.report.charged_reductions
+        );
+    }
+
+    // A larger JOB1 cannot enlarge the explicitly selected host allowance.
+    let large_job = make_job(&mut ar, compiler, caps);
+    let error = run(
+        encoded(&ar, compiler),
+        encoded(&ar, large_job),
+        RunLimits {
+            budget: 10_000_000_000,
+            ..limits
+        },
+    )
+    .unwrap_err();
+    assert!(error.contains("compiler job admission"), "{error}");
+
+    // Conversely, a small JOB1 still tightens the larger host allowance.
+    caps[8] = ordinary.report.charged_reductions - 1;
+    let tight_job = make_job(&mut ar, compiler, caps);
+    let error = run(encoded(&ar, compiler), encoded(&ar, tight_job), limits).unwrap_err();
+    assert!(error.contains("budget exhausted"), "{error}");
+}

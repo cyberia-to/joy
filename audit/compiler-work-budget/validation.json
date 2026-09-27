@@ -1,0 +1,139 @@
+{
+  "kind": "local-development",
+  "base_revision": "62dadd35abe83b3d6dea77fe5f60baac050530e9",
+  "branch": "feat/0.4-compiler-work-budget",
+  "source_sha256": {
+    "specs/structured-run.md": "8c64b5427d6a5b88cbd2bad474c46ad6e43ea4b83d41a47a0a8a90cf9fa56d8d",
+    "rs/structured/limits.rs": "820abc78345a6088140ff5c515e516e36e8141a2eff41e15d99a0856b16eb8e1",
+    "rs/structured/tests/compaction.rs": "3302cdf673b6dbc26d544e9eb89855a359ceb5570ed255e033cb2fd8dd12130b",
+    "rs/structured/tests/compiler/compaction.rs": "1f3e236822b521e73b069bbfd5e5beec85169db5cc9fda194bd553c3f6fdbf77"
+  },
+  "siblings": {
+    "trident": "12a164b441f2af45f9534a011db5639afc0a35ad",
+    "nox": "1eaa8a494f994e4da6b20509469c1e62624f3f2d",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "zheng": "b54b209b91b8bf99c2975c4c24493a2411c23079",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee"
+  },
+  "checks": {
+    "focused-tests": {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--release",
+        "--locked",
+        "--offline",
+        "compaction",
+        "--",
+        "--nocapture"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "env": {
+        "CARGO_TARGET_DIR": "../target-byte-scale"
+      },
+      "exit_code": 0,
+      "output": "focused-tests.log",
+      "original_sha256": "5cdd7704c2bf30ba56e557837b325b96c76b09ead5dc5c6c14a163b59e4550c7",
+      "sha256": "8432502d885219bd759e39d44db0a652ddfb0b893850d8055f7d21b52989633e",
+      "original_copy": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/compiler-work-budget-original-logs/focused-tests.log",
+      "warnings": 0,
+      "passed": 8,
+      "failed": 0,
+      "ignored": 0,
+      "suites": 26
+    },
+    "tests": {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "env": {
+        "CARGO_TARGET_DIR": "../target-byte-scale"
+      },
+      "exit_code": 0,
+      "output": "tests.log",
+      "original_sha256": "9d7f989fb090722c521c6912c79343ac148e255f1286a62d56b8acbb00d3cfc4",
+      "sha256": "57eafb1f2cad8a248ff1281d5923c24c370031faa9a65b77463afdafe7ae13fc",
+      "original_copy": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/compiler-work-budget-original-logs/tests.log",
+      "warnings": 0,
+      "passed": 170,
+      "failed": 0,
+      "ignored": 0,
+      "suites": 27
+    },
+    "check": {
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "env": {
+        "CARGO_TARGET_DIR": "../target-byte-scale"
+      },
+      "exit_code": 0,
+      "output": "check.log",
+      "original_sha256": "b09cb47dfef994ba1331f634d49462332a713c66d7b39a50b57fd9a945764450",
+      "sha256": "b09cb47dfef994ba1331f634d49462332a713c66d7b39a50b57fd9a945764450",
+      "original_copy": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/compiler-work-budget-original-logs/check.log",
+      "warnings": 0
+    },
+    "boundary": {
+      "command": [
+        "python3",
+        "scripts/check-soft3-boundary.py"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "env": {},
+      "exit_code": 0,
+      "output": "boundary.log",
+      "original_sha256": "497344f571155f55a506e72cba5fd3b6e2f122e28b654037865935dc6a78059b",
+      "sha256": "497344f571155f55a506e72cba5fd3b6e2f122e28b654037865935dc6a78059b",
+      "original_copy": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/compiler-work-budget-original-logs/boundary.log",
+      "warnings": 0
+    }
+  },
+  "log_normalization": "Trailing whitespace on each line and trailing empty lines removed; one final newline retained. All other content preserved; original copies and both hashes are recorded per check.",
+  "preserved_evidence": {
+    "full-run-baseline.json": {
+      "source": "../nox/audit/prefix-frontier/full-run-baseline.json",
+      "sha256": "9091ddc5765346b5ba49822455ea610419f2bc6bb78851e33d7b9f6317c74a69"
+    },
+    "stage120.json": {
+      "source": "../nox/audit/prefix-frontier/stage120.json",
+      "sha256": "e35834411e04f97f3def83e02d293a75b6f7214f64513b4e6914bf08ecb6f2f6"
+    }
+  },
+  "projection": {
+    "scope": "Source-byte proportional projection of body-prefix cost; not a gas bound, measured full-body cost, generation cost, or C2 acceptance.",
+    "source_model": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/trident/audit/self-hosting/alias-suffix-work-model.json",
+    "source_model_sha256": "4e108ef5197f03491ce0d509fae0a3cb5332489668cef62294989db5c79c7c54",
+    "source_model_revision": "90ac882be8fe8b7af861ac8d8ba7aa9e9f291eb9",
+    "source_model_command": [
+      "audit/self-hosting/alias-suffix-work-model.py",
+      "--inventory",
+      "../measurements/scaled-inventory.json",
+      "--closure",
+      "audit/self-hosting/full-bootstrap-frontier/scaled-closure.json"
+    ],
+    "discovery_receipt": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/trident/audit/self-hosting/full-bootstrap-frontier/scaled-discovery.json",
+    "discovery_receipt_sha256": "f1534ca2b09b96134586278d1822e08dc6e7c6dcfc0433e2b28b21339d4c182d",
+    "discovery_reductions": 627648529,
+    "first_21_modules_bytes": 97778,
+    "all_94_modules_bytes": 369707,
+    "prefix_reductions": 3146170244,
+    "formula": "discovery + (prefix - discovery) * all_source_bytes / first_21_source_bytes",
+    "projected_body_reductions": 10150395033.198338
+  },
+  "acceptance": "Host ceiling and small fixture semantics only. Full C1(S) at the new allowance has not completed and no C2 claim is made."
+}
