@@ -41,8 +41,16 @@ than the size of its owning pointer. Frames and codec workspace have their own
 allowances. Artifact byte/node ceilings remain unchanged: lifetime intermediate
 allocation and exported DAG size are separate bounds. Frame-buffer byte accounting
 comes from nox's actual Frame size. Traces are not
-retained: NoTrace execution reports successful charged reductions as budget
+retained: trace-free execution reports successful charged reductions as budget
 minus remaining; errors never fabricate cost or produce a successful receipt.
+
+Pure execution uses nox's execution-local finalizer cache. Its fixed 1,048,576
+byte buffer is reported separately as `finalizer_cache_bytes`; allocator and
+Vec metadata are additional. Every guest child, reduction charge, frame and
+cancellation checkpoint remains executed. The cache reuses only successful
+immutable results in the current arena and is discarded when that run ends.
+It contains no compiled-source recognition or compiler-stage implementation.
+Cache allocation failure aborts before publication, like frame allocation.
 
 The cooperative deadline starts inside the worker before decoding. Check it
 between input/output codec stages and every evaluator transition. Join the
@@ -58,7 +66,7 @@ explicitly permits atomic replacement. Execution/export/publication failure
 preserves existing destination contents and removes staging files. Report
 JSON only after successful publication: schema joy/artifact-run/v1, ok, artifact
 path, program/input/output particles, charged_reductions, allocated_nodes,
-peak_frames, arena_reserved_bytes, frame_buffer_bytes, worker_stack_bytes,
+peak_frames, arena_reserved_bytes, frame_buffer_bytes, finalizer_cache_bytes, worker_stack_bytes,
 elapsed_micros and trace_mode none. These are execution observations, not proof.
 Failure exits1 with a diagnostic; Clap syntax errors exit2. Existing commands
 and ProgramBundle public/secret input conventions retain their own contracts.

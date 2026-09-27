@@ -1,0 +1,23 @@
+{
+  "scope": "Joy structured worker uses bounded pure nox finalizer cache; no self-hosting completion claim",
+  "revisions": {
+    "joy": "f0d0a5d07ae5c8cf776c2ea907e53ea7c21be9cd",
+    "nox": "13b4c2ee71b3f3e205ddc9ad30d1476b86a7ccc5",
+    "trident": "ca9d926b65701be4f9fe0eadac0ac05283b95bb6",
+    "zheng": "b54b209b91b8bf99c2975c4c24493a2411c23079"
+  },
+  "working_changes": {
+    "joy": "7c029ed236f8fcf81fc4455231c35be0e610921f52f342b70a5013db529ab268",
+    "trident": "dc97307a2a61826157e98de311362ff7fb570cfa993e45640a263e11db6e43c9"
+  },
+  "commands": [
+    "CARGO_TARGET_DIR=../target-joy-check cargo test --workspace --release --locked --offline",
+    "CARGO_TARGET_DIR=../target-joy-check cargo check --workspace --all-targets --locked --offline",
+    "CARGO_TARGET_DIR=../target-joy-check python3 scripts/check-soft3-boundary.py"
+  ],
+  "passed_tests": 162,
+  "cache_bytes": 1048576,
+  "tests.log_sha256": "1918e949d7e3fd7ad919f5ba7d56cd0ac1f8e145dc93f9344436fa15de0b7611",
+  "check.log_sha256": "de92c250345112bccfdf2578d7d3989f1b1950090c3f42e449620555089b0e08",
+  "boundary.json_sha256": "3cbcca0afbaa0029acb4405cfc2ad7a7f3bc92f6e418456dba19a667f4bc5638"
+}
