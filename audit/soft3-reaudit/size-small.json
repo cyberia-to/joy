@@ -1,0 +1,798 @@
+{
+  "binary": "/Users/master/cyber/.worktrees/joy-size-baseline/target-small/release/joy",
+  "bytes": 3391392,
+  "sha256": "642a1037a727bd2dbb8e55bfe5045725d0191ec309d5602e3b6e005e704c18b9",
+  "segments": [
+    {
+      "name": "__PAGEZERO",
+      "file_offset": 0,
+      "file_bytes": 0
+    },
+    {
+      "name": "__TEXT",
+      "file_offset": 0,
+      "file_bytes": 2834432
+    },
+    {
+      "name": "__DATA_CONST",
+      "file_offset": 2834432,
+      "file_bytes": 32768
+    },
+    {
+      "name": "__DATA",
+      "file_offset": 2867200,
+      "file_bytes": 16384
+    },
+    {
+      "name": "__LINKEDIT",
+      "file_offset": 2883584,
+      "file_bytes": 507808
+    }
+  ],
+  "sections": [
+    {
+      "segment": "__TEXT",
+      "name": "__text",
+      "address": 4294969456,
+      "bytes": 1812448,
+      "offset": 2160,
+      "zero_fill": false
+    },
+    {
+      "segment": "__TEXT",
+      "name": "__stubs",
+      "address": 4296781904,
+      "bytes": 1440,
+      "offset": 1814608,
+      "zero_fill": false
+    },
+    {
+      "segment": "__TEXT",
+      "name": "__stub_helper",
+      "address": 4296783344,
+      "bytes": 1464,
+      "offset": 1816048,
+      "zero_fill": false
+    },
+    {
+      "segment": "__TEXT",
+      "name": "__const",
+      "address": 4296784896,
+      "bytes": 638704,
+      "offset": 1817600,
+      "zero_fill": false
+    },
+    {
+      "segment": "__TEXT",
+      "name": "__gcc_except_tab",
+      "address": 4297423600,
+      "bytes": 97880,
+      "offset": 2456304,
+      "zero_fill": false
+    },
+    {
+      "segment": "__TEXT",
+      "name": "__cstring",
+      "address": 4297521480,
+      "bytes": 28944,
+      "offset": 2554184,
+      "zero_fill": false
+    },
+    {
+      "segment": "__TEXT",
+      "name": "__unwind_info",
+      "address": 4297550424,
+      "bytes": 35320,
+      "offset": 2583128,
+      "zero_fill": false
+    },
+    {
+      "segment": "__TEXT",
+      "name": "__eh_frame",
+      "address": 4297585744,
+      "bytes": 207704,
+      "offset": 2618448,
+      "zero_fill": false
+    },
+    {
+      "segment": "__DATA_CONST",
+      "name": "__got",
+      "address": 4297801728,
+      "bytes": 16,
+      "offset": 2834432,
+      "zero_fill": false
+    },
+    {
+      "segment": "__DATA_CONST",
+      "name": "__const",
+      "address": 4297801744,
+      "bytes": 31168,
+      "offset": 2834448,
+      "zero_fill": false
+    },
+    {
+      "segment": "__DATA",
+      "name": "__la_symbol_ptr",
+      "address": 4297834496,
+      "bytes": 960,
+      "offset": 2867200,
+      "zero_fill": false
+    },
+    {
+      "segment": "__DATA",
+      "name": "__data",
+      "address": 4297835456,
+      "bytes": 6368,
+      "offset": 2868160,
+      "zero_fill": false
+    },
+    {
+      "segment": "__DATA",
+      "name": "__thread_vars",
+      "address": 4297841824,
+      "bytes": 192,
+      "offset": 2874528,
+      "zero_fill": false
+    },
+    {
+      "segment": "__DATA",
+      "name": "__thread_data",
+      "address": 4297842016,
+      "bytes": 32,
+      "offset": 2874720,
+      "zero_fill": false
+    },
+    {
+      "segment": "__DATA",
+      "name": "__thread_bss",
+      "address": 4297842048,
+      "bytes": 144,
+      "offset": 0,
+      "zero_fill": true
+    },
+    {
+      "segment": "__DATA",
+      "name": "__bss",
+      "address": 4297842192,
+      "bytes": 216,
+      "offset": 0,
+      "zero_fill": true
+    }
+  ],
+  "symbol_metadata": {
+    "symbols": 4840,
+    "symbol_table_bytes": 77440,
+    "string_table_bytes": 394224
+  },
+  "embedded_resources": {
+    "unique_physical_bytes": 559702,
+    "files": [
+      {
+        "path": "lib/std/compiler/codegen.tri",
+        "bytes": 69183,
+        "present": false
+      },
+      {
+        "path": "lib/std/compiler/lexer.tri",
+        "bytes": 30261,
+        "present": false
+      },
+      {
+        "path": "lib/std/compiler/lower.tri",
+        "bytes": 29714,
+        "present": false
+      },
+      {
+        "path": "lib/std/compiler/nox/aggregate_gen.tri",
+        "bytes": 884,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/array_gen.tri",
+        "bytes": 2611,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/array_parse.tri",
+        "bytes": 3401,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/array_size.tri",
+        "bytes": 2623,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/ascii.tri",
+        "bytes": 3487,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/ast.tri",
+        "bytes": 3696,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/attributes.tri",
+        "bytes": 4940,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/block_gen.tri",
+        "bytes": 4491,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/blocks.tri",
+        "bytes": 1845,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/body.tri",
+        "bytes": 8005,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/body_state.tri",
+        "bytes": 2062,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/body_store.tri",
+        "bytes": 3967,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/builtin_gen.tri",
+        "bytes": 2485,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/builtins.tri",
+        "bytes": 4055,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/call_codegen.tri",
+        "bytes": 4570,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/call_frames.tri",
+        "bytes": 1172,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/call_graph.tri",
+        "bytes": 4925,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/call_parse.tri",
+        "bytes": 5978,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/check_functions.tri",
+        "bytes": 4607,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/check_scope.tri",
+        "bytes": 1227,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/code_plan.tri",
+        "bytes": 2036,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/codegen.tri",
+        "bytes": 9025,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/const_module.tri",
+        "bytes": 3466,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/const_parse.tri",
+        "bytes": 5842,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/constant_exports.tri",
+        "bytes": 3947,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/constant_imports.tri",
+        "bytes": 2303,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/constants.tri",
+        "bytes": 7952,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/contexts.tri",
+        "bytes": 1630,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/control_gen.tri",
+        "bytes": 4472,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/control_parse.tri",
+        "bytes": 4497,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/coverage.tri",
+        "bytes": 4697,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/declarations.tri",
+        "bytes": 3337,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/digest_gen.tri",
+        "bytes": 1096,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/emit.tri",
+        "bytes": 3419,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/entry_frame.tri",
+        "bytes": 833,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/expression.tri",
+        "bytes": 14226,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/expression_state.tri",
+        "bytes": 1314,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/flow.tri",
+        "bytes": 1947,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/formula.tri",
+        "bytes": 1309,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/function_exports.tri",
+        "bytes": 3690,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/function_gen.tri",
+        "bytes": 4938,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/function_imports.tri",
+        "bytes": 2357,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/function_order.tri",
+        "bytes": 2991,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/function_plan.tri",
+        "bytes": 2618,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/group_parse.tri",
+        "bytes": 3865,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/halting.tri",
+        "bytes": 751,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/header_state.tri",
+        "bytes": 1995,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/headers.tri",
+        "bytes": 12936,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/index_parse.tri",
+        "bytes": 3023,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/intrinsic_abi.tri",
+        "bytes": 4896,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/intrinsic_bindings.tri",
+        "bytes": 1843,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/intrinsic_plan.tri",
+        "bytes": 1599,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/job.tri",
+        "bytes": 10007,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/lexer.tri",
+        "bytes": 6461,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/loop_gen.tri",
+        "bytes": 3357,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/loop_parse.tri",
+        "bytes": 4460,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/loop_records.tri",
+        "bytes": 1065,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/module_function_order.tri",
+        "bytes": 3336,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/module_functions.tri",
+        "bytes": 6045,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/module_graph.tri",
+        "bytes": 7434,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/module_header.tri",
+        "bytes": 4591,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/module_order.tri",
+        "bytes": 4287,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/module_store.tri",
+        "bytes": 2563,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/nominal.tri",
+        "bytes": 4366,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/package_compile.tri",
+        "bytes": 3437,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/parser.tri",
+        "bytes": 2977,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/purity.tri",
+        "bytes": 2925,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/qualified_call.tri",
+        "bytes": 1167,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/qualified_name.tri",
+        "bytes": 2421,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/record_assign.tri",
+        "bytes": 2711,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/record_edit_gen.tri",
+        "bytes": 2042,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/record_frames.tri",
+        "bytes": 2217,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/record_parse.tri",
+        "bytes": 7994,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/signatures.tri",
+        "bytes": 3074,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/struct_parse.tri",
+        "bytes": 3701,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/symbols.tri",
+        "bytes": 2243,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/syntax.tri",
+        "bytes": 1946,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/terminal.tri",
+        "bytes": 2396,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/tuple_bind.tri",
+        "bytes": 3341,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/tuple_declarations.tri",
+        "bytes": 3402,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/tuple_pattern.tri",
+        "bytes": 2139,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/type_exports.tri",
+        "bytes": 2521,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/type_imports.tri",
+        "bytes": 2552,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/type_parse.tri",
+        "bytes": 5195,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/type_registry.tri",
+        "bytes": 2550,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/types.tri",
+        "bytes": 5175,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/nox/utf8.tri",
+        "bytes": 2175,
+        "present": true
+      },
+      {
+        "path": "lib/std/compiler/optimize.tri",
+        "bytes": 29408,
+        "present": false
+      },
+      {
+        "path": "lib/std/compiler/parser.tri",
+        "bytes": 93548,
+        "present": false
+      },
+      {
+        "path": "lib/std/compiler/pipeline.tri",
+        "bytes": 10739,
+        "present": false
+      },
+      {
+        "path": "lib/std/compiler/typecheck.tri",
+        "bytes": 57287,
+        "present": false
+      },
+      {
+        "path": "lib/std/crypto/bigint.tri",
+        "bytes": 17839,
+        "present": true
+      },
+      {
+        "path": "lib/std/crypto/ecdsa.tri",
+        "bytes": 4873,
+        "present": true
+      },
+      {
+        "path": "lib/std/crypto/ed25519.tri",
+        "bytes": 9468,
+        "present": true
+      },
+      {
+        "path": "lib/std/crypto/keccak256.tri",
+        "bytes": 29290,
+        "present": true
+      },
+      {
+        "path": "lib/std/crypto/lut_sponge.tri",
+        "bytes": 7423,
+        "present": true
+      },
+      {
+        "path": "lib/std/crypto/poseidon.tri",
+        "bytes": 6995,
+        "present": true
+      },
+      {
+        "path": "lib/std/crypto/poseidon2.tri",
+        "bytes": 23748,
+        "present": true
+      },
+      {
+        "path": "lib/std/crypto/preimage.tri",
+        "bytes": 284,
+        "present": true
+      },
+      {
+        "path": "lib/std/crypto/secp256k1.tri",
+        "bytes": 12105,
+        "present": true
+      },
+      {
+        "path": "lib/std/crypto/sha256.tri",
+        "bytes": 31912,
+        "present": true
+      },
+      {
+        "path": "lib/std/fhe/lwe.tri",
+        "bytes": 9347,
+        "present": true
+      },
+      {
+        "path": "lib/std/fhe/pbs.tri",
+        "bytes": 10519,
+        "present": true
+      },
+      {
+        "path": "lib/std/fhe/rlwe.tri",
+        "bytes": 6539,
+        "present": true
+      },
+      {
+        "path": "lib/std/io/storage.tri",
+        "bytes": 541,
+        "present": true
+      },
+      {
+        "path": "lib/std/math/fibonacci.tri",
+        "bytes": 1599,
+        "present": true
+      },
+      {
+        "path": "lib/std/math/lut.tri",
+        "bytes": 2994,
+        "present": true
+      },
+      {
+        "path": "lib/std/nn/tensor.tri",
+        "bytes": 7834,
+        "present": true
+      },
+      {
+        "path": "lib/std/nox/bytes.tri",
+        "bytes": 6874,
+        "present": true
+      },
+      {
+        "path": "lib/std/nox/seq.tri",
+        "bytes": 2130,
+        "present": true
+      },
+      {
+        "path": "lib/std/nox/tree.tri",
+        "bytes": 10242,
+        "present": true
+      },
+      {
+        "path": "lib/std/private/poly.tri",
+        "bytes": 7486,
+        "present": true
+      },
+      {
+        "path": "lib/std/quantum/gates.tri",
+        "bytes": 10159,
+        "present": true
+      },
+      {
+        "path": "lib/std/target.tri",
+        "bytes": 171,
+        "present": true
+      },
+      {
+        "path": "lib/std/trinity/inference.tri",
+        "bytes": 12007,
+        "present": true
+      },
+      {
+        "path": "lib/vm/core/assert.tri",
+        "bytes": 340,
+        "present": true
+      },
+      {
+        "path": "lib/vm/core/convert.tri",
+        "bytes": 323,
+        "present": true
+      },
+      {
+        "path": "lib/vm/core/field.tri",
+        "bytes": 461,
+        "present": true
+      },
+      {
+        "path": "lib/vm/core/u32.tri",
+        "bytes": 277,
+        "present": true
+      },
+      {
+        "path": "lib/vm/io/io.tri",
+        "bytes": 251,
+        "present": true
+      },
+      {
+        "path": "lib/vm/io/mem.tri",
+        "bytes": 491,
+        "present": true
+      },
+      {
+        "path": "lib/vm/nox/noun.tri",
+        "bytes": 1026,
+        "present": true
+      }
+    ],
+    "note": "Union of first exact content matches; subset of constants, never added again to file total."
+  }
+}

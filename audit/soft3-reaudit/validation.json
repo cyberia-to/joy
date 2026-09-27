@@ -1,0 +1,176 @@
+{
+  "status": "passed-with-open-local-privacy-findings",
+  "release_candidate": false,
+  "sources": {
+    "joy": {
+      "revision": "e2e95f92bb6ff1616f619c1e82d8e61157f2c545",
+      "tree": "8cd368d032b169c88c2137583619233cfa9b22b5"
+    },
+    "zheng": {
+      "revision": "b54b209b91b8bf99c2975c4c24493a2411c23079",
+      "tree": "2a1472e012fd928d1fe23a84569c3197fec549ff"
+    },
+    "trident": {
+      "revision": "6e9fb45ff814ecd4c873e895f875e4730e93d184",
+      "tree": "392b60544010d0bd19c2a9c3cedcadfc9f829892"
+    },
+    "nox": {
+      "revision": "c9f7486a74fe81bfc194b598da40f6343ecb2ef1",
+      "tree": "88b1e2760cd840e01933694d0c921c3f4509a0e6"
+    },
+    "lens": {
+      "revision": "17cafe91431977b738e5b72361187cd01ad93638",
+      "tree": "d5f2953928982b161bf29bd21ff4c946ac046e17"
+    },
+    "bbg": {
+      "revision": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+      "tree": "073e5a50d33ce68d88a610a796e2c9c62b94dc2c"
+    },
+    "hemera": {
+      "revision": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+      "tree": "84d75cb13103474cfd6001accc214e74251f2251"
+    },
+    "strata": {
+      "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+      "tree": "0fd77e2fd8467a4e4a4ab6093c628d8ec792e3eb"
+    },
+    "neuron": {
+      "revision": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+      "tree": "4552fe5661cb92aca2051f98a222f6771ad5605a"
+    },
+    "honeycrisp": {
+      "revision": "ff735e6c262926bc9bab7534786a575020cbe442",
+      "tree": "707b719848579e6c1e891ec85ec65d959c913f6d"
+    },
+    "tade": {
+      "revision": "c1d81c75725df0a666c36d81ef33c3a60eb007f3",
+      "tree": "1973a66a92f358d5f61c1c1c990422d4744b0639"
+    }
+  },
+  "commands": [
+    {
+      "command": "CARGO_TARGET_DIR=../target-baseline cargo test --workspace --release --locked --offline",
+      "log": "/tmp/joy-reaudit-final-tests.log",
+      "log_sha256": "48924e3c2fa0f496ced7a0761cd4ba74feb5f811732edb7b6d42a61e981aa36a",
+      "passed": 162,
+      "failed": 0,
+      "ignored": 0,
+      "compiler_warnings": [],
+      "tail": [
+        "   Doc-tests joy_rs",
+        "",
+        "running 0 tests",
+        "",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        ""
+      ]
+    },
+    {
+      "command": "CARGO_TARGET_DIR=../target-baseline cargo check --workspace --all-targets --locked --offline",
+      "log": "/tmp/joy-reaudit-final-check.log",
+      "log_sha256": "20272018a831984a608faa1c66bc3332dcceee0aa6cdc06f0c495749a210fc6b",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "compiler_warnings": [],
+      "tail": [
+        "    Checking url v2.5.8",
+        "    Checking lsp-types v0.94.1",
+        "    Checking tower-lsp v0.20.0",
+        "    Checking joy-rs v0.5.0 (/Users/master/cyber/.worktrees/joy-soft3-reaudit/joy/rs)",
+        "    Checking cyber-joy v0.5.0 (/Users/master/cyber/.worktrees/joy-soft3-reaudit/joy/cli)",
+        "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 26.64s"
+      ]
+    },
+    {
+      "command": "CARGO_TARGET_DIR=../target-proof-review cargo test -p zheng --release --locked --offline --features serde execution::",
+      "log": "/tmp/zheng-reaudit-hardened-execution.log",
+      "log_sha256": "f32760e0eec0d2d6a56ca800c4aa8ae57771585b72ef0e4a7bf1e9a58a56616c",
+      "passed": 66,
+      "failed": 0,
+      "ignored": 0,
+      "compiler_warnings": [],
+      "tail": [
+        "     Running tests/reaudit_private.rs (/Users/master/cyber/.worktrees/joy-soft3-reaudit/target-proof-review/release/deps/reaudit_private-e6f654bc9d7d8b99)",
+        "",
+        "running 0 tests",
+        "",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s",
+        ""
+      ]
+    },
+    {
+      "command": "CARGO_TARGET_DIR=../target-proof-review cargo test -p zheng --release --locked --offline --features serde --test reaudit_private",
+      "log": "/tmp/zheng-reaudit-hardened-regressions.log",
+      "log_sha256": "64d3f3b54f007f9ace660bdc1f4df9242766ea3bf80ef43a91cacade6d189a9a",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 1,
+      "compiler_warnings": [],
+      "tail": [
+        "test private_verifier_rejects_dimension_bombs_and_excessive_sparse_expansion ... ok",
+        "test native_private_ccs_handles_constants_sparse_cancellation_and_degree_sixteen ... ok",
+        "test generated_private_relations_match_native_success_failure_output_and_cost ... ok",
+        "",
+        "test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.41s",
+        ""
+      ]
+    }
+  ],
+  "boundary": {
+    "ok": true,
+    "packages": 145,
+    "compiler_features": [],
+    "command": [
+      "cargo",
+      "metadata",
+      "--format-version",
+      "1",
+      "--locked",
+      "--offline",
+      "--all-features"
+    ]
+  },
+  "installed": {
+    "report": "final-installed.json",
+    "commands": 51,
+    "status": "passed",
+    "bytes": 4910272,
+    "sha256": "1185285c8032f7b3670a97bb724075305cf2654157212225fa6bcd78b53a9391",
+    "stripped_bytes": 4292096
+  },
+  "paired": {
+    "report": "final-paired.json",
+    "commands": 7,
+    "status": "passed"
+  },
+  "compiler_artifact": {
+    "command": "../install-audit/bin/joy build ../trident/compiler/nox/main.tri --emit artifact --artifact-profile compiler-job -o ../measurements/final-c1.dag",
+    "bytes": 9191495,
+    "sha256": "4aed7fc83be96156fcb65c3bbb369c192ad27f894ab78a030e3588056a66d112",
+    "identical_to_frozen_baseline": true
+  },
+  "cross_checks": {
+    "report": "cross-checks.json",
+    "targets": [
+      "x86_64-apple-darwin",
+      "aarch64-unknown-linux-gnu",
+      "x86_64-unknown-linux-gnu",
+      "x86_64-pc-windows-gnu"
+    ],
+    "all_passed": true,
+    "execution_on_targets": false
+  },
+  "install_commands": [
+    "CARGO_TARGET_DIR=../target-baseline cargo install --path cli --root ../install-audit --locked --offline --force",
+    "CARGO_TARGET_DIR=../target-cli-review cargo install --path . --no-default-features --root ../install-audit --locked --offline --force"
+  ],
+  "limitations": [
+    "macOS arm64 runtime only; other targets compile-checked with rustup1.98, native runtime/size with Homebrew1.95",
+    "Local private timing/cache and incomplete secret-buffer/PRG erasure remain open",
+    "Static proof-relation coverage and raw/structured resource contracts remain explicit",
+    "No independent external cryptographic certification, release/tag/default-branch change",
+    "Cargo install emitted PATH setup advice; Rust checks/tests had zero compiler warnings"
+  ],
+  "provenance": "Checks covered the final implementation tree before final documentation commits. All implementation files match the source commits recorded here. Installed binaries were built after implementation commits. Audit/plan documents were still uncommitted during execution."
+}
