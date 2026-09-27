@@ -71,11 +71,16 @@ Proof formats and content headers:
 - `joy-nox-public-state-execution-v1` (`JOYST001`): actual compiled state reads,
   all namespace/key/value/root coordinates bound to verified public BBG tables.
   `--state` loads a bounded StateCertificate JSON and may pin the expected root.
+- `joy-nox-zheng-private-execution-v1` (`JOYZH001`): native randomized Zheng
+  CCS proof over Goldilocks/Hemera. Secret calls and private queries are hidden;
+  program, public IO/cost and complete BBG certificate tables remain public.
+  See `specs/private-execution.md` and Zheng's `specs/native-private-ccs.md`.
 
 Joy has no foreign VM/prover dependency or embedded foreign target resources.
 Its Trident dependencies disable default features. Never introduce a foreign
-backend fallback: `--zk` and nonempty proving `--secret` requests fail before
-compilation, execution or publication. Secret execution remains supported.
+backend fallback. `--zk` and nonempty proving secrets select native Zheng
+private proving. Explicit public proof APIs reject secrets. Successful execution
+and proving consume exactly the active witness stream.
 Retired private envelopes are explicitly refused, including legacy mode.
 
 Execution proofs verify without re-executing nox. Unsupported dynamic
@@ -116,11 +121,16 @@ connection or authority to modify state.
 `specs/cli.md` is the CLI contract: implemented baseline plus explicitly
 marked target requirements. Cross-repo jobs and acceptance are specified
 in `cyber/specs/worker.md`; do not duplicate node policy in Joy.
+`joy_rs::worker` verifies saved job expectations through native artifacts; see
+`specs/worker-adapter.md`. It supplies no network acceptance or freshness.
 
 ```
 joy build  <file.tri | project> [--profile NAME] [--emit bundle|nox] [-o PATH] [--force] [--format json-v1]
 joy run    <bundle.json | file.tri | file.nox> [--input-values 1,2] [--secret 3] [--budget N]
-joy prove  <input> [--input-values ...] [--secret ...] [--output p.zheng]
+joy prove  <input> [--input-file witness.json] [--zk] [--output p.zheng] [--force]
+joy batch  run|prove|verify <inputs...> [--max-parallel N]
+joy test   <source | project> [--profile NAME]
+joy bench  <input> [--input-file witness.json] [--claim VALUES] [--repeat N]
 joy verify <p.zheng>                            # self-contained artifact, no re-execution
 joy verify <input> --proof <p.zheng>            # same, bound to this bundle
 joy verify <input> --claim <values> [--input-values ...]  # re-execution
@@ -147,7 +157,7 @@ lines.
 ```
 python3 scripts/check-soft3-boundary.py # resolved packages/features exclude foreign backends
 cargo check --workspace --all-targets   # zero warnings
-cargo test
+cargo test --workspace --release --locked
 cargo install --path cli --force        # installs `joy` on PATH
 ```
 
