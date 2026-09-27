@@ -1,0 +1,349 @@
+{
+  "kind": "local-development",
+  "status": "passed",
+  "source_revisions": {
+    "trident": "7b1d4c069961fae099f40bb160328c09b8d15607",
+    "joy": "06aac01d2541c17f5b6295c04fd7eb2f4d7bb9e8",
+    "nox": "c9f7486a74fe81bfc194b598da40f6343ecb2ef1",
+    "zheng": "80a8ca90208c3b49c4f2a8507d75fd17785fdfe3",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "trisha": "aa25e32fd9005b88547b12348ac581750739ecf2"
+  },
+  "gates": [
+    {
+      "owner": "joy",
+      "revision": "06aac01d2541c17f5b6295c04fd7eb2f4d7bb9e8",
+      "command": "cargo check --workspace --all-targets --all-features --locked --offline",
+      "exit_code": 0,
+      "log": "/tmp/joy-soft3-only-final-check.log",
+      "log_sha256": "bd5410d186be43e74b6adf3b5c9ea6f7e2a08bedeac3da5adfff9534584f4bd3",
+      "rust_warnings": 0,
+      "passed": 0,
+      "ignored": 0,
+      "summaries": [
+        "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.15s"
+      ]
+    },
+    {
+      "owner": "joy",
+      "revision": "06aac01d2541c17f5b6295c04fd7eb2f4d7bb9e8",
+      "command": "cargo test --workspace --release --locked --offline",
+      "exit_code": 0,
+      "log": "/tmp/joy-soft3-only-final-tests.log",
+      "log_sha256": "b9b7b9969afca251caa1ece8cd8a8a97bf8b8a14aca47d9f20155fbd2d63cac6",
+      "rust_warnings": 0,
+      "passed": 124,
+      "ignored": 0,
+      "summaries": [
+        "    Finished `release` profile [optimized] target(s) in 0.88s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s",
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s",
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s",
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.83s",
+        "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s",
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.92s",
+        "test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s",
+        "test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.51s",
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "owner": "trident",
+      "revision": "7b1d4c069961fae099f40bb160328c09b8d15607",
+      "command": "cargo check --all-targets --locked --offline",
+      "exit_code": 0,
+      "log": "/tmp/trident-soft3-only-final-check.log",
+      "log_sha256": "5e32f2b5059b25c80c6b11c5e80b2a3a23c889d20025e510b85b96964841aed3",
+      "rust_warnings": 0,
+      "passed": 0,
+      "ignored": 0,
+      "summaries": [
+        "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.88s"
+      ]
+    },
+    {
+      "owner": "trident",
+      "revision": "7b1d4c069961fae099f40bb160328c09b8d15607",
+      "command": "cargo test --lib --locked --offline",
+      "exit_code": 0,
+      "log": "/tmp/trident-soft3-only-final-lib.log",
+      "log_sha256": "6c21118b24558fede589d0492e3738f05f60e9f22f550cff04d2b89b2cd40734",
+      "rust_warnings": 0,
+      "passed": 724,
+      "ignored": 0,
+      "summaries": [
+        "    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.97s",
+        "test result: ok. 724 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.91s"
+      ]
+    },
+    {
+      "owner": "trident",
+      "revision": "7b1d4c069961fae099f40bb160328c09b8d15607",
+      "command": "cargo test --lib --no-default-features --locked --offline",
+      "exit_code": 0,
+      "log": "/tmp/trident-soft3-only-final-minimal-lib.log",
+      "log_sha256": "bb34c47460ac2c217a66d24557179978725e698c1daadb3c9072ea54ec5e6a30",
+      "rust_warnings": 0,
+      "passed": 724,
+      "ignored": 0,
+      "summaries": [
+        "    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.03s",
+        "test result: ok. 724 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.92s"
+      ]
+    },
+    {
+      "owner": "trident",
+      "revision": "7b1d4c069961fae099f40bb160328c09b8d15607",
+      "command": "cargo test --locked --offline --test build_context --test import_scope --test imported_generics --test import_lowerers --test target_packages --test target_intrinsics",
+      "exit_code": 0,
+      "log": "/tmp/trident-soft3-only-integration.log",
+      "log_sha256": "eef8169ffa6cf6d1ab358caafba7aa9bb8f03cb695fe0f5d6f1c1875abd747be",
+      "rust_warnings": 0,
+      "passed": 26,
+      "ignored": 0,
+      "summaries": [
+        "    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.60s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.94s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s",
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "owner": "trident",
+      "revision": "7b1d4c069961fae099f40bb160328c09b8d15607",
+      "command": "cargo test --locked --offline --no-default-features --test differential",
+      "exit_code": 0,
+      "log": "/tmp/trident-soft3-only-differential-minimal.log",
+      "log_sha256": "bd49732883ab3aca5553adb7506446ae208383618102711309c0f8e0c17ec4ce",
+      "rust_warnings": 0,
+      "passed": 13,
+      "ignored": 0,
+      "summaries": [
+        "    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.00s",
+        "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.03s"
+      ]
+    },
+    {
+      "owner": "trident",
+      "revision": "7b1d4c069961fae099f40bb160328c09b8d15607",
+      "command": "cargo test --locked --offline --test differential",
+      "exit_code": 0,
+      "log": "/tmp/trident-soft3-only-differential-default.log",
+      "log_sha256": "c371e8801556b5b1cd3508edf9080c9f89ef7f6d0cae66158210f87a452ffa25",
+      "rust_warnings": 0,
+      "passed": 14,
+      "ignored": 0,
+      "summaries": [
+        "    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.25s",
+        "test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.04s"
+      ]
+    },
+    {
+      "owner": "trisha",
+      "revision": "aa25e32fd9005b88547b12348ac581750739ecf2",
+      "command": "cargo check --workspace --all-targets --locked --offline",
+      "exit_code": 0,
+      "log": "/tmp/trisha-soft3-only-check-final.log",
+      "log_sha256": "a0ea3eb8a3b5bcc72c496948598ff406ea297ced72ad4c37e6f7912fe9792b6a",
+      "rust_warnings": 0,
+      "passed": 0,
+      "ignored": 0,
+      "summaries": [
+        "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.67s"
+      ]
+    },
+    {
+      "owner": "trisha",
+      "revision": "aa25e32fd9005b88547b12348ac581750739ecf2",
+      "command": "cargo test --workspace --release --locked --offline",
+      "exit_code": 0,
+      "log": "/tmp/trisha-soft3-only-tests-final.log",
+      "log_sha256": "2674c0eaa50dd20b77b83cb1f40248d9e50c418144a0b4d6e5f6801aefb85d65",
+      "rust_warnings": 0,
+      "passed": 430,
+      "ignored": 6,
+      "summaries": [
+        "    Finished `release` profile [optimized] target(s) in 16.77s",
+        "test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 1 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.55s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s",
+        "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.95s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.41s",
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s",
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 92 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s",
+        "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.56s",
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s",
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s",
+        "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s",
+        "test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.33s",
+        "test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s",
+        "test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.76s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s",
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s",
+        "test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.99s",
+        "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s",
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s",
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 1 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.04s",
+        "test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s",
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s",
+        "test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s",
+        "test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s",
+        "test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s",
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "owner": "trisha",
+      "revision": "aa25e32fd9005b88547b12348ac581750739ecf2",
+      "command": "../install-committed/bin/trisha bench",
+      "exit_code": 0,
+      "log": "/tmp/trisha-soft3-only-bench.log",
+      "log_sha256": "a46a6e0157143726ad5733e5b9d142883d225668c3aa3a85a43c71b3bf1ff015",
+      "rust_warnings": 0,
+      "passed": 0,
+      "ignored": 0,
+      "summaries": [
+        "133 / 133 fixtures passed; 43 / 43 baselines verified"
+      ]
+    }
+  ],
+  "boundary": {
+    "ok": true,
+    "packages": 140,
+    "compiler_features": [],
+    "command": [
+      "cargo",
+      "metadata",
+      "--format-version",
+      "1",
+      "--locked",
+      "--offline",
+      "--all-features"
+    ]
+  },
+  "lockfile": {
+    "before": 250,
+    "after": 140,
+    "removed": 110,
+    "new_versions": []
+  },
+  "compiler": {
+    "commands": 65,
+    "observations": 21,
+    "files_equal_to_previous": 204,
+    "c1_sha256": "4aed7fc83be96156fcb65c3bbb369c192ad27f894ab78a030e3588056a66d112",
+    "baseline_revision": "9d52ee8fbb68833a65b52ebe9254bf24bbcd52d0"
+  },
+  "baselines": {
+    "command": "../install-committed/bin/trisha bench",
+    "revision": "aa25e32fd9005b88547b12348ac581750739ecf2",
+    "fixture_rows": 133,
+    "manual_baselines": 43,
+    "rows_equal_to_previous": true,
+    "previous_log": "/tmp/trisha-04-native-source-capacity-corrected-bench.log"
+  },
+  "binaries": {
+    "joy": {
+      "path": "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/install-committed/bin/joy",
+      "bytes": 4571120,
+      "sha256": "ac157a417eadfbfa7f37f36432ba8395b33cd914b8e82e0c5b55278cdfdb6a4f"
+    },
+    "trident": {
+      "path": "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-only/install-committed/bin/trident",
+      "bytes": 8662016,
+      "sha256": "8a0e55a1739746ad047b80fa87b76845f174bd49394c4ea4f3edda990ae74cfd"
+    },
+    "trisha": {
+      "path": "/Users/master/cyber/.worktrees/selfhost-0.4-soft3-compat/install-committed/bin/trisha",
+      "bytes": 13450768,
+      "sha256": "b5bcd4b6ec8394c3f2679d6e89770442e93d4fe27b8df2596cf68bdc4e4fadc9"
+    }
+  },
+  "observations": {
+    "old_joy_bytes": 8389808,
+    "new_joy_bytes": 4571120,
+    "old_stripped_bytes": 7175792,
+    "new_stripped_bytes": 4001360,
+    "hello_formula_bytes": 292,
+    "old_size_receipt": "/Users/master/cyber/.worktrees/trident-hello-world-size/trident/audit/hello-world-macos/measurements.json"
+  },
+  "prior_attempts": [
+    {
+      "log": "/tmp/joy-soft3-only-tests.log",
+      "reason": "A newly split trait implementation called an absent budget() getter; corrected to child-module access to the private budget field before accepted checks."
+    },
+    {
+      "log": "/tmp/trisha-soft3-only-check.log",
+      "reason": "Fresh compatibility worktree lacked ignored vendor bootstrap; reused the accepted immutable vendor directory in the separate Trisha compatibility root. Joy root has no Trisha sibling."
+    },
+    {
+      "log": "/tmp/joy-soft3-only-profile.json",
+      "reason": "Successful earlier installed profile; final formatting/discovery cleanup changed binary identity by 16 bytes, so all 65 commands were repeated with the committed binary."
+    }
+  ],
+  "scope": [
+    "No private/ZK proving capability is claimed. Public certificates disclose their witnesses.",
+    "Native compiler formula and profile fixture files match the accepted source-capacity baseline. Complete self-host C2/C3 remains open.",
+    "macOS arm64 measured; no cross-platform release or version promotion performed.",
+    "Tests are focused Trident library/import/differential coverage; the long full native compiler corpus was not rerun for packaging changes."
+  ]
+}
