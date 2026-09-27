@@ -24,7 +24,7 @@ pub struct ProveArgs {
     /// Secret/divine input values (comma-separated field elements)
     #[arg(long, value_delimiter = ',')]
     pub secret: Option<Vec<u64>>,
-    /// Use the Triton-backed zero-knowledge execution proof (automatic with secrets)
+    /// Request zero-knowledge proving (currently unsupported by the soft3 backend)
     #[arg(long)]
     pub zk: bool,
     /// Reduction budget (also the statement's focus bound)
@@ -48,6 +48,15 @@ fn artifact_path(input: &PathBuf) -> PathBuf {
 }
 
 pub fn cmd_prove(args: ProveArgs) {
+    if args.zk
+        || args
+            .secret
+            .as_ref()
+            .is_some_and(|values| !values.is_empty())
+    {
+        eprintln!("error: zero-knowledge execution proofs are unavailable in soft3-only Joy; secret inputs cannot be published as public proofs");
+        process::exit(1);
+    }
     if let Err(e) = check_target(args.target.as_deref().unwrap_or("nox")) {
         eprintln!("error: {}", e);
         process::exit(1);
@@ -64,29 +73,16 @@ pub fn cmd_prove(args: ProveArgs) {
 
     let t0 = Instant::now();
     let path = args.output.unwrap_or_else(|| artifact_path(&args.input));
-    let zk = args.zk || !pi.secret.is_empty();
     let result = if let Some(state_path) = &args.state {
         joy_rs::state_execution::load_certificate(std::path::Path::new(state_path)).and_then(
             |certificate| {
-                if zk {
-                    warrior
-                        .prove_zk_state_certificate(&bundle, &pi, &certificate, args.budget)
-                        .and_then(|(artifact, result)| {
-                            artifact.save(&path).map(|bytes| (result, bytes))
-                        })
-                } else {
-                    warrior
-                        .prove_state_certificate(&bundle, &pi, &certificate, args.budget)
-                        .and_then(|(artifact, result)| {
-                            artifact.save(&path).map(|bytes| (result, bytes))
-                        })
-                }
+                warrior
+                    .prove_state_certificate(&bundle, &pi, &certificate, args.budget)
+                    .and_then(|(artifact, result)| {
+                        artifact.save(&path).map(|bytes| (result, bytes))
+                    })
             },
         )
-    } else if zk {
-        warrior
-            .prove_zk_execution(&bundle, &pi, args.budget)
-            .and_then(|(artifact, result)| artifact.save(&path).map(|bytes| (result, bytes)))
     } else {
         warrior
             .prove_execution(&bundle, &pi, args.budget)
@@ -99,12 +95,8 @@ pub fn cmd_prove(args: ProveArgs) {
             process::exit(1);
         }
     };
-    let mode = if args.state.is_some() && zk {
-        "private authenticated state execution (Triton ZK)"
-    } else if args.state.is_some() {
+    let mode = if args.state.is_some() {
         "authenticated public state execution"
-    } else if zk {
-        "private execution (Triton ZK)"
     } else {
         "public execution"
     };

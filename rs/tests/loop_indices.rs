@@ -1,5 +1,5 @@
 //! FINAL4 installed-smoke regressions, with explicit public field visibility.
-use joy_rs::{ExecutionArtifact, Warrior, ZkExecutionArtifact};
+use joy_rs::{ExecutionArtifact, Warrior};
 use trident::runtime::ProgramInput;
 
 const HELPER: &str = r#"module release_helper
@@ -43,7 +43,7 @@ impl Drop for Project {
 }
 
 #[test]
-fn exact_final4_imported_loop_indices_have_public_and_private_proofs() {
+fn exact_final4_imported_loop_indices_have_public_proofs() {
     let project = Project::new("final4-loop-indices");
     let path = project.entry(ENTRY);
     let warrior = Warrior::new();
@@ -71,24 +71,6 @@ fn exact_final4_imported_loop_indices_have_public_and_private_proofs() {
                 assert!(
                     bad.verify().is_err(),
                     "public mutation accepted: {profile}, {first}, {output}"
-                );
-            }
-            let (private, native) = warrior
-                .prove_zk_execution(&bundle, &input, 100_000)
-                .unwrap();
-            assert_eq!(native.output, [expected]);
-            let private = ZkExecutionArtifact::from_bytes(&private.to_bytes().unwrap()).unwrap();
-            private.verify().unwrap();
-            for output in [false, true] {
-                let mut bad = private.clone();
-                if output {
-                    bad.statement.execution.public_output[0] += 1;
-                } else {
-                    bad.statement.execution.public_input[0] += 1;
-                }
-                assert!(
-                    bad.verify().is_err(),
-                    "private mutation accepted: {profile}, {first}, {output}"
                 );
             }
         }

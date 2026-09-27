@@ -11,11 +11,12 @@ use bbg::BbgState;
 use nebu::Goldilocks;
 use nox::{reduce, ErrorKind, Order, Outcome, Reduction, VecTrace};
 use nox::{CallProvider, LookProvider};
-use trident::runtime::{
-    Deployer, ExecutionResult, ProgramBundle, ProgramInput, ProofData, Prover, Runner, Verifier,
-};
+use trident::runtime::{ExecutionResult, ProgramBundle, ProgramInput, Runner};
 
 use crate::formula;
+
+#[path = "traits.rs"]
+mod traits;
 
 /// Default reduction budget: bounds trace rows one-to-one.
 pub const DEFAULT_BUDGET: u64 = 1_000_000;
@@ -180,7 +181,7 @@ impl Warrior {
     ) -> Result<(ExecutionResult, VecTrace, Vec<zheng::HashAux>), String> {
         if bundle.target_vm != "nox" {
             return Err(format!(
-                "joy runs nox bundles; this bundle targets '{}' (use trisha for triton)",
+                "joy runs nox bundles; this bundle targets '{}'",
                 bundle.target_vm
             ));
         }
@@ -191,7 +192,7 @@ impl Warrior {
         }
         if !input.digests.is_empty() {
             return Err(
-                "nox has no digest input stream (merkle_step is a Triton concept)".to_string(),
+                "nox has no digest input stream".to_string(),
             );
         }
 
@@ -280,6 +281,9 @@ impl Warrior {
         bundle: &ProgramBundle,
         input: &ProgramInput,
     ) -> Result<(crate::proof::ProofArtifact, ExecutionResult), String> {
+        if !input.secret.is_empty() {
+            return Err("legacy trace statements disclose witnesses; secret inputs are refused".into());
+        }
         let (result, trace, hash_aux) = self.execute_traced(bundle, input)?;
         if trace.0.iter().any(|r| r.r()[0] == 17) {
             return Err(
@@ -302,6 +306,9 @@ impl Warrior {
         input: &ProgramInput,
         state: &BbgState,
     ) -> Result<(crate::proof::ProofArtifact, ExecutionResult), String> {
+        if !input.secret.is_empty() {
+            return Err("legacy trace statements disclose witnesses; secret inputs are refused".into());
+        }
         let (result, trace, hash_aux, look_openings) =
             self.execute_traced_with_state(bundle, input, state)?;
         self.finish_proof(bundle, result, trace, hash_aux, look_openings, state.root())
@@ -373,13 +380,13 @@ impl Warrior {
     > {
         if bundle.target_vm != "nox" {
             return Err(format!(
-                "joy runs nox bundles; this bundle targets '{}' (use trisha for triton)",
+                "joy runs nox bundles; this bundle targets '{}'",
                 bundle.target_vm
             ));
         }
         if !input.digests.is_empty() {
             return Err(
-                "nox has no digest input stream (merkle_step is a Triton concept)".to_string(),
+                "nox has no digest input stream".to_string(),
             );
         }
 
@@ -440,6 +447,9 @@ impl Warrior {
         bundle: &ProgramBundle,
         artifact: &crate::proof::ProofArtifact,
     ) -> Result<bool, String> {
+        if artifact.format != crate::PROOF_FORMAT {
+            return Err("unsupported legacy statement format".into());
+        }
         if artifact.statement.program_hash != crate::proof::program_hash(&bundle.assembly) {
             return Ok(false); // proof is for a different program
         }
@@ -454,6 +464,9 @@ impl Warrior {
     /// rejected exactly like a tampered proof. This is what
     /// `trident verify <artifact>` reaches through the warrior boundary.
     pub fn verify_artifact(&self, artifact: &crate::proof::ProofArtifact) -> Result<bool, String> {
+        if artifact.format != crate::PROOF_FORMAT {
+            return Err("unsupported legacy statement format".into());
+        }
         let assembly = artifact.meta.assembly_text()?.ok_or_else(|| {
             "artifact carries no assembly (written before 0.2.0) — verify it \
              against its bundle: joy verify <bundle> --proof <artifact>"
@@ -464,40 +477,5 @@ impl Warrior {
         }
         let params = zheng::ProofParams::default();
         Ok(zheng::verify(&artifact.proof, &artifact.statement, &params).is_ok())
-    }
-}
-
-impl Prover for Warrior {
-    fn prove(&self, bundle: &ProgramBundle, input: &ProgramInput) -> Result<ProofData, String> {
-        if !input.secret.is_empty() {
-            let (artifact, _) = self.prove_zk_execution(bundle, input, self.budget)?;
-            artifact.proof_data()
-        } else {
-            let (artifact, _) = self.prove_execution(bundle, input, self.budget)?;
-            artifact.proof_data()
-        }
-    }
-}
-
-impl Verifier for Warrior {
-    fn verify(&self, proof: &ProofData) -> Result<bool, String> {
-        if proof.format == crate::STATE_EXECUTION_FORMAT {
-            return crate::state_execution::verify_proof_data(proof);
-        }
-        if proof.format == crate::ZK_EXECUTION_FORMAT {
-            crate::zk_execution::verify_proof_data(proof)
-        } else {
-            crate::execution::verify_proof_data(proof)
-        }
-    }
-}
-
-impl Deployer for Warrior {
-    fn deploy(
-        &self,
-        _bundle: &ProgramBundle,
-        _proof: Option<&ProofData>,
-    ) -> Result<String, String> {
-        Err("deploy lands after the zheng prover (M4): particle + cyberlink emission".to_string())
     }
 }

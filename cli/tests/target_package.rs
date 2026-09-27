@@ -45,11 +45,7 @@ fn installed_description_matches_machine_and_public_certificate_capabilities() {
         assert!(!package.runtime.deploy);
         assert_eq!(
             package.runtime.proof_formats,
-            [
-                joy_rs::EXECUTION_FORMAT,
-                joy_rs::ZK_EXECUTION_FORMAT,
-                joy_rs::STATE_EXECUTION_FORMAT
-            ]
+            [joy_rs::EXECUTION_FORMAT, joy_rs::STATE_EXECUTION_FORMAT]
         );
         assert!(package
             .runtime
@@ -115,4 +111,28 @@ fn stateless_library_runner_rejects_state_marked_bundle() {
         )
         .unwrap_err();
     assert!(error.contains("bundle requires state"));
+}
+
+#[test]
+fn installed_soft3_compiler_rejects_foreign_targets_and_resources() {
+    let installed = Installed::new();
+    for target in ["triton", "neptune"] {
+        assert!(!installed
+            .run(&["describe", "--target", target])
+            .status
+            .success());
+    }
+    for module in ["std.compiler.codegen", "std.kernel", "os.neptune.kernel"] {
+        fs::write(
+            installed.0.join("foreign.tri"),
+            format!("program foreign\nuse {module}\nfn main()->Field {{ 1 }}\n"),
+        )
+        .unwrap();
+        let output = installed.run(&["build", "foreign.tri", "-o", "foreign.json"]);
+        assert_eq!(output.status.code(), Some(1));
+        assert!(!installed.0.join("foreign.json").exists());
+        assert!(
+            String::from_utf8_lossy(&output.stderr).contains("not supplied by this target package")
+        );
+    }
 }

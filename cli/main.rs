@@ -65,7 +65,7 @@ pub(crate) fn check_target(target: &str) -> Result<(), JoyError> {
     match target {
         "nox" | "cyber" => Ok(()),
         t => Err(JoyError::Execute(format!(
-            "joy is the nox warrior; target '{}' is not mine (use trisha for triton)",
+            "joy supports only soft3 targets nox and cyber; unsupported target '{}'",
             t
         ))),
     }
@@ -99,8 +99,7 @@ pub(crate) fn load_bundle(
     }
 }
 
-/// Wrap a raw .nox formula file into a minimal bundle (trisha's
-/// `bundle_from_tasm` pattern).
+/// Wrap a raw .nox formula file into a minimal bundle.
 fn bundle_from_nox(path: &std::path::Path) -> Result<trident::runtime::ProgramBundle, JoyError> {
     let assembly = joy_rs::read_program_text(path)
         .map_err(|e| JoyError::Io(format!("cannot read '{}': {}", path.display(), e)))?;

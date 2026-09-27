@@ -10,6 +10,14 @@ const MAGIC: &[u8] = b"JOYEXEC2";
 const MAX_ARTIFACT_BYTES: usize = 32 * 1024 * 1024;
 const MAX_ASSEMBLY_BYTES: usize = 256 * 1024;
 
+/// Recognize retired private envelopes only to reject them before any fallback.
+/// Header admission retains the same bounded regular-file checks as live formats.
+pub fn has_unsupported_private_header(path: &Path) -> bool {
+    [b"JOYZK001", b"JOYZK002", b"JOYZK003"]
+        .iter()
+        .any(|magic| crate::file_input::has_header(path, *magic, 64 * 1024 * 1024))
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ExecutionArtifact {
     pub format: String,

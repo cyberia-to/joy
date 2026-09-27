@@ -1,7 +1,6 @@
 #![cfg(unix)]
 use joy_rs::{
     state_execution::load_certificate, ExecutionArtifact, ProofArtifact, StateExecutionArtifact,
-    ZkExecutionArtifact,
 };
 use std::{
     fs,
@@ -81,10 +80,9 @@ fn verification_rejects_streams_links_and_oversize_files_but_keeps_real_proof_ro
     }
     for path in [&fifo, &f.0, &f.0.join("pipe-link.zheng"), &oversized] {
         assert!(!ExecutionArtifact::has_header(path));
-        assert!(!ZkExecutionArtifact::has_header(path));
+        assert!(!joy_rs::execution::has_unsupported_private_header(path));
         assert!(!StateExecutionArtifact::has_header(path));
         assert!(ExecutionArtifact::load(path).is_err());
-        assert!(ZkExecutionArtifact::load(path).is_err());
         assert!(StateExecutionArtifact::load(path).is_err());
         assert!(ProofArtifact::load(path).is_err());
         assert!(load_certificate(path).is_err());

@@ -20,8 +20,5 @@ pub use warrior::{Warrior, DEFAULT_BUDGET};
 
 pub use execution::{ExecutionArtifact, EXECUTION_FORMAT};
 
-pub mod zk_execution;
-pub use zk_execution::{ZkExecutionArtifact, ZK_EXECUTION_FORMAT};
-
 pub mod state_execution;
 pub use state_execution::{StateExecutionArtifact, STATE_EXECUTION_FORMAT};

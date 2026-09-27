@@ -1,6 +1,6 @@
 //! Public words must satisfy the source signature inside the proven computation.
-use joy_rs::{ExecutionArtifact, Warrior, ZkExecutionArtifact};
-use trident::runtime::{ProgramBundle, ProgramInput, Runner};
+use joy_rs::{ExecutionArtifact, Warrior};
+use trident::runtime::{ProgramBundle, ProgramInput, Prover, Runner};
 
 static NEXT_DIRECTORY: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 
@@ -47,11 +47,9 @@ fn unused_typed_inputs_are_constrained_by_public_execution_certificate() {
             vec![7, 19, 2],
         ] {
             assert!(warrior.run(&bundle, &input(&public)).is_err());
-            assert!(
-                warrior
-                    .prove_execution(&bundle, &input(&public), 100_000)
-                    .is_err()
-            );
+            assert!(warrior
+                .prove_execution(&bundle, &input(&public), 100_000)
+                .is_err());
             // Same constant output cannot make a mistyped/mis-sized input valid.
             let mut changed = decoded.clone();
             changed.statement.public_input = public;
@@ -84,25 +82,22 @@ fn aggregate_entry_has_real_proven_native_layout() {
 }
 
 #[test]
-fn typed_input_guards_survive_the_real_private_stark() {
+fn typed_input_guards_check_secret_execution_and_proving_is_refused() {
     let bundle = compile(
         "program entry\nfn main(n:U32,flag:Bool)->Field { assert(flag)\n let secret:Field=divine()\n as_field(n)+secret }",
         "release",
     );
     let mut values = input(&[19, 0]);
     values.secret = vec![23];
-    let (artifact, native) = Warrior::new()
-        .prove_zk_execution(&bundle, &values, 100_000)
-        .unwrap();
-    assert_eq!(native.output, vec![42]);
-    let decoded = ZkExecutionArtifact::from_bytes(&artifact.to_bytes().unwrap()).unwrap();
-    decoded.verify().unwrap();
+    let warrior = Warrior::new();
+    assert_eq!(warrior.run(&bundle, &values).unwrap().output, vec![42]);
+    assert!(warrior
+        .prove(&bundle, &values)
+        .unwrap_err()
+        .contains("secret inputs"));
     for public in [vec![1u64 << 32, 0], vec![19, 2], vec![19], vec![19, 0, 7]] {
-        let mut changed = decoded.clone();
-        changed.statement.execution.public_input = public;
-        assert!(changed.verify().is_err());
+        let mut changed = values.clone();
+        changed.public = public;
+        assert!(warrior.run(&bundle, &changed).is_err());
     }
-    let mut changed = decoded;
-    changed.statement.execution.public_output[0] = 43;
-    assert!(changed.verify().is_err());
 }
