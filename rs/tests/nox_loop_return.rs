@@ -1,6 +1,6 @@
 //! A source-level loop return must survive native execution and the proved CCS.
 use joy_rs::{ExecutionArtifact, Warrior};
-use trident::runtime::{ProgramInput, Prover, Runner};
+use trident::runtime::{ProgramInput, Prover, Runner, Verifier};
 
 #[test]
 fn bounded_loop_return_proof_binds_selected_result_input_and_cost() {
@@ -39,7 +39,7 @@ fn bounded_loop_return_proof_binds_selected_result_input_and_cost() {
 }
 
 #[test]
-fn private_loop_return_skips_later_witness_and_refuses_public_proof() {
+fn private_loop_return_proves_and_skips_later_witness() {
     let directory =
         std::env::temp_dir().join(format!("joy-private-loop-proof-{}", std::process::id()));
     std::fs::create_dir_all(&directory).unwrap();
@@ -55,9 +55,9 @@ fn private_loop_return_skips_later_witness_and_refuses_public_proof() {
     };
     let warrior = Warrior::new();
     assert_eq!(warrior.run(&bundle, &input).unwrap().output, vec![42]);
-    assert!(warrior
-        .prove(&bundle, &input)
-        .unwrap_err()
-        .contains("secret inputs"));
+    let proof = warrior.prove(&bundle, &input).unwrap();
+    assert_eq!(proof.format, joy_rs::ZK_EXECUTION_FORMAT);
+    assert!(warrior.verify(&proof).unwrap());
+    assert!(warrior.prove_execution(&bundle, &input, 100_000).is_err());
     std::fs::remove_dir_all(directory).unwrap();
 }

@@ -1,4 +1,7 @@
-# Soft3-only Joy
+# Soft3-only Joy — historical delivery
+
+Superseded for private proving by [native-private-parity.md](native-private-parity.md).
+The refusal below describes the earlier removal commit, not current behavior.
 
 User-directed correction: remove Joy-owned foreign private prover integration,
 all foreign Cargo dependencies/patches and current capability claims. Keep

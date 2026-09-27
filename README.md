@@ -2,11 +2,12 @@
 
 Interface specification: [Joy CLI](specs/cli.md). Node integration and
 acceptance are owned by [cyber's worker contract](../cyber/specs/worker.md).
-Both specs distinguish the implemented baseline from the planned interface.
+Both specs distinguish implemented behavior from the planned interface.
+The typed [worker adapter](specs/worker-adapter.md) checks native results against
+independently saved jobs; Cyber retains scheduling and network admission.
 
-Joy compiles and executes Trident programs on nox. Supported public programs
-can also produce a Zheng execution certificate whose input, output, program
-and reduction count are checked by the verifier.
+Joy compiles and executes Trident programs on nox. Supported programs produce
+native Zheng proofs binding public input, output, program and reduction count. Secret call witnesses select the private profile.
 
 ```sh
 joy describe --target nox  # versioned JSON package and runtime capabilities
@@ -22,15 +23,34 @@ CCS from the canonical program, authenticates the complete public witness and
 checks all constraints and public coordinates. This certificate discloses the
 witness and has linear verification cost. Verification does not run nox.
 
-Joy uses the soft3 execution/proof stack exclusively. `run --secret` supplies
-execution witnesses. `prove --secret` and `prove --zk` are refused before
-compilation or publication because the current soft3 execution certificate is
-public, not zero knowledge. Historical private envelopes are unsupported.
+Joy uses the soft3 execution/proof stack exclusively. `prove --secret` or
+`prove --zk` selects `joy-nox-zheng-private-execution-v1` (`JOYZH001`): Zheng's
+native randomized CCS proof over Goldilocks and Hemera. Verification needs no
+witness and performs no native re-execution. The protocol has linear costs;
+see [private execution](specs/private-execution.md) for its exact privacy and
+coverage contract. Historical foreign private envelopes must be regenerated.
+
+For automated use, keep witnesses in a regular input file instead of argv:
+
+```json
+{"schema_version":1,"public":[],"secret":["7","13"]}
+```
+
+```sh
+joy prove private.tri --input-file witness.json --output private.zheng
+joy verify private.tri --proof private.zheng --claim 91
+```
+
+Here `private.tri` must return the product of two `divine()` calls. Input files,
+`batch run|prove|verify`, `test` and `bench` are specified in
+[native CLI operations](specs/native-cli-parity.md). Proof output is atomic;
+replacing an existing file requires `--force`.
 
 `--state state.json` loads a bounded authenticated public BBG certificate.
 Public state proofs use `joy-nox-public-state-execution-v1`; each actual lookup
 binds namespace, index, returned value and all four root limbs to execution.
-Hidden-query and zero-knowledge state proving are unavailable.
+Private state proofs hide query coordinates and intermediate witness while
+authenticating the same public tables. The certificate/database remains public.
 
 ```sh
 joy prove state.tri --state state.json --input-values 11 --output state.zheng
@@ -87,11 +107,11 @@ cargo test -p cyber-joy --test state_execution
 cargo install --path cli --locked
 ```
 
-Versions in the working branches are development candidates. Public execution
-and authenticated public state certificates remain supported; private execution
-proofs, full nox proof coverage and live node/database integration remain open.
+Versions in the working branches are development candidates. Public/private
+execution and authenticated state proofs are implemented for the bounded static
+relation. Full nox proof coverage and live node/database integration remain open.
 Historical receipts in [the release audit](audit/release-validation.md) describe
-their recorded revisions; current acceptance is recorded in `audit/soft3-only/`.
+their recorded revisions; native private acceptance is recorded in `audit/native-private/`.
 State commitment v2 changes all BBG roots; regenerate certificates and proofs.
 
 Cyber License: Don't trust. Don't fear. Don't beg.
@@ -103,4 +123,5 @@ ART1 raw-noun program and preserves the output DAG. It emits a JSON execution
 receipt after atomic publication; `--force` permits replacing an existing file.
 This path uses bounded sequential nox without retaining a trace. See
 [the structured-run contract](specs/structured-run.md) for limits and profiles.
-Compiler JOB1 admission and proofs of dynamic execution are subsequent gates.
+Compiler JOB1/RES1 admission is implemented; proofs of dynamic execution remain
+a subsequent gate.

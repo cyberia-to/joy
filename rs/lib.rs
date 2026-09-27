@@ -7,18 +7,21 @@
 
 pub mod execution;
 mod file_input;
+pub mod zk_execution;
 pub use file_input::read_program_text;
 pub mod formula;
 pub mod proof;
+pub mod structured;
 pub mod target;
 pub mod warrior;
-pub mod structured;
+pub mod worker;
 
 pub use proof::{program_hash, ArtifactMeta, ProofArtifact, PROOF_FORMAT};
 pub use target::{nox_terrain, target_package};
 pub use warrior::{Warrior, DEFAULT_BUDGET};
 
 pub use execution::{ExecutionArtifact, EXECUTION_FORMAT};
+pub use zk_execution::{ZkExecutionArtifact, ZK_EXECUTION_FORMAT};
 
 pub mod state_execution;
 pub use state_execution::{StateExecutionArtifact, STATE_EXECUTION_FORMAT};

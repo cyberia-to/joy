@@ -1,18 +1,23 @@
 # Changelog
 
-## Unreleased — soft3-only Joy
+## Unreleased — native soft3 proving
 
-- Remove the foreign private prover and its VM/vendor dependency closure. Joy
-  builds and runs with the soft3 siblings and Trident alone.
-- Compile Trident without external target discovery, Neptune compatibility
-  aliases, foreign catalog entries or historical RAM/TASM compiler resources.
-- Preserve native nox execution, compiler jobs and public Zheng/state
-  certificates. Secret execution and explicit re-execution remain supported.
-- Reject secret/`--zk` proving and retired private artifacts explicitly. The
-  current soft3 backend has no zero-knowledge execution proof; public proof
-  fallback is forbidden. Legacy statement APIs now also refuse secret inputs.
-- Add an executable dependency/feature boundary gate and regression checks
-  for removed capabilities, output preservation and supported execution.
+- Complete private proving inside Zheng over Goldilocks and Hemera. Joy now
+  proves `divine()` witnesses with `JOYZH001` and verifies in a separate process
+  without secrets or re-execution. Public proofs remain explicitly disclosing.
+- Bind private programs, public IO, budgets, selected reductions and state roots
+  to the verifier-derived relation. Hidden state queries use authenticated
+  public BBG tables; the database itself remains public.
+- Remove the foreign prover/VM dependency closure and compile Trident's native
+  surface only. Retired foreign private artifacts must be regenerated.
+- Consume exactly the successful native secret stream, including state reads;
+  reject missing, excess and noncanonical inputs without exposing witness values.
+- Add bounded versioned witness files, isolated batch run/prove/verify, native
+  test execution and measurements of supplied programs through `joy bench`.
+- Add a typed worker result verifier checking independently retained program,
+  profile, public IO, budget and trusted state root. Cyber keeps admission policy.
+- Publish proofs atomically, preserving existing files unless replacement is
+  explicitly requested with `--force`. Add adversarial wire/claim/state tests.
 
 ## 0.5.0 — 2026-09-16
 

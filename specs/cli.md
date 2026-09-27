@@ -8,12 +8,9 @@ alias: joy cli contract
 
 # joy CLI
 
-Owner: joy. The baseline describes source version 0.4.0 at `6b8dfd3`.
-The working-tree integration below records concurrent target-package work
-separately from that committed baseline. Target
-sections define requirements for a subsequent interface revision and remain
-unimplemented until conformance tests pass. MUST/SHOULD/MAY are normative
-within those target sections.
+Owner: joy. Implemented sections describe the native soft3 integration branch.
+Sections labelled target define subsequent interfaces and remain unimplemented
+until their conformance gates pass. MUST/SHOULD/MAY are normative there.
 
 Cross-repository contracts:
 
@@ -34,7 +31,7 @@ target architecture; today's stateless cyber alias has no network binding.
 Joy's target lifecycle is build → run/prove → verify → deploy. Cyber owns
 network state, job scheduling and acceptance. Trident owns the compiler
 contract and ProgramBundle; Joy's build command uses its reference nox
-lowering. The implemented CLI exposes build/run/prove/verify/describe;
+lowering. The implemented CLI exposes build/run/prove/verify/describe, batch, test and bench;
 deployment remains a target contract below. `--target cyber`
 selects a supported target alias; it supplies no network connection or
 authority to modify chain state.
@@ -47,7 +44,10 @@ joy build INPUT [--target nox|cyber] [--profile NAME] [--emit bundle|nox|artifac
 joy run INPUT [COMMON]
 joy run-artifact PROGRAM --input INPUT --output OUTPUT [--emit result|program] [LIMITS] [--force]
 joy pack-job --compiler PROGRAM --manifest PACKAGE.json --output JOB [LIMITS] [--force]
-joy prove INPUT [COMMON] [--zk] [--output PATH]
+joy prove INPUT [COMMON] [--zk] [--output PATH] [--force]
+joy batch run|prove|verify INPUT... [--max-parallel N]
+joy test SOURCE_OR_PROJECT [--target nox|cyber] [--profile NAME]
+joy bench INPUT [--input-file PATH | --input-values WORDS] [--claim WORDS] [--repeat N]
 joy verify ARTIFACT [COMMON] [--claim VALUES]
 joy verify INPUT --proof ARTIFACT [COMMON] [--claim VALUES]
 joy verify INPUT --claim VALUES [COMMON]
@@ -68,7 +68,8 @@ COMMON flags currently appear on run/prove/verify:
 | --target nox\|cyber | project target, then nox | explicit flag overrides the source project; other targets fail |
 | --profile NAME | debug | passed to compilation for source inputs |
 | --input-values V1,V2 | empty | ordered public u64 values |
-| --secret V1,V2 | empty | sequential execution witnesses for run/re-execution; proving refuses secrets |
+| --secret V1,V2 | empty | sequential execution witnesses; proving selects the private profile |
+| --input-file PATH | absent | versioned public/secret object; conflicts with both inline flags |
 | --budget N | 1000000 | reduction limit; proof verification also checks the certificate budget |
 | --state VALUE | absent | path to an authenticated public BBG certificate (JSON) |
 
@@ -98,17 +99,18 @@ exit 1. Clap syntax errors exit 2. Help/version exit 0. Verification output
 is human-readable; consumers MUST NOT infer a stable machine schema from it.
 Build supports the `--format json-v1` envelope. Structured artifact execution
 uses its distinct `joy/artifact-run/v1` receipt.
-Current proof save behavior may overwrite an existing path; target publication
-rules below intentionally tighten this behavior.
+Proof publication is atomic and refuses an existing path unless `--force` is
+explicit. Failure preserves existing output. Batch/test/bench contracts and the
+versioned input-file schema are in [native CLI operations](native-cli-parity.md).
 
 ## three different verification meanings
 
 1. `run` produces native execution output and measured reductions.
 2. `verify INPUT --claim ...` repeats native execution and compares outputs.
-3. `verify ARTIFACT` or `verify INPUT --proof ARTIFACT` checks a public
+3. `verify ARTIFACT` or `verify INPUT --proof ARTIFACT` checks a native
    execution certificate without running nox.
 
-Current execution certificates use `zheng-nox-public-execution-v2`, disclose
+Public execution certificates use `zheng-nox-public-execution-v2`, disclose
 the full witness and have linear verification cost. They authenticate the
 supported program, public input/output and reduction coordinates. With
 `--proof`, Joy additionally compares the certificate's program with INPUT.
@@ -118,13 +120,13 @@ the caller must still establish that this is the intended computation.
 
 Public state requests use `joy-nox-public-state-execution-v1`, with namespace,
 key, returned value and all four root limbs constrained to the execution.
-Joy uses only the soft3 execution/proof stack. Public stateless and public
-state certificates verify without native execution. `prove --secret` and
-`prove --zk` fail before compilation, execution or output publication; the
-current soft3 proof backend provides no zero-knowledge execution protocol.
-Secret-bearing programs still execute through `run` and explicit re-execution.
-The `Prover` trait also refuses secret inputs; no path discloses them through
-a public certificate as a fallback.
+Joy uses only the soft3 execution/proof stack. Secret inputs or `--zk` select
+`joy-nox-zheng-private-execution-v1` (`JOYZH001`). Zheng proves its exact CCS
+with native Goldilocks/Hemera MPC-in-the-head; private verification needs no
+witness or re-execution. The `Prover` trait makes the same selection. Explicit
+public proof APIs reject secret inputs. Private state queries hide their
+coordinates over the authenticated public tables. See
+[private execution](private-execution.md) for disclosure, bounds and assumptions.
 
 Historical `JOYZK001`/`JOYZK002`/`JOYZK003` envelopes are unsupported and fail
 explicitly, including with `--legacy-trace-statement` or `--claim`. They have
@@ -151,13 +153,14 @@ The stateless Runner rejects `reads_state` bundles; explicit state runner/prover
 methods require a certificate. Live node/database synchronization remains open.
 
 `describe` reports the versioned Trident target package and separate native
-execution/public proof restrictions. It is compiler/warrior discovery;
+execution and public/private proof restrictions. It is compiler/warrior discovery;
 it does not implement the planned worker protocol capability envelope.
 
 `--secret` currently exposes native witness arguments through the process
 command line. It remains a development compatibility option; the worker
-adapter must use explicit private channels. CLI cancellation, hard memory
-limits, machine output and atomic no-overwrite publication are target work.
+adapter uses separate witness inputs. `--input-file` keeps private values out
+of argv. CLI cancellation, hard memory limits and common machine output remain
+target work. Atomic proof publication is implemented.
 
 ## target additions
 
@@ -165,7 +168,7 @@ Concurrent working-tree integration introduces `joy describe --target
 nox|cyber`, emitting the versioned Trident target package as JSON. Runtime
 declarations live in `joy/targets/nox/capabilities.json`; machine constants
 come from Trident's upstream nox contract. Runtime declarations include the
-public stateless and authenticated public state proof profiles and their concrete limits.
+public/private execution and authenticated state profiles with their concrete limits.
 CLI state certificate acceptance is covered by fresh-process conformance tests.
 
 Use `describe` as the discovery command. Extend its versioned runtime
@@ -232,10 +235,8 @@ with code `compile_failed`, `artifact_write_failed` or `build_failed`, a message
 and `retryable=false`; application exit remains 1. Publication follows
 the atomic no-overwrite/explicit-force rules below.
 
-Current gap: `joy/cli/main.rs` has no Build variant. Source compilation already
-exists in `joy/cli/compile.rs`. `trident build --target nox` currently uses its
-own reference path; adding `joy build` does not require replacing that path.
-Bundle equivalence between the two library entry paths is a conformance gate.
+Build is implemented through `joy/cli/compile.rs`; bundle equivalence with
+Trident's reference path is a conformance gate.
 
 ## target deploy contract
 
@@ -303,16 +304,18 @@ alone cannot express this contract.
 
 ## target inputs, publication and discovery
 
-`--input-file`, `--secret-file` and `--claim-file` accept a UTF-8 JSON array
-of canonical decimal strings. They are mutually exclusive with their
-respective inline value flags. `-` means stdin; at most one input may claim
-stdin. Unknown format, noncanonical field values, oversized inputs and
+Implemented `--input-file` accepts the strict version1 object in
+[native-cli-parity.md](native-cli-parity.md): `schema_version`, `public`, `secret`.
+It conflicts with both inline flags, accepts only a bounded regular file and
+requires secret-free contents for proof verification. A future interface may add
+separate public/secret/claim files and stdin, with an explicit schema transition;
+those flags and array-only input files are currently unsupported. Unknown format, noncanonical field values, oversized inputs and
 conflicting flags MUST fail before execution. Values outside the pinned
 field range MUST be rejected rather than silently reduced.
 
 Secrets MUST be absent from argv, logs and diagnostics in automated use.
-Public proof requests with secret data MUST fail before an artifact is
-produced. File/pipe handling must respect the caller's access controls;
+Explicit public proof API requests with secret data MUST fail. CLI secret
+proving selects the private profile. File/pipe handling must respect the caller's access controls;
 memory cleanup is best effort unless a stronger guarantee is implemented.
 
 `--output` publication MUST default to no overwrite, write a temporary file,
@@ -365,7 +368,7 @@ the standalone CLI envelope.
 
 Proof artifacts and public state certificates are bounded regular files. Header
 inspection and loading reject directories, symbolic links, FIFOs and devices.
-Public execution artifacts are limited to32MiB; state/legacy artifacts
+Native private artifacts are limited to256MiB; public execution to32MiB; state/legacy artifacts
 and state certificates to64MiB. Raw `.nox` formulas and JSON bundle reads use
 the same64MiB admission, including verification's source fallback. Reads retain
 a byte cap even if the file grows.
@@ -388,12 +391,12 @@ Implement in this order:
 5. Wire public stateless jobs through the cyber worker adapter.
 6. Define the Cyber deployment format/policy and signer/receipt contract;
    implement dry-run preparation, then authorized submission.
-7. Public state has authenticated proof support. Zero-knowledge execution,
-   hidden queries, private databases and live synchronization remain open.
+7. Native private execution and hidden queries over public certificates are
+   implemented. Private databases and live synchronization remain open.
 
 Required cases: native output and rerun agreement; proof verification without
 rerun; wrong program/input/output/budget rejection; corrupt proof rejection
-without downgrade; state/secret refusal; exact JSON types and exit behavior;
+without downgrade; private proving and unsupported state/mode refusal; exact JSON types and exit behavior;
 artifact preservation on failure; cancellation and oversize input rejection.
 Public execution and legacy state-proof suites must be reported separately.
 

@@ -1,6 +1,6 @@
 //! Function terminal branches must bind their actual selected result in proofs.
 use joy_rs::{ExecutionArtifact, Warrior};
-use trident::runtime::{ProgramBundle, ProgramInput, Prover, Runner};
+use trident::runtime::{ProgramBundle, ProgramInput, Prover, Runner, Verifier};
 
 fn compile(source: &str, profile: &str, name: &str) -> ProgramBundle {
     let directory = std::env::temp_dir().join(format!(
@@ -66,8 +66,8 @@ fn main(x: Field) -> Field {
     };
     let warrior = Warrior::new();
     assert_eq!(warrior.run(&bundle, &input).unwrap().output, vec![42]);
-    assert!(warrior
-        .prove(&bundle, &input)
-        .unwrap_err()
-        .contains("secret inputs"));
+    let proof = warrior.prove(&bundle, &input).unwrap();
+    assert_eq!(proof.format, joy_rs::ZK_EXECUTION_FORMAT);
+    assert!(warrior.verify(&proof).unwrap());
+    assert!(warrior.prove_execution(&bundle, &input, 100_000).is_err());
 }

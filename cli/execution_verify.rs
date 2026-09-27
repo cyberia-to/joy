@@ -5,7 +5,9 @@ use joy_rs::ExecutionArtifact;
 pub fn try_verify(args: &VerifyArgs) -> Option<Result<(), String>> {
     let path = args.proof.as_ref().unwrap_or(&args.input);
     if joy_rs::execution::has_unsupported_private_header(path) {
-        return Some(Err("unsupported private execution proof; Joy accepts only soft3 public execution certificates".into()));
+        return Some(Err(
+            "retired foreign private proof format; regenerate with native Zheng proving".into(),
+        ));
     }
     if !ExecutionArtifact::has_header(path) {
         return None;

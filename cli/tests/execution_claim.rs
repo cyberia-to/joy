@@ -165,42 +165,80 @@ fn malformed_execution_artifacts_fail_directly_and_legacy_needs_opt_in() {
 }
 
 #[test]
-fn private_proving_is_refused_before_loading_or_publishing() {
+fn native_private_proving_verifies_without_secrets_and_publishes_atomically() {
     let f = Fixture::new();
-    fs::write(f.0.join("private.nox"), "[16 [[1 0] [1 0]]]").unwrap();
-    assert_eq!(
-        f.ok(&["run", "private.nox", "--secret", "424242"]).stdout,
-        b"424242\n"
-    );
-    let replay = f.ok(&[
-        "verify",
-        "private.nox",
+    fs::write(f.0.join("private.tri"), "program hidden_product\nfn main() -> Field { let x: Field = divine()\n let y: Field = divine()\n x * y }\n").unwrap();
+    f.ok(&[
+        "prove",
+        "private.tri",
         "--secret",
-        "424242",
-        "--claim",
-        "424242",
+        "7,13",
+        "--output",
+        "private.zheng",
     ]);
-    assert!(String::from_utf8_lossy(&replay.stdout).contains("re-execution"));
-    fs::write(f.0.join("keep.zheng"), b"unchanged").unwrap();
-    for source in ["private.nox", "missing.tri"] {
-        for request in [vec!["--zk"], vec!["--secret", "424242"]] {
-            for state in [vec![], vec!["--state", "missing.json"]] {
-                for destination in ["absent.zheng", "keep.zheng"] {
-                    let mut args = vec!["prove", source, "--output", destination];
-                    args.extend(request.iter().copied());
-                    args.extend(state.iter().copied());
-                    let output = f.run(&args);
-                    assert_eq!(output.status.code(), Some(1));
-                    assert!(output.stdout.is_empty());
-                    let error = String::from_utf8_lossy(&output.stderr);
-                    assert!(error.contains("unavailable in soft3-only Joy"), "{error}");
-                    assert!(!error.contains("424242"));
-                    assert!(!f.0.join("absent.zheng").exists());
-                    assert_eq!(fs::read(f.0.join("keep.zheng")).unwrap(), b"unchanged");
-                }
-            }
-        }
+    let proof = joy_rs::ZkExecutionArtifact::load(&f.0.join("private.zheng")).unwrap();
+    assert_eq!(proof.format, joy_rs::ZK_EXECUTION_FORMAT);
+    f.ok(&["verify", "private.zheng", "--claim", "91"]);
+    f.ok(&[
+        "verify",
+        "private.tri",
+        "--proof",
+        "private.zheng",
+        "--claim",
+        "91",
+    ]);
+    for extra in [
+        vec!["--claim", "92"],
+        vec!["--secret", "7,13"],
+        vec!["--legacy-trace-statement"],
+    ] {
+        let mut args = vec!["verify", "private.zheng"];
+        args.extend(extra);
+        assert!(!f.run(&args).status.success());
     }
+    fs::write(f.0.join("keep.zheng"), b"unchanged").unwrap();
+    for request in [vec!["7"], vec!["7,13,42"]] {
+        let output = f.run(&[
+            "prove",
+            "private.tri",
+            "--secret",
+            request[0],
+            "--output",
+            "keep.zheng",
+            "--force",
+        ]);
+        assert!(!output.status.success());
+        assert!(output.stdout.is_empty());
+        assert_eq!(fs::read(f.0.join("keep.zheng")).unwrap(), b"unchanged");
+    }
+    assert!(!f
+        .run(&[
+            "prove",
+            "private.tri",
+            "--secret",
+            "7,13",
+            "--output",
+            "keep.zheng"
+        ])
+        .status
+        .success());
+    assert_eq!(fs::read(f.0.join("keep.zheng")).unwrap(), b"unchanged");
+    f.ok(&[
+        "prove",
+        "private.tri",
+        "--secret",
+        "7,13",
+        "--output",
+        "keep.zheng",
+        "--force",
+    ]);
+    f.ok(&["verify", "keep.zheng", "--claim", "91"]);
+    fs::write(f.0.join("public.nox"), "[1 42]").unwrap();
+    f.ok(&["prove", "public.nox", "--zk", "--output", "explicit.zheng"]);
+    assert!(joy_rs::ZkExecutionArtifact::has_header(
+        &f.0.join("explicit.zheng")
+    ));
+    f.ok(&["verify", "explicit.zheng", "--claim", "42"]);
 }
 
 #[test]
@@ -224,7 +262,7 @@ fn retired_private_envelopes_never_fall_back_to_execution_or_legacy() {
                     assert_eq!(output.status.code(), Some(1));
                     assert!(output.stdout.is_empty());
                     assert!(String::from_utf8_lossy(&output.stderr)
-                        .contains("unsupported private execution proof"));
+                        .contains("retired foreign private proof format"));
                 }
             }
         }

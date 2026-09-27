@@ -5,7 +5,8 @@
   "deploy": false,
   "proof_formats": [
     "zheng-nox-public-execution-v2",
-    "joy-nox-public-state-execution-v1"
+    "joy-nox-public-state-execution-v1",
+    "joy-nox-zheng-private-execution-v1"
   ],
   "restrictions": [
     "run: nox reductions with public inputs and sequential secret call witnesses; no digest stream; --state loads a bounded authenticated public BBG certificate",
@@ -13,11 +14,11 @@
     "pack-job: exact source files and explicit origins/options/limits to canonical identity-bound JOB1; no source language stages or implicit imports",
     "run-artifact: complete NOXDAG01 ART1 raw(0,0) and compiler JOB1/RES1(1,1) with full identity binding and independent schema/runtime caps; bounded sequential pure tags0..15 with dynamic compose, no retained trace or host services; --emit program publishes a validated guest ART1; dynamic execution proofs remain unsupported",
     "prove public: stateless bounded static tags 0..15; full witness disclosure with linear verification and storage, neither zero knowledge nor succinct",
-    "prove private: zero-knowledge execution is unavailable in the current soft3 backend; --zk and secret proving inputs fail before output publication",
-    "prove state: public bounded CCS execution with all lookup coordinates and four root limbs bound to complete authenticated public tables; hidden-query proofs are unavailable",
-    "prove: no dynamic continuations or variable branch shapes; budget must cover the selected execution's bound cost; only public inputs are accepted",
+    "prove private: native Zheng randomized CCS over Goldilocks/Hemera with 219 MPC-in-the-head repetitions; secret calls and intermediate witness hidden, public program/IO/cost; linear proof and verification costs; 256 MiB artifact bound",
+    "prove state: public bounded CCS execution with all lookup coordinates and four root limbs bound to complete authenticated public tables; private profiles hide query coordinates over the same public tables, limited to 2048 field values",
+    "prove: no dynamic continuations or variable branch shapes; budget must cover the selected execution's bound cost; secret calls select the private profile; explicit public proof APIs reject secrets",
     "prove: at most 64 public inputs, 4096 program/symbolic noun nodes, depth 128, 4096 symbolic calls, 32768 gates/rows and 4096 output atoms",
-    "verify: exact public execution and authenticated public state execution; retired private formats are unsupported; old trace statements require explicit opt-in and do not authenticate execution or IO",
+    "verify: exact public/private execution and authenticated public/private-query state execution; retired foreign private formats are unsupported; old trace statements require explicit opt-in and do not authenticate execution or IO",
     "cyber aliases the nox runtime; public BBG certificate files are supported, live network state synchronization and deployment are not"
   ]
 }

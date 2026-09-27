@@ -6,7 +6,7 @@ use clap::Args;
 
 use joy_rs::Warrior;
 
-use super::{check_target, load_bundle, make_input};
+use super::{check_target, load_bundle};
 
 #[derive(Args)]
 pub struct ProveArgs {
@@ -24,7 +24,10 @@ pub struct ProveArgs {
     /// Secret/divine input values (comma-separated field elements)
     #[arg(long, value_delimiter = ',')]
     pub secret: Option<Vec<u64>>,
-    /// Request zero-knowledge proving (currently unsupported by the soft3 backend)
+    /// Native public/secret input file (JSON); conflicts with values on the CLI
+    #[arg(long, conflicts_with_all = ["input_values", "secret"])]
+    pub input_file: Option<PathBuf>,
+    /// Use native Zheng private proving even when no secret inputs are supplied
     #[arg(long)]
     pub zk: bool,
     /// Reduction budget (also the statement's focus bound)
@@ -33,6 +36,9 @@ pub struct ProveArgs {
     /// Artifact path (default: <input stem>.zheng next to the input)
     #[arg(long)]
     pub output: Option<PathBuf>,
+    /// Replace an existing output only after proving succeeds
+    #[arg(long)]
+    pub force: bool,
     /// Public BBG state certificate (JSON)
     #[arg(long)]
     pub state: Option<String>,
@@ -48,15 +54,6 @@ fn artifact_path(input: &PathBuf) -> PathBuf {
 }
 
 pub fn cmd_prove(args: ProveArgs) {
-    if args.zk
-        || args
-            .secret
-            .as_ref()
-            .is_some_and(|values| !values.is_empty())
-    {
-        eprintln!("error: zero-knowledge execution proofs are unavailable in soft3-only Joy; secret inputs cannot be published as public proofs");
-        process::exit(1);
-    }
     if let Err(e) = check_target(args.target.as_deref().unwrap_or("nox")) {
         eprintln!("error: {}", e);
         process::exit(1);
@@ -68,7 +65,18 @@ pub fn cmd_prove(args: ProveArgs) {
             process::exit(1);
         }
     };
-    let pi = make_input(&args.input_values, &args.secret);
+    let pi = match crate::input_file::resolve(
+        &args.input_values,
+        &args.secret,
+        args.input_file.as_deref(),
+    ) {
+        Ok(input) => input,
+        Err(error) => {
+            eprintln!("error: {error}");
+            process::exit(1);
+        }
+    };
+    let private = args.zk || !pi.secret.is_empty();
     let warrior = Warrior::with_budget(args.budget);
 
     let t0 = Instant::now();
@@ -76,17 +84,29 @@ pub fn cmd_prove(args: ProveArgs) {
     let result = if let Some(state_path) = &args.state {
         joy_rs::state_execution::load_certificate(std::path::Path::new(state_path)).and_then(
             |certificate| {
-                warrior
-                    .prove_state_certificate(&bundle, &pi, &certificate, args.budget)
-                    .and_then(|(artifact, result)| {
-                        artifact.save(&path).map(|bytes| (result, bytes))
-                    })
+                if private {
+                    warrior
+                        .prove_zk_state_certificate(&bundle, &pi, &certificate, args.budget)
+                        .and_then(|(artifact, result)| {
+                            artifact.to_bytes().map(|bytes| (result, bytes))
+                        })
+                } else {
+                    warrior
+                        .prove_state_certificate(&bundle, &pi, &certificate, args.budget)
+                        .and_then(|(artifact, result)| {
+                            artifact.to_bytes().map(|bytes| (result, bytes))
+                        })
+                }
             },
         )
+    } else if private {
+        warrior
+            .prove_zk_execution(&bundle, &pi, args.budget)
+            .and_then(|(artifact, result)| artifact.to_bytes().map(|bytes| (result, bytes)))
     } else {
         warrior
             .prove_execution(&bundle, &pi, args.budget)
-            .and_then(|(artifact, result)| artifact.save(&path).map(|bytes| (result, bytes)))
+            .and_then(|(artifact, result)| artifact.to_bytes().map(|bytes| (result, bytes)))
     };
     let (result, bytes) = match result {
         Ok(value) => value,
@@ -95,7 +115,13 @@ pub fn cmd_prove(args: ProveArgs) {
             process::exit(1);
         }
     };
-    let mode = if args.state.is_some() {
+    if let Err(error) = crate::publication::atomic_write(&path, &bytes, args.force) {
+        eprintln!("error: {error}");
+        process::exit(1);
+    }
+    let mode = if private {
+        "native private execution (Zheng)"
+    } else if args.state.is_some() {
         "authenticated public state execution"
     } else {
         "public execution"
@@ -104,7 +130,7 @@ pub fn cmd_prove(args: ProveArgs) {
         "Proved {mode} in {} ms: {} reductions, {} bytes",
         t0.elapsed().as_millis(),
         result.cycle_count,
-        bytes
+        bytes.len()
     );
     eprintln!("Output: {:?}", result.output);
     println!("{}", path.display());

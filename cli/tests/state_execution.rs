@@ -128,7 +128,7 @@ fn compiled_helper_state_proof_verifies_in_a_fresh_process_and_rejects_substitut
 }
 
 #[test]
-fn secret_state_query_executes_but_proving_preserves_existing_output() {
+fn secret_state_query_proves_and_preserves_existing_output_without_force() {
     let f = Fixture::new();
     fs::write(f.0.join("private.tri"), "program hidden_lookup\nfn helper(k: Field) -> Field { os.state.read(k) }\nfn main() -> Field { let k: Field = divine()\n helper(k) + 5 }\n").unwrap();
     let output = f.ok(&[
@@ -154,4 +154,53 @@ fn secret_state_query_executes_but_proving_preserves_existing_output() {
     assert_eq!(output.status.code(), Some(1));
     assert!(output.stdout.is_empty());
     assert_eq!(fs::read(f.0.join("private.zheng")).unwrap(), b"unchanged");
+}
+
+#[test]
+fn native_private_state_binds_root_and_build_in_a_fresh_verifier() {
+    let f = Fixture::new();
+    fs::write(f.0.join("private.tri"), "program hidden_lookup\nfn helper(k: Field) -> Field { os.state.read(k) }\nfn main() -> Field { let k: Field = divine()\n helper(k) + 5 }\n").unwrap();
+    f.ok(&[
+        "prove",
+        "private.tri",
+        "--state",
+        "state.json",
+        "--secret",
+        "11",
+        "--output",
+        "private.zheng",
+    ]);
+    f.ok(&["verify", "private.zheng", "--claim", "82"]);
+    f.ok(&[
+        "verify",
+        "private.tri",
+        "--proof",
+        "private.zheng",
+        "--state",
+        "state.json",
+        "--claim",
+        "82",
+    ]);
+    for extra in [
+        vec!["--state", "other.json"],
+        vec!["--claim", "83"],
+        vec!["--secret", "11"],
+    ] {
+        let mut args = vec!["verify", "private.zheng"];
+        args.extend(extra);
+        assert!(!f.run(&args).status.success());
+    }
+    let original = joy_rs::ZkExecutionArtifact::load(&f.0.join("private.zheng")).unwrap();
+    for change in 0..6 {
+        let mut forged = original.clone();
+        match change {
+            0 => forged.state.as_mut().unwrap().dimensions[0].fields[11] += 1,
+            1 => forged.state.as_mut().unwrap().leaves[0][0] ^= 1,
+            2 => forged.root_in_subject = false,
+            3 => forged.source_hash.push('0'),
+            4 => forged.program.push('x'),
+            _ => forged.statement.execution.public_output[0] += 1,
+        }
+        assert!(forged.verify().is_err(), "accepted state forgery {change}");
+    }
 }

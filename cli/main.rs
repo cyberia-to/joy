@@ -1,15 +1,20 @@
 mod artifact_limits;
 mod artifact_run;
+mod batch;
+mod bench;
 mod build_cmd;
 mod compile;
 mod error;
 mod execution_verify;
+mod input_file;
 mod pack_job;
+mod private_verify;
 mod prove;
 mod publication;
 mod raw_build;
 mod run;
 mod state_verify;
+mod test_cmd;
 mod verify;
 
 use clap::{Parser, Subcommand};
@@ -37,6 +42,12 @@ enum Command {
     },
     /// Compile a source or project to a metadata-preserving bundle or nox assembly
     Build(build_cmd::BuildArgs),
+    /// Execute independent runs, proofs or verifications with bounded concurrency
+    Batch(batch::BatchArgs),
+    /// Execute compiled native #[test] functions
+    Test(test_cmd::TestArgs),
+    /// Measure native execution of an explicit program and input
+    Bench(bench::BenchArgs),
     /// Execute a Trident program on the nox VM
     Run(run::RunArgs),
     /// Execute an ART1 program on a complete raw noun without retaining a trace
@@ -143,6 +154,9 @@ fn main() {
             }
         },
         Command::Build(args) => build_cmd::cmd_build(args),
+        Command::Batch(args) => batch::cmd_batch(args),
+        Command::Test(args) => test_cmd::cmd_test(args),
+        Command::Bench(args) => bench::cmd_bench(args),
         Command::Run(args) => run::cmd_run(args),
         Command::RunArtifact(args) => artifact_run::cmd_run(args),
         Command::PackJob(args) => pack_job::cmd_pack(args),
