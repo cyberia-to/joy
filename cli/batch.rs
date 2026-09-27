@@ -90,8 +90,11 @@ struct ResultOutput {
 }
 
 fn flag(args: &mut Vec<OsString>, name: &str, value: impl AsRef<std::ffi::OsStr>) {
-    args.push(name.into());
-    args.push(value.as_ref().into());
+    // One native argument preserves leading hyphens and non-UTF-8 path values.
+    let mut argument = OsString::from(name);
+    argument.push("=");
+    argument.push(value.as_ref());
+    args.push(argument);
 }
 impl Execution {
     fn options(&self) -> Result<Vec<OsString>, String> {
@@ -311,5 +314,18 @@ pub fn cmd_batch(args: BatchArgs) {
     if let Err(error) = run(args) {
         eprintln!("error: {error}");
         std::process::exit(1);
+    }
+}
+
+#[cfg(all(test, unix))]
+mod tests {
+    #[test]
+    fn flag_values_preserve_native_bytes_and_cannot_become_child_options() {
+        use std::os::unix::ffi::{OsStrExt, OsStringExt};
+        let value = std::ffi::OsString::from_vec(b"--input-\xff".to_vec());
+        let mut args = Vec::new();
+        super::flag(&mut args, "--input-file", &value);
+        assert_eq!(args.len(), 1);
+        assert_eq!(args[0].as_bytes(), b"--input-file=--input-\xff");
     }
 }
