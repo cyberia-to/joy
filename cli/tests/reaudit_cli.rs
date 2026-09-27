@@ -145,3 +145,68 @@ fn forced_proof_publication_replaces_the_link_and_preserves_its_target() {
     assert_eq!(fs::read(target).unwrap(), b"keep original");
     f.ok(&args(&["verify", "proof.zheng"]));
 }
+
+#[cfg(unix)]
+#[test]
+fn source_commands_reject_entry_import_and_manifest_streams_before_publication() {
+    use std::{
+        thread,
+        time::{Duration, Instant},
+    };
+    let f = Fixture::new();
+    fn fifo(path: &std::path::Path) {
+        assert!(Command::new("mkfifo").arg(path).status().unwrap().success());
+    }
+    let rejected = |invocation: &[&str]| {
+        let mut child = Command::new(env!("CARGO_BIN_EXE_joy"))
+            .current_dir(&f.0)
+            .args(invocation)
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped())
+            .spawn()
+            .unwrap();
+        let deadline = Instant::now() + Duration::from_secs(5);
+        loop {
+            if child.try_wait().unwrap().is_some() {
+                break;
+            }
+            if Instant::now() >= deadline {
+                child.kill().unwrap();
+                let _ = child.wait();
+                panic!("source command blocked before execution admission: {invocation:?}");
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        let output = child.wait_with_output().unwrap();
+        assert!(!output.status.success());
+        let error = String::from_utf8_lossy(&output.stderr);
+        assert!(error.contains("regular file"), "{error}");
+    };
+    fifo(&f.0.join("pipe.tri"));
+    fs::write(f.0.join("keep.out"), b"preserve previous result").unwrap();
+    for invocation in [
+        vec!["run", "pipe.tri", "--budget", "1"],
+        vec!["build", "pipe.tri", "--output", "keep.out", "--force"],
+        vec!["prove", "pipe.tri", "--output", "keep.out", "--force"],
+        vec!["bench", "pipe.tri", "--repeat", "1"],
+        vec!["test", "pipe.tri"],
+        vec!["verify", "pipe.tri", "--claim", "7"],
+    ] {
+        rejected(&invocation);
+    }
+    assert_eq!(
+        fs::read(f.0.join("keep.out")).unwrap(),
+        b"preserve previous result"
+    );
+    fs::create_dir(f.0.join("project")).unwrap();
+    fifo(&f.0.join("project/trident.toml"));
+    rejected(&["run", "project", "--budget", "1"]);
+    fs::create_dir(f.0.join("imports")).unwrap();
+    fs::write(
+        f.0.join("imports/main.tri"),
+        "program app use helper fn main()->Field{helper.value()}",
+    )
+    .unwrap();
+    fifo(&f.0.join("imports/helper.tri"));
+    rejected(&["run", "imports/main.tri", "--budget", "1"]);
+}
