@@ -6,7 +6,7 @@ use clap::Args;
 use joy_rs::Warrior;
 use trident::runtime::Runner;
 
-use super::{check_target, load_bundle, make_input};
+use super::{check_target, load_bundle};
 
 #[derive(Args)]
 pub struct RunArgs {
@@ -24,6 +24,9 @@ pub struct RunArgs {
     /// Secret/divine input values (comma-separated field elements)
     #[arg(long, value_delimiter = ',')]
     pub secret: Option<Vec<u64>>,
+    /// Native public/secret input file (JSON); conflicts with values on the CLI
+    #[arg(long, conflicts_with_all = ["input_values", "secret"])]
+    pub input_file: Option<PathBuf>,
     /// Reduction budget (bounds trace rows one-to-one)
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
@@ -44,7 +47,17 @@ pub fn cmd_run(args: RunArgs) {
             process::exit(1);
         }
     };
-    let pi = make_input(&args.input_values, &args.secret);
+    let pi = match crate::input_file::resolve(
+        &args.input_values,
+        &args.secret,
+        args.input_file.as_deref(),
+    ) {
+        Ok(input) => input,
+        Err(error) => {
+            eprintln!("error: {error}");
+            process::exit(1);
+        }
+    };
     let warrior = Warrior::with_budget(args.budget);
     let result = if let Some(path) = &args.state {
         joy_rs::state_execution::load_certificate(std::path::Path::new(path)).and_then(

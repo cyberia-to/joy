@@ -33,6 +33,9 @@ pub struct VerifyArgs {
     /// Secret/divine input values (comma-separated field elements)
     #[arg(long, value_delimiter = ',')]
     pub secret: Option<Vec<u64>>,
+    /// Expected public input file; secret values are accepted only for re-execution
+    #[arg(long, conflicts_with_all = ["input_values", "secret"])]
+    pub input_file: Option<PathBuf>,
     /// Reduction budget
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
@@ -41,10 +44,27 @@ pub struct VerifyArgs {
     pub state: Option<String>,
 }
 
-pub fn cmd_verify(args: VerifyArgs) {
+pub fn cmd_verify(mut args: VerifyArgs) {
     if let Err(e) = check_target(args.target.as_deref().unwrap_or("nox")) {
         eprintln!("error: {}", e);
         process::exit(1);
+    }
+
+    if let Some(path) = args.input_file.as_deref() {
+        match crate::input_file::resolve(&args.input_values, &args.secret, Some(path)) {
+            Ok(input) => {
+                args.input_values = Some(input.public);
+                args.secret = if input.secret.is_empty() {
+                    None
+                } else {
+                    Some(input.secret)
+                };
+            }
+            Err(error) => {
+                eprintln!("error: {error}");
+                process::exit(1);
+            }
+        }
     }
 
     let artifact = args.proof.as_ref().unwrap_or(&args.input);
@@ -60,6 +80,13 @@ pub fn cmd_verify(args: VerifyArgs) {
         }
     }
 
+    if let Some(result) = crate::private_verify::try_verify(&args) {
+        if let Err(error) = result {
+            eprintln!("Verification: FAIL ({error})");
+            process::exit(1);
+        }
+        return;
+    }
     if let Some(result) = crate::state_verify::try_verify(&args) {
         if let Err(error) = result {
             eprintln!("Verification: FAIL ({error})");

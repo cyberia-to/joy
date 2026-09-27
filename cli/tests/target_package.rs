@@ -28,7 +28,7 @@ impl Drop for Installed {
 }
 
 #[test]
-fn installed_description_matches_machine_and_public_certificate_capabilities() {
+fn installed_description_matches_machine_and_native_certificate_capabilities() {
     let installed = Installed::new();
     for target in ["nox", "cyber"] {
         let output = installed.run(&["describe", "--target", target]);
@@ -45,7 +45,11 @@ fn installed_description_matches_machine_and_public_certificate_capabilities() {
         assert!(!package.runtime.deploy);
         assert_eq!(
             package.runtime.proof_formats,
-            [joy_rs::EXECUTION_FORMAT, joy_rs::STATE_EXECUTION_FORMAT]
+            [
+                joy_rs::EXECUTION_FORMAT,
+                joy_rs::STATE_EXECUTION_FORMAT,
+                joy_rs::ZK_EXECUTION_FORMAT
+            ]
         );
         assert!(package
             .runtime

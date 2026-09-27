@@ -1,5 +1,5 @@
 use joy_rs::Warrior;
-use trident::runtime::{ProgramBundle, ProgramInput, Prover, Runner};
+use trident::runtime::{ProgramBundle, ProgramInput, Prover, Runner, Verifier};
 fn compiled() -> ProgramBundle {
     let source = "program private_product\nfn main(a: Field) -> Field { let x: Field = divine()\n let y: Field = divine()\n x * y + a }\n";
     let options = trident::CompileOptions::default()
@@ -38,10 +38,9 @@ fn secret_execution_works_but_all_public_provers_refuse_witnesses() {
     let warrior = Warrior::new();
     assert_eq!(warrior.run(&bundle, &input).unwrap().output, vec![94]);
     assert!(warrior.verify_by_rerun(&bundle, &input, &[94]).unwrap());
-    assert!(warrior
-        .prove(&bundle, &input)
-        .unwrap_err()
-        .contains("secret inputs"));
+    let proof = warrior.prove(&bundle, &input).unwrap();
+    assert_eq!(proof.format, joy_rs::ZK_EXECUTION_FORMAT);
+    assert!(warrior.verify(&proof).unwrap());
     assert!(warrior
         .prove_execution(&bundle, &input, 10000)
         .unwrap_err()
@@ -93,7 +92,7 @@ fn relabeling_legacy_statement_cannot_enable_another_format() {
     };
     let (mut artifact, _) = warrior.prove_zheng(&bundle, &input).unwrap();
     for format in [
-        "joy-nox-ccs-triton7-zk-v3",
+        joy_rs::ZK_EXECUTION_FORMAT,
         joy_rs::EXECUTION_FORMAT,
         joy_rs::STATE_EXECUTION_FORMAT,
     ] {

@@ -1,6 +1,6 @@
 //! Public words must satisfy the source signature inside the proven computation.
 use joy_rs::{ExecutionArtifact, Warrior};
-use trident::runtime::{ProgramBundle, ProgramInput, Prover, Runner};
+use trident::runtime::{ProgramBundle, ProgramInput, Prover, Runner, Verifier};
 
 static NEXT_DIRECTORY: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 
@@ -82,7 +82,7 @@ fn aggregate_entry_has_real_proven_native_layout() {
 }
 
 #[test]
-fn typed_input_guards_check_secret_execution_and_proving_is_refused() {
+fn typed_input_guards_bind_native_private_execution() {
     let bundle = compile(
         "program entry\nfn main(n:U32,flag:Bool)->Field { assert(flag)\n let secret:Field=divine()\n as_field(n)+secret }",
         "release",
@@ -91,10 +91,10 @@ fn typed_input_guards_check_secret_execution_and_proving_is_refused() {
     values.secret = vec![23];
     let warrior = Warrior::new();
     assert_eq!(warrior.run(&bundle, &values).unwrap().output, vec![42]);
-    assert!(warrior
-        .prove(&bundle, &values)
-        .unwrap_err()
-        .contains("secret inputs"));
+    let proof = warrior.prove(&bundle, &values).unwrap();
+    assert_eq!(proof.format, joy_rs::ZK_EXECUTION_FORMAT);
+    assert!(warrior.verify(&proof).unwrap());
+    assert!(warrior.prove_execution(&bundle, &values, 100_000).is_err());
     for public in [vec![1u64 << 32, 0], vec![19, 2], vec![19], vec![19, 0, 7]] {
         let mut changed = values.clone();
         changed.public = public;
