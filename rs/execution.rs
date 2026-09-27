@@ -186,6 +186,7 @@ impl ExecutionArtifact {
 impl Warrior {
     /// Produce a verifier-checked public execution proof; never downgrades to a
     /// relaxed trace statement. Native execution is an independent prover check.
+    /// The explicit budget governs both checks, overriding the Warrior budget.
     pub fn prove_execution(
         &self,
         bundle: &ProgramBundle,
@@ -203,7 +204,7 @@ impl Warrior {
         let program = parse_program(&bundle.assembly)?;
         let (statement, proof) =
             zheng::execution::prove_execution(&program, &input.public, budget)?;
-        let native = self.run(bundle, input)?;
+        let native = Warrior::with_budget(budget).run(bundle, input)?;
         if native.output != statement.public_output || native.cycle_count != statement.cycles {
             return Err("execution relation disagrees with native nox".into());
         }
