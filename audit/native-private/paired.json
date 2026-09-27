@@ -1,0 +1,120 @@
+{
+  "status": "passed",
+  "commands": [
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4-native-private/install-committed/bin/trident",
+        "run",
+        "private.tri",
+        "--target",
+        "nox",
+        "--input-file",
+        "witness.json"
+      ],
+      "expected_exit": 0,
+      "exit_code": 0,
+      "stdout": "91\n",
+      "stderr": "Executed in 32 reductions\n"
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4-native-private/install-committed/bin/trident",
+        "prove",
+        "private.tri",
+        "--target",
+        "nox",
+        "--input-file",
+        "witness.json",
+        "--output",
+        "pair.zheng"
+      ],
+      "expected_exit": 0,
+      "exit_code": 0,
+      "stdout": "pair.zheng\n",
+      "stderr": "Proved native private execution (Zheng) in 202 ms: 32 reductions, 281823 bytes\nOutput: [91]\n"
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4-native-private/install-committed/bin/trident",
+        "verify",
+        "pair.zheng",
+        "--target",
+        "nox"
+      ],
+      "expected_exit": 0,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4-native-private/install-committed/bin/joy",
+        "verify",
+        "private.tri",
+        "--proof",
+        "pair.zheng",
+        "--profile",
+        "release",
+        "--claim",
+        "91"
+      ],
+      "expected_exit": 0,
+      "exit_code": 0,
+      "stdout": "Verification: PASS (native private execution; Zheng)\n  public input: []\n  public output: [91]\n  reductions: 32\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4-native-private/install-committed/bin/joy",
+        "verify",
+        "private.tri",
+        "--proof",
+        "pair.zheng",
+        "--profile",
+        "debug",
+        "--claim",
+        "91"
+      ],
+      "expected_exit": 1,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Verification: FAIL (private proof is for another program or compilation identity)\n"
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4-native-private/install-committed/bin/joy",
+        "verify",
+        "pair.zheng",
+        "--claim",
+        "92"
+      ],
+      "expected_exit": 1,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Verification: FAIL (private proof differs from requested input, output or budget)\n"
+    },
+    {
+      "command": [
+        "/Users/master/cyber/.worktrees/selfhost-0.4-native-private/install-committed/bin/trident",
+        "verify",
+        "corrupt.zheng",
+        "--target",
+        "nox"
+      ],
+      "expected_exit": 1,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Verification: FAIL (state ABI requires a certificate)\nerror: warrior '/Users/master/cyber/.worktrees/selfhost-0.4-native-private/install-committed/bin/joy' verify failed: exit status: 1\n"
+    }
+  ],
+  "work": "/var/folders/gc/64p7ymwx60144drqltvslckr0000gn/T/native-paired-cli-z0y6g3h0",
+  "sources": {
+    "joy": "ba100a55c3730b3a1fc67503702e370e687c311a",
+    "zheng": "e320f641a8d208b5a007b61b743cb046bc9ee211",
+    "trident": "b027c27e70047b29c2f29f031b221063c29082ed"
+  },
+  "binaries": {
+    "joy": "9b2553b544972a98ae033b643578c144abc8a10558734d4ff2ab5f46162bff96",
+    "trident": "b479e485f0bb3740691d1ec237cecb07f2f3b545dc1ce42ca34b96a9f86572a4"
+  }
+}
