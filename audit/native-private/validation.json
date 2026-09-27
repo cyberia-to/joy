@@ -1,0 +1,106 @@
+{
+  "schema": "joy/native-private-validation/v1",
+  "source_revision": "f09800ba7146bd94b712af7060346e90cc9b79b6",
+  "sibling_revisions": {
+    "joy": "f09800ba7146bd94b712af7060346e90cc9b79b6",
+    "trident": "90f42b4da4fe02c003333460bb4ccfa5fcf0e73c",
+    "nox": "c9f7486a74fe81bfc194b598da40f6343ecb2ef1",
+    "zheng": "50bbacd9837896e030b0c6649387d651de23c529",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373"
+  },
+  "kind": "development-branch-validation",
+  "checks": {
+    "check": {
+      "command": "cargo check --workspace --all-targets --locked --offline",
+      "log": "/tmp/joy-native-private-final-check.log",
+      "log_sha256": "fd5cd1dddf594c2126b3d3c4fd162a13fcd25a40450f8aa98921a30cfbcd2976",
+      "warnings": 0,
+      "passed": 0,
+      "result": "passed"
+    },
+    "tests": {
+      "command": "CARGO_TARGET_DIR=../target cargo test --workspace --release --locked --offline",
+      "log": "/tmp/joy-native-private-final-tests.log",
+      "log_sha256": "02201a9e1b9607d506e7d5304519634414a2602e00da431184d0186bbab08299",
+      "warnings": 0,
+      "passed": 151,
+      "result": "passed"
+    },
+    "x86_64-unknown-linux-gnu": {
+      "command": "PATH=/Users/master/.cargo/bin:$PATH CARGO_TARGET_DIR=../target-x86_64-unknown-linux-gnu-check cargo check --workspace --all-targets --target x86_64-unknown-linux-gnu --locked --offline",
+      "log": "/tmp/joy-native-private-x86_64-unknown-linux-gnu.log",
+      "log_sha256": "7915e0b655048ed3dd0cdc6e9d772b768f784863a90e62823251c006446e5dd6",
+      "warnings": 0,
+      "passed": 0,
+      "result": "passed"
+    },
+    "aarch64-unknown-linux-gnu": {
+      "command": "PATH=/Users/master/.cargo/bin:$PATH CARGO_TARGET_DIR=../target-aarch64-unknown-linux-gnu-check cargo check --workspace --all-targets --target aarch64-unknown-linux-gnu --locked --offline",
+      "log": "/tmp/joy-native-private-aarch64-unknown-linux-gnu.log",
+      "log_sha256": "9827862ec66b90288cc6b674e444d39fe14634eb20cf738ff060f316165dfe34",
+      "warnings": 0,
+      "passed": 0,
+      "result": "passed"
+    },
+    "x86_64-pc-windows-gnu": {
+      "command": "PATH=/Users/master/.cargo/bin:$PATH CARGO_TARGET_DIR=../target-x86_64-pc-windows-gnu-check cargo check --workspace --all-targets --target x86_64-pc-windows-gnu --locked --offline",
+      "log": "/tmp/joy-native-private-x86_64-pc-windows-gnu.log",
+      "log_sha256": "0509a879b2f0acfef50f8d8d95e619986b678d49ba4910f6bb22f7fa9f3a8cf5",
+      "warnings": 0,
+      "passed": 0,
+      "result": "passed"
+    },
+    "x86_64-apple-darwin": {
+      "command": "PATH=/Users/master/.cargo/bin:$PATH CARGO_TARGET_DIR=../target-x86_64-apple-darwin-check cargo check --workspace --all-targets --target x86_64-apple-darwin --locked --offline",
+      "log": "/tmp/joy-native-private-x86_64-apple-darwin.log",
+      "log_sha256": "c6e538f35970dbad220d22d4cc65a101cf3366e54114d884757a0fc331836507",
+      "warnings": 0,
+      "passed": 0,
+      "result": "passed"
+    }
+  },
+  "toolchains": {
+    "host": "rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.3\n",
+    "cross": "rustc 1.98.0 (88d9e12ae 2026-08-18)\nbinary: rustc\ncommit-hash: 88d9e12ae178fab0fb5cc050a94da85685d449ea\ncommit-date: 2026-08-18\nhost: aarch64-apple-darwin\nrelease: 1.98.0\nLLVM version: 22.1.8\n"
+  },
+  "limits": [
+    "Only macOS arm64 executed; other target gates are cargo check, not linked executable or runtime tests.",
+    "Crypto review is source-level, not an independent production security audit.",
+    "Static private relation only; public program/IO/cost and public BBG certificate tables.",
+    "Worker verifier is local computation admission primitive; Cyber network job admission remains separate."
+  ],
+  "boundary": {
+    "ok": true,
+    "packages": 145,
+    "compiler_features": [],
+    "command": [
+      "cargo",
+      "metadata",
+      "--format-version",
+      "1",
+      "--locked",
+      "--offline",
+      "--all-features"
+    ]
+  },
+  "compiler_profile": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 ../trident/audit/self-hosting/check-generated-compiler-profile.py --joy ../install-committed/bin/joy --output /tmp/joy-native-private-profile.json",
+    "result": "passed",
+    "commands": 65,
+    "observations": 21,
+    "identical_fixture_files": 204,
+    "baseline": "audit/soft3-only/compiler-profile.json",
+    "c1": {
+      "path": "c1.dag",
+      "bytes": 9191495,
+      "sha256": "4aed7fc83be96156fcb65c3bbb369c192ad27f894ab78a030e3588056a66d112",
+      "particle": "a53ccd3c628e595ee1ac3e9e9da345689af80a91f72a26ee82d1c2c0e03588b6",
+      "dag_entries": 95435
+    }
+  }
+}
