@@ -14,6 +14,7 @@ pub mod proof;
 pub mod structured;
 pub mod target;
 pub mod warrior;
+pub mod worker;
 
 pub use proof::{program_hash, ArtifactMeta, ProofArtifact, PROOF_FORMAT};
 pub use target::{nox_terrain, target_package};
