@@ -1,0 +1,120 @@
+{
+  "schema": "joy/portable-native-smoke-audit/v1",
+  "status": "passed",
+  "scope": "One local macOS ARM installed Joy regression, later Nox/Zheng pins; no SH6, SH7, SH8 or release acceptance",
+  "inputs": {
+    "repositories": {
+      "bbg": {
+        "revision": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+        "status": ""
+      },
+      "hemera": {
+        "revision": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+        "status": ""
+      },
+      "joy": {
+        "revision": "ec83bd8d85b20a8bd20d2d14b0f25aab0f75e9fe",
+        "status": "?? audit/portable-native-smoke/README.md\n?? rs/examples/release_state_fixtures.rs\n?? scripts/smoke-native.py\n?? scripts/test_smoke_native.py\n"
+      },
+      "lens": {
+        "revision": "17cafe91431977b738e5b72361187cd01ad93638",
+        "status": ""
+      },
+      "neuron": {
+        "revision": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+        "status": ""
+      },
+      "nox": {
+        "revision": "172811b7746cdcd6ab198a3ed976dc6c19f55d5b",
+        "status": ""
+      },
+      "strata": {
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      },
+      "trident": {
+        "revision": "57491633fbccb58ae44dca2da438ee31430be1bc",
+        "status": ""
+      },
+      "zheng": {
+        "revision": "633e5ba980db94ca10d9d6b67cf24d9d3aef63a7",
+        "status": ""
+      }
+    },
+    "delivery": {
+      "scripts/smoke-native.py": "398fc368ab423741b090fb1fc45ab3abfd5b77b7a7883d84438313c178c4fbb3",
+      "scripts/test_smoke_native.py": "8ef52bdbc56dd5707570c145a50ae29b16b63a4dfce456e9a9fc6f4fb8ef36d6",
+      "rs/examples/release_state_fixtures.rs": "8ca6994426150df723e1ff321a1384c9d567a5090a6c11a222930f03a740a280"
+    }
+  },
+  "installed_binary": {
+    "bytes": 4961888,
+    "sha256": "d806e3018ac2b2f7dfbee52de505da8d467bc7cac3c4c65fa5dcf9ecd3a9962b"
+  },
+  "raw_validation": "final/validation.json",
+  "raw_smoke": "final/installed/receipt.json",
+  "initial_failed_setup": "initial/validation.json",
+  "initial_failure": "Cargo install exited 0 but emitted the missing-PATH advisory; driver stopped. No smoke or compiler test ran in that attempt.",
+  "final_path_correction": "Final build driver prepends its installed bin directory to PATH; smoke restricts PATH to exactly that directory.",
+  "commands": 49,
+  "successful_commands": 21,
+  "rejected_commands": 28,
+  "work_files": 22,
+  "routes": {
+    "public": {
+      "source": "public.tri",
+      "proof": "public.zheng",
+      "expected_output": 24,
+      "public_inputs": "3,5",
+      "state": null,
+      "header": "JOYEXEC2"
+    },
+    "private": {
+      "source": "private.tri",
+      "proof": "private.zheng",
+      "expected_output": 91,
+      "public_inputs": null,
+      "state": null,
+      "header": "JOYZH001"
+    },
+    "state": {
+      "source": "state.tri",
+      "proof": "state.zheng",
+      "expected_output": 82,
+      "public_inputs": "11",
+      "state": "state-all.json",
+      "header": "JOYST001"
+    },
+    "private-state": {
+      "source": "private-state.tri",
+      "proof": "private-state.zheng",
+      "expected_output": 82,
+      "public_inputs": null,
+      "state": "state-all.json",
+      "header": "JOYZH001"
+    }
+  },
+  "rust_summaries": 27,
+  "rust_totals": {
+    "passed": 172,
+    "failed": 0,
+    "ignored": 0
+  },
+  "python_guards_per_mode": 9,
+  "python_modes": [
+    "normal",
+    "optimized"
+  ],
+  "warning_lines": 0,
+  "archive": {
+    "path": "raw-evidence.tar.gz",
+    "bytes": 5422783,
+    "sha256": "d10947aff332a1c29120cff825bd17cceb9b1e980a7d26c2d37358d3b4869175",
+    "files": 166,
+    "raw_bytes": 5556867
+  },
+  "index": {
+    "path": "files.json",
+    "sha256": "72d6ab5c9538c284829c39878569e2cce4be3f52eaf47ec3dc8606124eeea9af"
+  }
+}
