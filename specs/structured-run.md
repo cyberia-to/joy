@@ -88,13 +88,18 @@ allocations, including loaded nodes and allocations left by failed operations.
 Hash-cons hits in the current arena are free. Reconstructing a previously
 collected value charges again. This is a conservative allocation allowance,
 separate from resident storage; no collection replenishes it. The host ceiling
-is 1,000,000,000 allocations, 20,000,000,000 reductions and 3,600,000 ms in this
+is 1,000,000,000 allocations, 20,000,000,000 reductions and 7,200,000 ms in this
 explicit mode. Defaults remain unchanged. All transport, frame and compiler
 schema ceilings remain unchanged. No JOB1 field or source option is added.
 `--budget` explicitly selects the reduction allowance within this ceiling;
 JOB1 LIM1 reductions can only tighten it. Raising that allowance leaves the
 independent resident, cumulative-allocation, collection-work and deadline
 limits unchanged. An exhausted request never retries with a larger allowance.
+`--time-ms` explicitly selects the cooperative deadline within this ceiling;
+the default remains 30,000 ms and ordinary execution retains its 300,000 ms
+ceiling. Selecting a longer deadline leaves every work and storage allowance
+unchanged. The worker still joins before returning a cancellation failure,
+and cancellation preserves the destination without publishing a result.
 
 Resident nodes must be positive and at most 3,145,728. Physical tier selection
 uses this resident bound, capped by the cumulative allowance. JOB1 admission

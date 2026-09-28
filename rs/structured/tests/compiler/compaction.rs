@@ -31,6 +31,21 @@ fn compiler_job_binding_and_extracted_artifact_survive_repeated_collection() {
         result.report.charged_reductions,
         ordinary.report.charged_reductions
     );
+    for time_ms in [3_600_000, 7_200_000] {
+        let at_deadline = run(
+            encoded(&ar, compiler),
+            encoded(&ar, job),
+            RunLimits { time_ms, ..limits },
+        )
+        .unwrap();
+        assert_eq!(at_deadline.output, result.output);
+        assert_eq!(at_deadline.compiled, result.compiled);
+        let mut expected = serde_json::to_value(&result.report).unwrap();
+        let mut actual = serde_json::to_value(&at_deadline.report).unwrap();
+        expected.as_object_mut().unwrap().remove("elapsed_micros");
+        actual.as_object_mut().unwrap().remove("elapsed_micros");
+        assert_eq!(actual, expected);
+    }
     let stats = result.report.compaction.unwrap();
     assert!(stats.collections > 1);
     assert!(stats.reclaimed_nodes > 512);

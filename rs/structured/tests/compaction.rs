@@ -154,7 +154,7 @@ fn extended_caps_require_explicit_compaction_and_remain_bounded() {
     let maximum = RunLimits {
         arena_nodes: 1_000_000_000,
         budget: 20_000_000_000,
-        time_ms: 3_600_000,
+        time_ms: 7_200_000,
         compaction: Some(CompactionPolicy {
             resident_nodes: MAX_ARENA_NODES,
             collection_work: 10_000_000_000,
@@ -218,6 +218,63 @@ fn extended_caps_require_explicit_compaction_and_remain_bounded() {
     ] {
         assert!(invalid.validate().is_err(), "{invalid:?}");
     }
+}
+
+#[test]
+fn explicit_compaction_deadlines_preserve_defaults_and_cancellation() {
+    let defaults = RunLimits::default();
+    assert_eq!(defaults.time_ms, 30_000);
+    assert_eq!(MAX_TIME_MS, 300_000);
+    RunLimits {
+        time_ms: MAX_TIME_MS,
+        ..defaults
+    }
+    .validate()
+    .unwrap();
+    assert!(RunLimits {
+        time_ms: MAX_TIME_MS + 1,
+        ..defaults
+    }
+    .validate()
+    .is_err());
+
+    for time_ms in [3_600_000, 7_200_000] {
+        RunLimits {
+            time_ms,
+            ..limits()
+        }
+        .validate()
+        .unwrap();
+    }
+
+    // A short expired worker start exercises evaluator cancellation without
+    // requiring a clock that can represent times hours before process startup.
+    let run_limits = RunLimits {
+        time_ms: 1,
+        ..limits()
+    };
+    let mut ar = Arena::new();
+    let (formula, input) = loop_fixture(&mut ar, 2000, false);
+    assert!(ar.limit_allocations(run_limits.resident_nodes()));
+    let started = Instant::now() - Duration::from_millis(2);
+    let error = match execution::run(
+        &mut ar,
+        execution::Request {
+            input,
+            formula,
+            budget: run_limits.budget,
+            allocations: run_limits.arena_nodes,
+            frames: sequential::Limits {
+                max_frames: run_limits.frames,
+            },
+        },
+        run_limits,
+        started,
+    ) {
+        Ok(_) => panic!("expired compacting execution produced a result"),
+        Err(error) => error,
+    };
+    assert!(error.contains("Execution(Cancelled)"), "{error}");
 }
 
 #[test]

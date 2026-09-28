@@ -92,17 +92,26 @@ fn exact_input_bounds_and_shared_code_input_charge_once() {
 #[test]
 fn worker_deadline_returns_failure_without_output_bytes() {
     let (p, i) = fixture(|ar| loop_fixture(ar, 50_000, false));
-    let error = run(
-        p,
-        i,
-        RunLimits {
-            time_ms: 1,
-            ..RunLimits::default()
-        },
-    )
-    .unwrap_err();
-    assert!(
-        error.contains("deadline") || error.contains("Cancelled"),
-        "{error}"
-    );
+    for compaction in [
+        None,
+        Some(CompactionPolicy {
+            resident_nodes: 256,
+            collection_work: 100_000_000,
+        }),
+    ] {
+        let error = run(
+            p.clone(),
+            i.clone(),
+            RunLimits {
+                time_ms: 1,
+                compaction,
+                ..RunLimits::default()
+            },
+        )
+        .unwrap_err();
+        assert!(
+            error.contains("deadline") || error.contains("Cancelled"),
+            "{error}"
+        );
+    }
 }

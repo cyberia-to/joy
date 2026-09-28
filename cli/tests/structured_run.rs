@@ -226,3 +226,49 @@ fn explicit_compaction_finishes_with_bounded_resident_storage_and_preserves_fail
         assert_eq!(fs::read(f.path.join("out.dag")).unwrap(), b"previous");
     }
 }
+
+#[test]
+fn explicit_compaction_deadline_ceiling_preserves_execution_and_publication() {
+    let f = Fixture::new("loop4097");
+    let flags = ["--resident-nodes", "256", "--collection-work", "100000000"];
+    let prior = f.ok(&flags);
+    assert!(
+        prior["execution"]["compaction"]["collections"]
+            .as_u64()
+            .unwrap()
+            > 1
+    );
+    for time_ms in ["3600000", "7200000"] {
+        let mut args = flags.to_vec();
+        args.extend(["--force", "--time-ms", time_ms]);
+        let result = f.ok(&args);
+        for key in [
+            "program_particle",
+            "input_particle",
+            "output_particle",
+            "charged_reductions",
+            "allocated_nodes",
+            "peak_frames",
+            "compaction",
+        ] {
+            assert_eq!(result["execution"][key], prior["execution"][key]);
+        }
+        assert_eq!(
+            fs::read(f.path.join("out.dag")).unwrap(),
+            f.bytes("expected_output")
+        );
+    }
+    let mut args = flags.to_vec();
+    args.extend(["--force", "--time-ms", "7200001"]);
+    let rejected = f.run(&args);
+    assert_eq!(rejected.status.code(), Some(1));
+    assert!(rejected.stdout.is_empty());
+    assert!(
+        String::from_utf8_lossy(&rejected.stderr).contains("limit time_ms must be in 1..=7200000")
+    );
+    assert_eq!(
+        fs::read(f.path.join("out.dag")).unwrap(),
+        f.bytes("expected_output")
+    );
+    f.no_staging();
+}

@@ -1,0 +1,63 @@
+{
+  "files": [
+    {
+      "path": "observation.json",
+      "source": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/ci-readonly/x86_64-apple-darwin-failure.json",
+      "sha256": "c1aa59382b3972186ef82dcddb4bc39dd2b3441d58ea5a6f7569dec2da66a365",
+      "bytes": 2975,
+      "raw_sha256": "c1aa59382b3972186ef82dcddb4bc39dd2b3441d58ea5a6f7569dec2da66a365",
+      "raw_bytes": 2975
+    },
+    {
+      "path": "artifact-api.json",
+      "source": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/ci-readonly/artifact-10943644187.json",
+      "sha256": "3e625acf983c288cb024f964179942e0811339c6f1cf6a070a8429562e363cfe",
+      "bytes": 721,
+      "raw_sha256": "3e625acf983c288cb024f964179942e0811339c6f1cf6a070a8429562e363cfe",
+      "raw_bytes": 721
+    },
+    {
+      "path": "artifact-10943644187.zip",
+      "source": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/ci-readonly/artifact-10943644187.zip",
+      "sha256": "2fed4c7afe122895e744edd09cab63e03de4fa9a92d81fa4c81763c0d22defdd",
+      "bytes": 8537516,
+      "raw_sha256": "2fed4c7afe122895e744edd09cab63e03de4fa9a92d81fa4c81763c0d22defdd",
+      "raw_bytes": 8537516
+    },
+    {
+      "path": "job-api.log.gz",
+      "source": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/ci-readonly/job-108717527925-api.log",
+      "sha256": "8e050fa93c7b0da4089ed6fcb146bf2656233f4c1706b7332c13b1f196b415aa",
+      "bytes": 7707,
+      "raw_sha256": "9842403e5bf5c367f750330fdcfbf2c6c285acbc79396d6bb800fb75c854ec98",
+      "raw_bytes": 36090
+    },
+    {
+      "path": "c2-step.json.gz",
+      "source": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/ci-readonly/platforms/bootstrap-x86_64-apple-darwin/repeat-1/c2-step.json",
+      "sha256": "a63795ef87c476fadac95bdfeddabc92f07c5bed983630fceb06d97f72409546",
+      "bytes": 26781,
+      "raw_sha256": "cc3a5f1985b2b4194673da4e12df10205d47ad31d20be5625ca1b44a4accf1d6",
+      "raw_bytes": 117093
+    },
+    {
+      "path": "platform-receipt.json.gz",
+      "source": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/ci-readonly/platforms/bootstrap-x86_64-apple-darwin/receipt.json",
+      "sha256": "02f0eef505dc3a2a2031bb5cba1e245dd30a5da764d28229cba63854b01dd631",
+      "bytes": 3351,
+      "raw_sha256": "d5902ed0b9b69d31f78486b86a6f317f5569338e4dcd7238fc9621607f61eb48",
+      "raw_bytes": 33176
+    },
+    {
+      "path": "local-same-input-success.json.gz",
+      "source": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/lexer-v9-c1-to-c2.json",
+      "sha256": "30986785dfad47be2cce45b5797a5b8063187478a0f59a7c80465c2001424b79",
+      "bytes": 37585,
+      "raw_sha256": "868ad429aa7d0b4867d10c5d59e04adc37c5179d19d537734e50155336fef0c6",
+      "raw_bytes": 189746
+    }
+  ],
+  "exact_input_identities_verified": true,
+  "failed_charged_reductions": null,
+  "scope": "Measured Intel macOS timeout retained exactly; no completion projection or failed-gas estimate."
+}

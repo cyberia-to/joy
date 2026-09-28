@@ -1,0 +1,160 @@
+{
+  "schema": "joy/compiler-deadline-validation/v1",
+  "status": "passed",
+  "kind": "local-development",
+  "base_revision": "2878f4b17dfedf237c6110d7d411bb4824e65103",
+  "branch": "feat/0.4-compiler-deadline",
+  "source_sha256": {
+    "specs/structured-run.md": "bfd90991f9fdcc522dad6bf86510af6ef6d56f82657a484f4e646d4e213d624c",
+    "rs/structured/limits.rs": "b7adbee9300d3136705270abf72081e95fc26ca810b0fff0a947e77201116447",
+    "rs/structured/tests/compaction.rs": "52d6783c018ace1c86f091305de2e6174515981375dbbc4a5a790649a0f5ac2e",
+    "rs/structured/tests/compiler/compaction.rs": "a5d6dc36241167ccad57ca2606665901fb8b817c8cdb781c5be3711300d420fe",
+    "rs/structured/tests/admission.rs": "8f6b27bc5c688d9abda886573e263a56533215a6b08c98ea1b5f7696d3598eb0",
+    "cli/tests/structured_run.rs": "b67f6218af3ac7ce846b478d3782f2b626968722347c0ea84a3a9803147e9e0b"
+  },
+  "cargo_lock_sha256": "b5206755b10cf649150e79dc7283e70af66fb72d243f1f6c3b01569e7cc79612",
+  "commands": {
+    "tests": {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "env": {
+        "CARGO_TARGET_DIR": "../target-joy-deadline"
+      },
+      "exit_code": 0,
+      "raw_log": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-deadline-tests-reviewed.log",
+      "output": "tests.log.gz",
+      "sha256": "16ce2803d907479ebbee3cd68658eb5c0f3703cdf04bbce80ea1bf2ab456ab41",
+      "raw_sha256": "aa7e651dec26173f8753198e39cf96971625ef93d102c68bfa88b089060ca3cb",
+      "rust_warnings": 0,
+      "passed": 172,
+      "failed": 0,
+      "ignored": 0,
+      "suites": 27
+    },
+    "check": {
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "env": {
+        "CARGO_TARGET_DIR": "../target-joy-deadline"
+      },
+      "exit_code": 0,
+      "raw_log": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-deadline-check-reviewed.log",
+      "output": "check.log.gz",
+      "sha256": "325a0831ccc98253edc60797fa5fe30eff5ddb510e82233c6e48ed38c0c716a9",
+      "raw_sha256": "445d78a5f3d3445b4767a68bfacc8451436ea91b7834b1f7351e2484333aadaf",
+      "rust_warnings": 0
+    },
+    "boundary": {
+      "command": [
+        "python3",
+        "scripts/check-soft3-boundary.py"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "env": {},
+      "exit_code": 0,
+      "raw_log": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-deadline-boundary.log",
+      "output": "boundary.log.gz",
+      "sha256": "eac577cc2a165b8c99d2c5f5d3f032a92d85b7f89cd9ae69d86d92d99db63e0a",
+      "raw_sha256": "3cbcca0afbaa0029acb4405cfc2ad7a7f3bc92f6e418456dba19a667f4bc5638",
+      "rust_warnings": 0
+    },
+    "format": {
+      "command": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2021",
+        "rs/structured/limits.rs",
+        "rs/structured/tests/compaction.rs",
+        "rs/structured/tests/compiler/compaction.rs",
+        "rs/structured/tests/admission.rs",
+        "cli/tests/structured_run.rs"
+      ],
+      "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+      "env": {},
+      "exit_code": 0,
+      "raw_log": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/measurements/joy-deadline-format-reviewed.log",
+      "output": "format.log.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_warnings": 0
+    }
+  },
+  "cargo_metadata": {
+    "command": [
+      "cargo",
+      "metadata",
+      "--format-version",
+      "1",
+      "--locked",
+      "--offline"
+    ],
+    "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy",
+    "exit_code": 0,
+    "path": "cargo-metadata.json.gz",
+    "raw_sha256": "54d13643b48c77244de1e559f5f490b4652d9299cdb5ee661707591a9c8358b6",
+    "sha256": "940395d406d54814c4dfa6f72e07300687a8ad8fc99b1d5820411f6b970a5eec"
+  },
+  "dependencies_at_validation": {
+    "/Users/master/cyber/.worktrees/selfhost-0.4-clean/bbg": {
+      "revision": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+      "status": ""
+    },
+    "/Users/master/cyber/.worktrees/selfhost-0.4-clean/hemera": {
+      "revision": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+      "status": ""
+    },
+    "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/joy": {
+      "revision": "2878f4b17dfedf237c6110d7d411bb4824e65103",
+      "status": " M cli/tests/structured_run.rs\n M rs/structured/limits.rs\n M rs/structured/tests/admission.rs\n M rs/structured/tests/compaction.rs\n M rs/structured/tests/compiler/compaction.rs\n M specs/structured-run.md\n?? audit/compiler-deadline/\n"
+    },
+    "/Users/master/cyber/.worktrees/selfhost-0.4-clean/lens": {
+      "revision": "17cafe91431977b738e5b72361187cd01ad93638",
+      "status": " M brakedown/src/public.rs\n M brakedown/src/tests.rs\n M cli/src/artifact.rs\n M core/src/fri.rs\n M core/src/lib.rs\n M core/tests/serde_roundtrip.rs\n"
+    },
+    "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/nox": {
+      "revision": "f8047c22cc6075d5171c0fbe520174e78e94ccb6",
+      "status": ""
+    },
+    "/Users/master/cyber/.worktrees/selfhost-0.4-clean/neuron": {
+      "revision": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+      "status": ""
+    },
+    "/Users/master/cyber/.worktrees/selfhost-0.4-clean/strata": {
+      "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+      "status": ""
+    },
+    "/Users/master/cyber/.worktrees/selfhost-0.4-full-bootstrap/trident": {
+      "revision": "a5088f02787fe9cdf7d3f4862229f1f19fb604d9",
+      "status": ""
+    },
+    "/Users/master/cyber/.worktrees/joy-soft3-reaudit/zheng": {
+      "revision": "b54b209b91b8bf99c2975c4c24493a2411c23079",
+      "status": ""
+    }
+  },
+  "toolchain": {
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21) (Homebrew)",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)",
+    "rustfmt": "rustfmt 1.9.0"
+  },
+  "preserved_ci_files": "ci/files.json",
+  "preserved_ci_archive_members": "ci/archive-files.json",
+  "log_encoding": "Exact raw logs retained with deterministic gzip; no whitespace or warning normalization.",
+  "acceptance": "New hard-ceiling admission, unchanged small-workload semantics and cancellation only. No full compiler completion at the new deadline is claimed.",
+  "review_correction": "Cancellation uses a 1 ms deadline and a 2 ms pre-aged start. Old/new maximum execution-equivalence checks remain separate; no two-hour Instant subtraction is used."
+}
