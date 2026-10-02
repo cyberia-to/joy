@@ -1,0 +1,100 @@
+{
+  "rs/structured/limits.rs": {
+    "bytes": 2941,
+    "sha256": "353807322daf28801ecc445fd30e5340796ddfb5e64bf32a0bf7586121ac8983",
+    "scope": "changed production/spec/tests"
+  },
+  "specs/structured-run.md": {
+    "bytes": 10270,
+    "sha256": "ce6ca6538f61f7101c04e8c1831a2986db45be31bd7230f8855e317d2b887af1",
+    "scope": "changed production/spec/tests"
+  },
+  "cli/tests/structured_run.rs": {
+    "bytes": 8998,
+    "sha256": "f6f704c295b743f9aa948522d1e8ee361c570047c6f49de9999482fa2129d0d8",
+    "scope": "changed production/spec/tests"
+  },
+  "cli/tests/structured_certificates.rs": {
+    "bytes": 10490,
+    "sha256": "8874ad6442f3fcae807c3a492f01770d434a731c49cd3cbabed0a0ca6284f58f",
+    "scope": "changed production/spec/tests"
+  },
+  "cli/tests/structured_certificates/deadline.rs": {
+    "bytes": 3116,
+    "sha256": "0ddcc0eeff325f0fd19f82ae6b76cdf5a40f3b249a76dc3fbb505759b3ee7a6d",
+    "scope": "changed production/spec/tests"
+  },
+  "rs/structured/tests/compaction.rs": {
+    "bytes": 9980,
+    "sha256": "001d2737bc8639b59c62451f6875a61aceae6586c54bf70fab62d199c7a19cbc",
+    "scope": "changed production/spec/tests"
+  },
+  "rs/structured/tests/compiler/compaction.rs": {
+    "bytes": 4265,
+    "sha256": "9b440322e35abca3a20917a631c807ef51cf47bc7511a2f4e645c62d81231663",
+    "scope": "changed production/spec/tests"
+  },
+  "rs/structured/certificate.rs": {
+    "bytes": 3421,
+    "sha256": "1e2ca43ed05cabd3390c597cac423c3259b120a84e1076d3c292c864c0f2ff84",
+    "scope": "unchanged context",
+    "unchanged_from_head": true
+  },
+  "rs/structured/certificate/types.rs": {
+    "bytes": 2137,
+    "sha256": "825ed4c59db8395fc31955bfcfe2bf756a13a6fe42e6cba320cf550e019d4483",
+    "scope": "unchanged context",
+    "unchanged_from_head": true
+  },
+  "rs/structured/certificate/admission.rs": {
+    "bytes": 4120,
+    "sha256": "243c967811e6a2028d091a82663848552596fa866b5c5adfd14f8eb2c9b06efc",
+    "scope": "unchanged context",
+    "unchanged_from_head": true
+  },
+  "rs/structured/certificate/pipeline.rs": {
+    "bytes": 8610,
+    "sha256": "794881982c011a5e1b93e77f2e17d6b4d4e6fd443868b28246cbbedd1050165a",
+    "scope": "unchanged context",
+    "unchanged_from_head": true
+  },
+  "rs/structured.rs": {
+    "bytes": 7399,
+    "sha256": "3d9305cf17fd8768bfb9a0790533871ba4e3264c81ebd7b0d8e8d7f2524dd360",
+    "scope": "unchanged context",
+    "unchanged_from_head": true
+  },
+  "cli/artifact_limits.rs": {
+    "bytes": 2264,
+    "sha256": "7382132380d17fe08dccd7f05f7433094210f26db39b2c56cd78aa71bd80b9b2",
+    "scope": "unchanged context",
+    "unchanged_from_head": true
+  },
+  "specs/structured-certificates.md": {
+    "bytes": 10069,
+    "sha256": "0a349f91e59983f574e8a45de4abd45799b158997631f9d0f0f18c9e97b3c313",
+    "scope": "unchanged context",
+    "unchanged_from_head": true
+  },
+  "specs/compiler-certificate-transport.md": {
+    "bytes": 4333,
+    "sha256": "08cbc58b744042f0338f3b7b7419fc3b28a720bbe630aacec569348c2af8f769",
+    "scope": "unchanged context",
+    "unchanged_from_head": true
+  },
+  ".claude/plans/host-proof-deadline.md": {
+    "bytes": 1179,
+    "sha256": "90330b78c9ac384a5221ee469a903fcb3c2cf0a0c1c65dacf284c507a3eabd12",
+    "scope": "support"
+  },
+  "audit/host-proof-deadline/run.py": {
+    "bytes": 5686,
+    "sha256": "3c3ee1675f05a28e7c9ea06863b91f03220412a00036a016d193a51b3db57e57",
+    "scope": "support"
+  },
+  "CLAUDE.md": {
+    "bytes": 8998,
+    "sha256": "af4cdc1ab8fcab494f4177243d2d6946cf682a51b4acf914ce2ab763c7b05dab",
+    "scope": "support"
+  }
+}

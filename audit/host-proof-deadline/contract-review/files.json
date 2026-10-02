@@ -1,0 +1,22 @@
+{
+  "commands.json": {
+    "bytes": 9616,
+    "sha256": "e619aa3b78e01a432795c16f03afa8eb66a2a6ae3ad59c0787c65c31b22f21ca"
+  },
+  "initial-invocation.json": {
+    "bytes": 675,
+    "sha256": "4435dfbff0399ec6ee7ebe2a102dae94e4bc6e84d849abb77b07332dfecd70ea"
+  },
+  "passages.json": {
+    "bytes": 105187,
+    "sha256": "d6e2a61fb65d77906bc353041eb63e169c2f68e9b89a6ce724659e4ca45e1f46"
+  },
+  "review.json": {
+    "bytes": 6473,
+    "sha256": "6adeda6ba81d5d4e5610d479c0dccd33f0baaf23af5185f2da96c88b3585c1af"
+  },
+  "source-map.json": {
+    "bytes": 5147,
+    "sha256": "d8445e2c2aff663cdbfe7d95b4db61966b54d52aded13cef831b86413a42d4f6"
+  }
+}

@@ -1,0 +1,3854 @@
+{
+  "whole-validation-v2/trident/reference/self-hosting.md": [
+    {
+      "first": 96,
+      "last": 112,
+      "lines": [
+        {
+          "line": 96,
+          "text": "## Shared acceptance rules"
+        },
+        {
+          "line": 97,
+          "text": ""
+        },
+        {
+          "line": 98,
+          "text": "- Every gate has a reproducible command/runner and immutable evidence. A file,"
+        },
+        {
+          "line": 99,
+          "text": "  implementation PR or passing Rust typecheck alone cannot close a gate."
+        },
+        {
+          "line": 100,
+          "text": "- Pin source revisions, dependency closure, compiler options, machine ABI,"
+        },
+        {
+          "line": 101,
+          "text": "  runtime version, budgets and proof profile where applicable."
+        },
+        {
+          "line": 102,
+          "text": "- Compare generated-program behavior with independent expected results."
+        },
+        {
+          "line": 103,
+          "text": "  Rust differential agreement supplements that oracle. Include negative cases."
+        },
+        {
+          "line": 104,
+          "text": "- Preserve the existing nox/foreign-target release regression coverage."
+        },
+        {
+          "line": 105,
+          "text": "  Experimental syntax must not silently alter an existing target's ABI."
+        },
+        {
+          "line": 106,
+          "text": "- Reject unsupported syntax, invalid inputs and exhausted resources explicitly."
+        },
+        {
+          "line": 107,
+          "text": "  Failure publishes no successful or partially written executable artifact."
+        },
+        {
+          "line": 108,
+          "text": "- Measure reductions, peak allocated nodes, memory and elapsed time. Report"
+        },
+        {
+          "line": 109,
+          "text": "  trace mode and host identity. Compare performance on the same declared host."
+        },
+        {
+          "line": 110,
+          "text": "- Numeric limits are fixed before an acceptance run. If a limit changes,"
+        },
+        {
+          "line": 111,
+          "text": "  update its contract and rerun boundary tests; do not remove a failure by"
+        },
+        {
+          "line": 112,
+          "text": "  omitting its case or replacing the original workload with a smaller one."
+        }
+      ]
+    },
+    {
+      "first": 867,
+      "last": 873,
+      "lines": [
+        {
+          "line": 867,
+          "text": "Each whole-compiler job uses the same declared profile: 20000000000"
+        },
+        {
+          "line": 868,
+          "text": "reductions, 1000000000 cumulative nodes, 3145728 resident nodes, 10000000000"
+        },
+        {
+          "line": 869,
+          "text": "collection work, 65536 frames and 7200000 milliseconds. The explicit"
+        },
+        {
+          "line": 870,
+          "text": "compaction deadline is a host allowance; guest computational limits and"
+        },
+        {
+          "line": 871,
+          "text": "compiler semantics remain fixed. A failed limit fails the repetition, with"
+        },
+        {
+          "line": 872,
+          "text": "no automatic retry or in-run increase. Corpus cases retain their existing"
+        },
+        {
+          "line": 873,
+          "text": "deterministic limits."
+        }
+      ]
+    },
+    {
+      "first": 958,
+      "last": 976,
+      "lines": [
+        {
+          "line": 958,
+          "text": "## SH8. Proved self-compilation"
+        },
+        {
+          "line": 959,
+          "text": ""
+        },
+        {
+          "line": 960,
+          "text": "**Outcome:** native Zheng proofs authenticate both actual self-builds"
+        },
+        {
+          "line": 961,
+          "text": "`C1(S) -> C2` and `C2(S) -> C3` recorded at SH6."
+        },
+        {
+          "line": 962,
+          "text": ""
+        },
+        {
+          "line": 963,
+          "text": "Bind the exact compiler, complete source/module/options package, output"
+        },
+        {
+          "line": 964,
+          "text": "artifact, machine/profile versions and execution cost. Commitments must be"
+        },
+        {
+          "line": 965,
+          "text": "checked against the data used inside the relation; metadata alone is insufficient."
+        },
+        {
+          "line": 966,
+          "text": "Verify in a fresh process without rerunning the compiler or using a Triton"
+        },
+        {
+          "line": 967,
+          "text": "prover/checker. Repeat the adversarial bindings from SH7 on these artifacts."
+        },
+        {
+          "line": 968,
+          "text": ""
+        },
+        {
+          "line": 969,
+          "text": "**Accept when:** valid proofs verify, altered jobs/artifacts reject, C2/C3"
+        },
+        {
+          "line": 970,
+          "text": "remain equal and the generated compiler still passes its regression corpus."
+        },
+        {
+          "line": 971,
+          "text": "Record proof generation/verification time, memory, size and disclosure."
+        },
+        {
+          "line": 972,
+          "text": ""
+        },
+        {
+          "line": 973,
+          "text": "**Receipt:** both compilation proofs, standalone verification commands and"
+        },
+        {
+          "line": 974,
+          "text": "receipts, bound artifact identities, rejected mutations and regression results."
+        },
+        {
+          "line": 975,
+          "text": "Proof of execution establishes that this compiler ran; a semantics-preservation"
+        },
+        {
+          "line": 976,
+          "text": "proof or translation validation is a further, separately specified milestone."
+        }
+      ]
+    }
+  ],
+  "whole-validation-v2/trident/reference/self-hosting-runtime.md": [
+    {
+      "first": 137,
+      "last": 167,
+      "lines": [
+        {
+          "line": 137,
+          "text": "## Arena, transport and host resources"
+        },
+        {
+          "line": 138,
+          "text": ""
+        },
+        {
+          "line": 139,
+          "text": "[JOB1 LIM1](self-hosting-jobs.md) supplies positive admission ceilings. The worker"
+        },
+        {
+          "line": 140,
+          "text": "also has independent hard ceilings. Check both before running; a job cannot"
+        },
+        {
+          "line": 141,
+          "text": "raise host policy. Keep these resources separate:"
+        },
+        {
+          "line": 142,
+          "text": ""
+        },
+        {
+          "line": 143,
+          "text": "| Resource | Enforcement owner and unit |"
+        },
+        {
+          "line": 144,
+          "text": "|---|---|"
+        },
+        {
+          "line": 145,
+          "text": "| reductions | nox dispatch cost, canonical field integer budget |"
+        },
+        {
+          "line": 146,
+          "text": "| arena_nodes | nox lifetime distinct nodes, including loaded code/input and intermediates |"
+        },
+        {
+          "line": 147,
+          "text": "| evaluator_frames | nox active invocations, root included |"
+        },
+        {
+          "line": 148,
+          "text": "| artifact bytes/nodes/depth | nox NOXDAG01 on each complete input/output container |"
+        },
+        {
+          "line": 149,
+          "text": "| validation visits | bounded Joy/guest admission at each declared boundary |"
+        },
+        {
+          "line": 150,
+          "text": "| host memory, stack, elapsed time | Joy worker admission/supervision, independent policy |"
+        },
+        {
+          "line": 151,
+          "text": "| retained trace | off in run-only; separately bounded for proof collection |"
+        },
+        {
+          "line": 152,
+          "text": ""
+        },
+        {
+          "line": 153,
+          "text": "The arena is append-only for one run. Hash-cons reuse is free in node count;"
+        },
+        {
+          "line": 154,
+          "text": "new persistent updates retain their history. Tightening a node allowance cannot"
+        },
+        {
+          "line": 155,
+          "text": "invalidate existing nodes or be reversed. A failed compound allocation may"
+        },
+        {
+          "line": 156,
+          "text": "leave charged nodes; it cannot return a partial success. Existing static arrays"
+        },
+        {
+          "line": 157,
+          "text": "reserve memory for their full slot count even when the logical limit is small."
+        },
+        {
+          "line": 158,
+          "text": "Nox's fallible in-place heap constructor provides this fixed storage without"
+        },
+        {
+          "line": 159,
+          "text": "a whole-arena stack temporary. Joy selects a trusted physical capacity from an"
+        },
+        {
+          "line": 160,
+          "text": "explicit host allowance, then applies the job's lifetime quota to the same"
+        },
+        {
+          "line": 161,
+          "text": "counter. Packing and execution share that policy; see"
+        },
+        {
+          "line": 162,
+          "text": "[Joy's structured-run contract](../../joy/specs/structured-run.md). A larger"
+        },
+        {
+          "line": 163,
+          "text": "physical capacity changes neither canonical data nor the admitted logical"
+        },
+        {
+          "line": 164,
+          "text": "quota. Failure never retries with a larger allowance implicitly."
+        },
+        {
+          "line": 165,
+          "text": "Measure physical arena size, codec workspace, frame storage and trace mode;"
+        },
+        {
+          "line": 166,
+          "text": "logical node count is not measured RSS. Worker cancellation/time supervision"
+        },
+        {
+          "line": 167,
+          "text": "must not leave a detached computation that later publishes an artifact."
+        }
+      ]
+    }
+  ],
+  "whole-validation-v2/trident/reference/self-hosting-jobs.md": [
+    {
+      "first": 19,
+      "last": 36,
+      "lines": [
+        {
+          "line": 19,
+          "text": "| Record | Tag | Fields in order |"
+        },
+        {
+          "line": 20,
+          "text": "|---|---|---|"
+        },
+        {
+          "line": 21,
+          "text": "| Job | `0x4a4f4231` (JOB1) | expected_compiler, package, entry_module, entry_function, options, limits |"
+        },
+        {
+          "line": 22,
+          "text": "| Package | `0x504b4731` (PKG1) | modules |"
+        },
+        {
+          "line": 23,
+          "text": "| Module | `0x4d4f4431` (MOD1) | logical_path, origin_name, origin_version, source |"
+        },
+        {
+          "line": 24,
+          "text": "| Options | `0x4f505431` (OPT1) | target, input_profile, output_profile, optimization, cfg_flags |"
+        },
+        {
+          "line": 25,
+          "text": "| Limits | `0x4c494d31` (LIM1) | source_bytes, modules, diagnostics, sequence_length, validation_visits, artifact_bytes, artifact_nodes, artifact_depth, reductions, arena_nodes, evaluator_frames |"
+        },
+        {
+          "line": 26,
+          "text": "| Result | `0x52455331` (RES1) | job_identity, status, payload |"
+        },
+        {
+          "line": 27,
+          "text": "| Program artifact | `0x41525431` (ART1) | machine, input_profile, output_profile, formula |"
+        },
+        {
+          "line": 28,
+          "text": "| Diagnostic | `0x44494131` (DIA1) | code, module_index, start_byte, end_byte, message |"
+        },
+        {
+          "line": 29,
+          "text": ""
+        },
+        {
+          "line": 30,
+          "text": "`expected_compiler` is the full identity of the compiler **ART1 root** loaded by"
+        },
+        {
+          "line": 31,
+          "text": "Joy. The runner checks this before execution. The job identity is the identity"
+        },
+        {
+          "line": 32,
+          "text": "of the complete JOB1 noun. A result must bind that exact identity. Producer/job"
+        },
+        {
+          "line": 33,
+          "text": "identity belongs to RES1 or the execution receipt; it must not be embedded in"
+        },
+        {
+          "line": 34,
+          "text": "ART1. This keeps identical source/options able to produce identical executable"
+        },
+        {
+          "line": 35,
+          "text": "artifacts across C1/C2/C3 generations. Bootstrap compares complete canonical"
+        },
+        {
+          "line": 36,
+          "text": "ART1 bytes, not the provenance-bearing RES1 envelopes."
+        }
+      ]
+    },
+    {
+      "first": 283,
+      "last": 316,
+      "lines": [
+        {
+          "line": 283,
+          "text": "## Bounds and transport"
+        },
+        {
+          "line": 284,
+          "text": ""
+        },
+        {
+          "line": 285,
+          "text": "All LIM1 fields are U32 except reductions, which is a canonical positive Field"
+        },
+        {
+          "line": 286,
+          "text": "integer. All fields must be positive, subject to the worker's supported caps;"
+        },
+        {
+          "line": 287,
+          "text": "the worker rejects requests it cannot honor before execution. `source_bytes`"
+        },
+        {
+          "line": 288,
+          "text": "bounds the sum of all module sources, not each file alone. `sequence_length`"
+        },
+        {
+          "line": 289,
+          "text": "also bounds library tables. `validation_visits` is a shared validation allowance"
+        },
+        {
+          "line": 290,
+          "text": "within each admission boundary (input JOB1, output RES1, or a guest validation"
+        },
+        {
+          "line": 291,
+          "text": "pass), never reset per attacker-supplied record. Distinct boundaries have separate"
+        },
+        {
+          "line": 292,
+          "text": "allowances; actual guest validation also consumes the execution reduction budget."
+        },
+        {
+          "line": 293,
+          "text": "Fixed JOB1/LIM1 reads before extracting the request count toward that input"
+        },
+        {
+          "line": 294,
+          "text": "allowance. `artifact_bytes/nodes/depth` apply to"
+        },
+        {
+          "line": 295,
+          "text": "each complete container; nested logical validators also consume shared work"
+        },
+        {
+          "line": 296,
+          "text": "limits. Names/versions, records, source and diagnostics count toward their enclosing"
+        },
+        {
+          "line": 297,
+          "text": "container limits. Job limits must fit the worker's independently supplied admission"
+        },
+        {
+          "line": 298,
+          "text": "limits; parsing the untrusted limits record never raises those caps."
+        },
+        {
+          "line": 299,
+          "text": ""
+        },
+        {
+          "line": 300,
+          "text": "The guest package reader retains the admitted module table, its indexed-read"
+        },
+        {
+          "line": 301,
+          "text": "cost, explicit options, source limit and remaining validation allowance in the"
+        },
+        {
+          "line": 302,
+          "text": "entry view. Subsequent module lookup and source opening consume that same"
+        },
+        {
+          "line": 303,
+          "text": "allowance. Lookup compares complete logical paths and returns an explicit"
+        },
+        {
+          "line": 304,
+          "text": "found flag plus the original package index; source/AST sentinels never stand"
+        },
+        {
+          "line": 305,
+          "text": "for package indices. Opening a source checks the caller's remaining source"
+        },
+        {
+          "line": 306,
+          "text": "capacity before validating its Bytes payload. Reachability, once-only source"
+        },
+        {
+          "line": 307,
+          "text": "accounting, UTF-8 and language semantics belong to the guest module resolver."
+        },
+        {
+          "line": 308,
+          "text": ""
+        },
+        {
+          "line": 309,
+          "text": "Reduction, allocated arena-node and pending evaluator-frame limits are distinct."
+        },
+        {
+          "line": 310,
+          "text": "The worker separately bounds trace retention, total memory and wall time; those"
+        },
+        {
+          "line": 311,
+          "text": "host admission limits cannot silently change generated code. The actual arena"
+        },
+        {
+          "line": 312,
+          "text": "load ceiling, loop/function policy, counted execution and trace retention are"
+        },
+        {
+          "line": 313,
+          "text": "fixed by SH0.4. Requested limits do not prove runtime capability. Initial runtime"
+        },
+        {
+          "line": 314,
+          "text": "implementations may support a finite set of capacities and reject larger jobs."
+        },
+        {
+          "line": 315,
+          "text": "Proof-profile bounds are separately admitted; run support does not imply proof"
+        },
+        {
+          "line": 316,
+          "text": "support. Native compiler jobs have no secrets/state/network callbacks."
+        }
+      ]
+    }
+  ],
+  "production-install/joy/specs/structured-run.md": [
+    {
+      "first": 74,
+      "last": 77,
+      "lines": [
+        {
+          "line": 74,
+          "text": "Library API `structured::run` accepts owned program/input bytes and RunLimits;"
+        },
+        {
+          "line": 75,
+          "text": "`run_files` performs bounded file loading. Both return output bytes and a report,"
+        },
+        {
+          "line": 76,
+          "text": "without publishing. The CLI alone performs publication. Limits above are worker"
+        },
+        {
+          "line": 77,
+          "text": "policy and do not redefine the nox or Trident protocol integer ranges."
+        }
+      ]
+    },
+    {
+      "first": 79,
+      "last": 102,
+      "lines": [
+        {
+          "line": 79,
+          "text": "## Explicit compacting execution"
+        },
+        {
+          "line": 80,
+          "text": ""
+        },
+        {
+          "line": 81,
+          "text": "`--resident-nodes N --collection-work W` selects bounded compacting execution."
+        },
+        {
+          "line": 82,
+          "text": "Both flags are required together. Omitting them retains the append-only"
+        },
+        {
+          "line": 83,
+          "text": "execution above, including all defaults and ceilings. Compaction is a general"
+        },
+        {
+          "line": 84,
+          "text": "pure-nox execution policy; it contains no compiler stages or source recognition."
+        },
+        {
+          "line": 85,
+          "text": ""
+        },
+        {
+          "line": 86,
+          "text": "In this mode `--arena-nodes` and JOB1 LIM1 arena_nodes bound cumulative fresh"
+        },
+        {
+          "line": 87,
+          "text": "allocations, including loaded nodes and allocations left by failed operations."
+        },
+        {
+          "line": 88,
+          "text": "Hash-cons hits in the current arena are free. Reconstructing a previously"
+        },
+        {
+          "line": 89,
+          "text": "collected value charges again. This is a conservative allocation allowance,"
+        },
+        {
+          "line": 90,
+          "text": "separate from resident storage; no collection replenishes it. The host ceiling"
+        },
+        {
+          "line": 91,
+          "text": "is 1,000,000,000 allocations, 20,000,000,000 reductions and 7,200,000 ms in this"
+        },
+        {
+          "line": 92,
+          "text": "explicit mode. Defaults remain unchanged. All transport, frame and compiler"
+        },
+        {
+          "line": 93,
+          "text": "schema ceilings remain unchanged. No JOB1 field or source option is added."
+        },
+        {
+          "line": 94,
+          "text": "`--budget` explicitly selects the reduction allowance within this ceiling;"
+        },
+        {
+          "line": 95,
+          "text": "JOB1 LIM1 reductions can only tighten it. Raising that allowance leaves the"
+        },
+        {
+          "line": 96,
+          "text": "independent resident, cumulative-allocation, collection-work and deadline"
+        },
+        {
+          "line": 97,
+          "text": "limits unchanged. An exhausted request never retries with a larger allowance."
+        },
+        {
+          "line": 98,
+          "text": "`--time-ms` explicitly selects the cooperative deadline within this ceiling;"
+        },
+        {
+          "line": 99,
+          "text": "the default remains 30,000 ms and ordinary execution retains its 300,000 ms"
+        },
+        {
+          "line": 100,
+          "text": "ceiling. Selecting a longer deadline leaves every work and storage allowance"
+        },
+        {
+          "line": 101,
+          "text": "unchanged. The worker still joins before returning a cancellation failure,"
+        },
+        {
+          "line": 102,
+          "text": "and cancellation preserves the destination without publishing a result."
+        }
+      ]
+    }
+  ],
+  "production-install/joy/specs/structured-certificates.md": [
+    {
+      "first": 3,
+      "last": 26,
+      "lines": [
+        {
+          "line": 3,
+          "text": "Status: 0.4 implementation contract. Actual compiler workload and whole-self-build"
+        },
+        {
+          "line": 4,
+          "text": "acceptance require their separate retained SH7/SH8 receipts."
+        },
+        {
+          "line": 5,
+          "text": "Profile `joy-nox-disclosed-compiler-v1` carries a full public witness for the"
+        },
+        {
+          "line": 6,
+          "text": "successful pure nox tags0..15 relation. Zheng's disclosed noun memory and bounded"
+        },
+        {
+          "line": 7,
+          "text": "semantic stream own primitive equations, dynamic continuations, chosen branches,"
+        },
+        {
+          "line": 8,
+          "text": "ordered children, exact charge and logical invocation depth. Verification never"
+        },
+        {
+          "line": 9,
+          "text": "calls the nox evaluator or compiler. Work and certificate size are linear in the"
+        },
+        {
+          "line": 10,
+          "text": "actual disclosed records; succinctness and zero knowledge are separate profiles."
+        },
+        {
+          "line": 11,
+          "text": ""
+        },
+        {
+          "line": 12,
+          "text": "## Admission and public context"
+        },
+        {
+          "line": 13,
+          "text": ""
+        },
+        {
+          "line": 14,
+          "text": "The caller supplies complete expected PROGRAM and INPUT NOXDAG01 files. Both"
+        },
+        {
+          "line": 15,
+          "text": "proving and verification use the existing ART1 and compiler JOB1 admission rules."
+        },
+        {
+          "line": 16,
+          "text": "Raw ART1(0,0,0,formula) takes INPUT unchanged. Compiler ART1(0,1,1,formula) takes"
+        },
+        {
+          "line": 17,
+          "text": "the complete admitted JOB1 unchanged, including sources, dependencies, options,"
+        },
+        {
+          "line": 18,
+          "text": "compiler identity and requested limits. No host compiler stage supplies output."
+        },
+        {
+          "line": 19,
+          "text": ""
+        },
+        {
+          "line": 20,
+          "text": "The transport's independently computed context is Hemera of"
+        },
+        {
+          "line": 21,
+          "text": "`joy/nox/disclosed-compiler/v1\\0`, followed by the complete program particle,"
+        },
+        {
+          "line": 22,
+          "text": "formula particle, input particle (four canonical little-endian u64 limbs each),"
+        },
+        {
+          "line": 23,
+          "text": "one profile byte0 or1, initial budget u64 and admitted logical frame bound u32."
+        },
+        {
+          "line": 24,
+          "text": "The machine is fixed to nox0 by ART1 admission and this profile domain. Caller"
+        },
+        {
+          "line": 25,
+          "text": "resource ceilings are enforced independently rather than accepted from proof"
+        },
+        {
+          "line": 26,
+          "text": "metadata. Compiler budget/frame values come from the admitted LIM1 request."
+        }
+      ]
+    },
+    {
+      "first": 59,
+      "last": 67,
+      "lines": [
+        {
+          "line": 59,
+          "text": "One Terminal is required after exactly one completed root derivation. Its root"
+        },
+        {
+          "line": 60,
+          "text": "must match context INPUT/formula, result particle and exact charge. The admitted"
+        },
+        {
+          "line": 61,
+          "text": "budget must cover the charge and frame bound must cover the derived peak. The"
+        },
+        {
+          "line": 62,
+          "text": "complete result bytes are independently decoded and their particle must equal"
+        },
+        {
+          "line": 63,
+          "text": "the relation's terminal result. Compiler results undergo existing complete RES1"
+        },
+        {
+          "line": 64,
+          "text": "admission, binding JOB1 identity, status, diagnostics and any extracted ART1."
+        },
+        {
+          "line": 65,
+          "text": "Success/program and compile-error/diagnostics are both successful VM outcomes."
+        },
+        {
+          "line": 66,
+          "text": "After terminal payload, immediate transport terminal and underlying EOF are"
+        },
+        {
+          "line": 67,
+          "text": "required. Prefixes and trailing records cannot be accepted."
+        }
+      ]
+    },
+    {
+      "first": 109,
+      "last": 124,
+      "lines": [
+        {
+          "line": 109,
+          "text": "Independent caps cover encoded bytes, decoded bytes, transport frames, semantic"
+        },
+        {
+          "line": 110,
+          "text": "payload records, noun slots, summary slots, expanded steps, charge and invocation"
+        },
+        {
+          "line": 111,
+          "text": "depth. The surrounding execution/verification worker enforces a cooperative"
+        },
+        {
+          "line": 112,
+          "text": "deadline and admitted schema/transport caps. Record count includes nouns and"
+        },
+        {
+          "line": 113,
+          "text": "resets, so arbitrary memory churn consumes the allowance. Prover lookup maps"
+        },
+        {
+          "line": 114,
+          "text": "are bounded by resident nouns and cache slots; their standard BTreeMap node"
+        },
+        {
+          "line": 115,
+          "text": "allocations follow Rust's global allocation failure policy. Runtime failure or"
+        },
+        {
+          "line": 116,
+          "text": "interrupted capture cannot publish a completed certificate."
+        },
+        {
+          "line": 117,
+          "text": ""
+        },
+        {
+          "line": 118,
+          "text": "The proved resource quantities are exact semantic charge, expanded invocation"
+        },
+        {
+          "line": 119,
+          "text": "count/steps and logical invocation peak. Physical allocation, resident storage,"
+        },
+        {
+          "line": 120,
+          "text": "GC count/work, elapsed time and RSS remain host observations. Admission checks"
+        },
+        {
+          "line": 121,
+          "text": "requested physical ceilings, but this logical relation supplies no proof of"
+        },
+        {
+          "line": 122,
+          "text": "every physical LIM1 or host limit. Declared disclosure covers source, input,"
+        },
+        {
+          "line": 123,
+          "text": "intermediate nouns and output. Existing private native proof routes retain their"
+        },
+        {
+          "line": 124,
+          "text": "own contract and never silently select this disclosed format."
+        }
+      ]
+    },
+    {
+      "first": 126,
+      "last": 164,
+      "lines": [
+        {
+          "line": 126,
+          "text": "## Production commands"
+        },
+        {
+          "line": 127,
+          "text": ""
+        },
+        {
+          "line": 128,
+          "text": "`joy prove-artifact PROGRAM --input INPUT --output CERTIFICATE [--force] [LIMITS]`"
+        },
+        {
+          "line": 129,
+          "text": "stages and atomically publishes one complete certificate. `joy verify-artifact"
+        },
+        {
+          "line": 130,
+          "text": "PROGRAM --input INPUT --proof CERTIFICATE [--output OUTPUT] [--emit result|program]"
+        },
+        {
+          "line": 131,
+          "text": "[--force] [LIMITS]` verifies against the expected files and optionally publishes"
+        },
+        {
+          "line": 132,
+          "text": "the complete result or extracted compiler ART1. Both commands accept the existing"
+        },
+        {
+          "line": 133,
+          "text": "structured runtime and compiler admission limits. Proof noun slots equal the"
+        },
+        {
+          "line": 134,
+          "text": "selected host resident allowance. Additional independent positive caps are:"
+        },
+        {
+          "line": 135,
+          "text": ""
+        },
+        {
+          "line": 136,
+          "text": "| Flag | Default | Hard maximum |"
+        },
+        {
+          "line": 137,
+          "text": "|---|---:|---:|"
+        },
+        {
+          "line": 138,
+          "text": "| --proof-bytes | 67108864 | 137438953472 |"
+        },
+        {
+          "line": 139,
+          "text": "| --proof-decoded-bytes | 268435456 | 1099511627776 |"
+        },
+        {
+          "line": 140,
+          "text": "| --proof-records | 4000000 | 100000000000 |"
+        },
+        {
+          "line": 141,
+          "text": "| --proof-steps | 2000000 | 40000000000 |"
+        },
+        {
+          "line": 142,
+          "text": "| --proof-cache-slots | 65536 | 262144 |"
+        },
+        {
+          "line": 143,
+          "text": ""
+        },
+        {
+          "line": 144,
+          "text": "Each data frame contains at least one decoded byte; decoded byte allowance plus"
+        },
+        {
+          "line": 145,
+          "text": "one also bounds transport frame count. The encoded-byte cap includes all frame"
+        },
+        {
+          "line": 146,
+          "text": "overhead. Native observer event/work/byte ceilings are checked arithmetic derived"
+        },
+        {
+          "line": 147,
+          "text": "from proof step and record caps; actual observed transitions additionally obey"
+        },
+        {
+          "line": 148,
+          "text": "the proof step cap during cache suppression. The verifier separately charges"
+        },
+        {
+          "line": 149,
+          "text": "all noun/reset/semantic/terminal records before their semantic work."
+        },
+        {
+          "line": 150,
+          "text": ""
+        },
+        {
+          "line": 151,
+          "text": "Existing destinations survive any admission, computation, proof or publication"
+        },
+        {
+          "line": 152,
+          "text": "failure. Production input/proof files use bounded regular-file admission and"
+        },
+        {
+          "line": 153,
+          "text": "reject links/streams. `--force` replaces only a complete successful output."
+        },
+        {
+          "line": 154,
+          "text": "`--emit program` requires a successful compiler RES1; compile errors retain"
+        },
+        {
+          "line": 155,
+          "text": "diagnostics and cannot publish a program. A successful prove reports"
+        },
+        {
+          "line": 156,
+          "text": "`joy/artifact-proof/v1`; verification reports `joy/artifact-verification/v1`."
+        },
+        {
+          "line": 157,
+          "text": "Reports distinguish verified semantic quantities from optional observed producer"
+        },
+        {
+          "line": 158,
+          "text": "counters. Fresh verification returns no claimed producer observations. Its"
+        },
+        {
+          "line": 159,
+          "text": "program/input are explicit external expectations and it performs no execution."
+        },
+        {
+          "line": 160,
+          "text": ""
+        },
+        {
+          "line": 161,
+          "text": "The worker deadline covers admitted decoding, bounded semantic operations,"
+        },
+        {
+          "line": 162,
+          "text": "capture and result validation cooperatively. Initial file reads, underlying"
+        },
+        {
+          "line": 163,
+          "text": "blocking I/O and final durable filesystem synchronization are bounded by byte"
+        },
+        {
+          "line": 164,
+          "text": "admission or the filesystem, rather than a preemptive timeout."
+        }
+      ]
+    }
+  ],
+  "production-install/joy/specs/compiler-certificate-transport.md": [
+    {
+      "first": 67,
+      "last": 77,
+      "lines": [
+        {
+          "line": 67,
+          "text": "Reader and writer become unusable after a framing, I/O, allocation or bound"
+        },
+        {
+          "line": 68,
+          "text": "error. EOF is returned only after a complete verified terminal. Empty read/write"
+        },
+        {
+          "line": 69,
+          "text": "requests follow the standard I/O contract. Writer `finish` consumes the writer,"
+        },
+        {
+          "line": 70,
+          "text": "flushes pending data, emits the terminal and flushes the destination. Interrupted"
+        },
+        {
+          "line": 71,
+          "text": "or failed destinations may contain a prefix; the production owner must stage"
+        },
+        {
+          "line": 72,
+          "text": "such bytes privately and publish only after full semantic and I/O success."
+        },
+        {
+          "line": 73,
+          "text": ""
+        },
+        {
+          "line": 74,
+          "text": "This layer has no clock or cancellation policy. Production wraps its bounded"
+        },
+        {
+          "line": 75,
+          "text": "operations in deadline checks and bounds semantic work separately. A generic"
+        },
+        {
+          "line": 76,
+          "text": "caller controls its I/O source, whose blocking behavior remains outside this"
+        },
+        {
+          "line": 77,
+          "text": "byte codec's contract."
+        }
+      ]
+    }
+  ],
+  "production-install/joy/rs/structured/limits.rs": [
+    {
+      "first": 11,
+      "last": 26,
+      "lines": [
+        {
+          "line": 11,
+          "text": "const COMPACT_ALLOCATIONS: u64 = 1_000_000_000;"
+        },
+        {
+          "line": 12,
+          "text": "const COMPACT_REDUCTIONS: u64 = 20_000_000_000;"
+        },
+        {
+          "line": 13,
+          "text": "const COMPACT_WORK: u64 = 10_000_000_000;"
+        },
+        {
+          "line": 14,
+          "text": "const COMPACT_TIME_MS: u64 = 7_200_000;"
+        },
+        {
+          "line": 15,
+          "text": ""
+        },
+        {
+          "line": 16,
+          "text": "#[derive(Debug, Clone, Copy)]"
+        },
+        {
+          "line": 17,
+          "text": "pub struct RunLimits {"
+        },
+        {
+          "line": 18,
+          "text": "    pub budget: u64,"
+        },
+        {
+          "line": 19,
+          "text": "    pub arena_nodes: u32,"
+        },
+        {
+          "line": 20,
+          "text": "    pub frames: u32,"
+        },
+        {
+          "line": 21,
+          "text": "    pub artifact_bytes: usize,"
+        },
+        {
+          "line": 22,
+          "text": "    pub artifact_nodes: u32,"
+        },
+        {
+          "line": 23,
+          "text": "    pub artifact_depth: u32,"
+        },
+        {
+          "line": 24,
+          "text": "    pub time_ms: u64,"
+        },
+        {
+          "line": 25,
+          "text": "    pub compiler: CompilerCaps,"
+        },
+        {
+          "line": 26,
+          "text": "    pub compaction: Option<CompactionPolicy>,"
+        }
+      ]
+    },
+    {
+      "first": 29,
+      "last": 69,
+      "lines": [
+        {
+          "line": 29,
+          "text": "impl Default for RunLimits {"
+        },
+        {
+          "line": 30,
+          "text": "    fn default() -> Self {"
+        },
+        {
+          "line": 31,
+          "text": "        Self {"
+        },
+        {
+          "line": 32,
+          "text": "            budget: 1_000_000,"
+        },
+        {
+          "line": 33,
+          "text": "            arena_nodes: DEFAULT_ARENA_NODES,"
+        },
+        {
+          "line": 34,
+          "text": "            frames: 16_384,"
+        },
+        {
+          "line": 35,
+          "text": "            artifact_bytes: 16 << 20,"
+        },
+        {
+          "line": 36,
+          "text": "            artifact_nodes: 196_608,"
+        },
+        {
+          "line": 37,
+          "text": "            artifact_depth: 4096,"
+        },
+        {
+          "line": 38,
+          "text": "            time_ms: 30_000,"
+        },
+        {
+          "line": 39,
+          "text": "            compiler: CompilerCaps::default(),"
+        },
+        {
+          "line": 40,
+          "text": "            compaction: None,"
+        },
+        {
+          "line": 41,
+          "text": "        }"
+        },
+        {
+          "line": 42,
+          "text": "    }"
+        },
+        {
+          "line": 43,
+          "text": "}"
+        },
+        {
+          "line": 44,
+          "text": ""
+        },
+        {
+          "line": 45,
+          "text": "impl RunLimits {"
+        },
+        {
+          "line": 46,
+          "text": "    pub fn validate(self) -> Result<(), String> {"
+        },
+        {
+          "line": 47,
+          "text": "        let (max_budget, max_nodes, max_time) = if let Some(policy) = self.compaction {"
+        },
+        {
+          "line": 48,
+          "text": "            positive("
+        },
+        {
+          "line": 49,
+          "text": "                \"resident_nodes\","
+        },
+        {
+          "line": 50,
+          "text": "                u64::from(policy.resident_nodes),"
+        },
+        {
+          "line": 51,
+          "text": "                u64::from(MAX_ARENA_NODES),"
+        },
+        {
+          "line": 52,
+          "text": "            )?;"
+        },
+        {
+          "line": 53,
+          "text": "            positive(\"collection_work\", policy.collection_work, COMPACT_WORK)?;"
+        },
+        {
+          "line": 54,
+          "text": "            (COMPACT_REDUCTIONS, COMPACT_ALLOCATIONS, COMPACT_TIME_MS)"
+        },
+        {
+          "line": 55,
+          "text": "        } else {"
+        },
+        {
+          "line": 56,
+          "text": "            (MAX_BUDGET, u64::from(MAX_ARENA_NODES), MAX_TIME_MS)"
+        },
+        {
+          "line": 57,
+          "text": "        };"
+        },
+        {
+          "line": 58,
+          "text": "        for (name, value, max) in ["
+        },
+        {
+          "line": 59,
+          "text": "            (\"budget\", self.budget, max_budget),"
+        },
+        {
+          "line": 60,
+          "text": "            (\"arena_nodes\", self.arena_nodes as u64, max_nodes),"
+        },
+        {
+          "line": 61,
+          "text": "            (\"frames\", self.frames as u64, 65_536),"
+        },
+        {
+          "line": 62,
+          "text": "            (\"artifact_bytes\", self.artifact_bytes as u64, 16 << 20),"
+        },
+        {
+          "line": 63,
+          "text": "            (\"artifact_nodes\", self.artifact_nodes as u64, 196_608),"
+        },
+        {
+          "line": 64,
+          "text": "            (\"artifact_depth\", self.artifact_depth as u64, 4096),"
+        },
+        {
+          "line": 65,
+          "text": "            (\"time_ms\", self.time_ms, max_time),"
+        },
+        {
+          "line": 66,
+          "text": "        ] {"
+        },
+        {
+          "line": 67,
+          "text": "            positive(name, value, max)?;"
+        },
+        {
+          "line": 68,
+          "text": "        }"
+        },
+        {
+          "line": 69,
+          "text": "        self.compiler.validate()"
+        }
+      ]
+    }
+  ],
+  "production-install/joy/rs/structured/certificate/types.rs": [
+    {
+      "first": 24,
+      "last": 46,
+      "lines": [
+        {
+          "line": 24,
+          "text": "impl CertificateLimits {"
+        },
+        {
+          "line": 25,
+          "text": "    pub fn validate(self) -> Result<(), String> {"
+        },
+        {
+          "line": 26,
+          "text": "        for (name, value, max) in ["
+        },
+        {
+          "line": 27,
+          "text": "            (\"nouns\", u64::from(self.nouns), 3_145_728),"
+        },
+        {
+          "line": 28,
+          "text": "            (\"cache_slots\", u64::from(self.cache_slots), 262_144),"
+        },
+        {
+          "line": 29,
+          "text": "            (\"records\", self.records, 100_000_000_000),"
+        },
+        {
+          "line": 30,
+          "text": "            (\"steps\", self.steps, 40_000_000_000),"
+        },
+        {
+          "line": 31,
+          "text": "            (\"wire_bytes\", self.wire_bytes, 128 << 30),"
+        },
+        {
+          "line": 32,
+          "text": "            (\"decoded_bytes\", self.decoded_bytes, 1 << 40),"
+        },
+        {
+          "line": 33,
+          "text": "        ] {"
+        },
+        {
+          "line": 34,
+          "text": "            if value == 0 || value > max {"
+        },
+        {
+          "line": 35,
+          "text": "                return Err(format!(\"certificate limit {name} must be in 1..={max}\"));"
+        },
+        {
+          "line": 36,
+          "text": "            }"
+        },
+        {
+          "line": 37,
+          "text": "        }"
+        },
+        {
+          "line": 38,
+          "text": "        Ok(())"
+        },
+        {
+          "line": 39,
+          "text": "    }"
+        },
+        {
+          "line": 40,
+          "text": "    pub(super) fn transport(self) -> transport::Limits {"
+        },
+        {
+          "line": 41,
+          "text": "        transport::Limits {"
+        },
+        {
+          "line": 42,
+          "text": "            wire_bytes: self.wire_bytes,"
+        },
+        {
+          "line": 43,
+          "text": "            decoded_bytes: self.decoded_bytes,"
+        },
+        {
+          "line": 44,
+          "text": "            frames: self.decoded_bytes.saturating_add(1),"
+        },
+        {
+          "line": 45,
+          "text": "        }"
+        },
+        {
+          "line": 46,
+          "text": "    }"
+        }
+      ]
+    },
+    {
+      "first": 49,
+      "last": 75,
+      "lines": [
+        {
+          "line": 49,
+          "text": "#[derive(Clone, Copy)]"
+        },
+        {
+          "line": 50,
+          "text": "pub(super) struct Context {"
+        },
+        {
+          "line": 51,
+          "text": "    pub program: [u64; 4],"
+        },
+        {
+          "line": 52,
+          "text": "    pub formula: [u64; 4],"
+        },
+        {
+          "line": 53,
+          "text": "    pub object: [u64; 4],"
+        },
+        {
+          "line": 54,
+          "text": "    pub profile: u8,"
+        },
+        {
+          "line": 55,
+          "text": "    pub budget: u64,"
+        },
+        {
+          "line": 56,
+          "text": "    pub frames: u32,"
+        },
+        {
+          "line": 57,
+          "text": "}"
+        },
+        {
+          "line": 58,
+          "text": "impl Context {"
+        },
+        {
+          "line": 59,
+          "text": "    pub(super) fn digest(self) -> [u8; 32] {"
+        },
+        {
+          "line": 60,
+          "text": "        let mut h = hemera::Hasher::new();"
+        },
+        {
+          "line": 61,
+          "text": "        h.update(b\"joy/nox/disclosed-compiler/v1\\0\");"
+        },
+        {
+          "line": 62,
+          "text": "        for limb in self"
+        },
+        {
+          "line": 63,
+          "text": "            .program"
+        },
+        {
+          "line": 64,
+          "text": "            .into_iter()"
+        },
+        {
+          "line": 65,
+          "text": "            .chain(self.formula)"
+        },
+        {
+          "line": 66,
+          "text": "            .chain(self.object)"
+        },
+        {
+          "line": 67,
+          "text": "        {"
+        },
+        {
+          "line": 68,
+          "text": "            h.update(&limb.to_le_bytes());"
+        },
+        {
+          "line": 69,
+          "text": "        }"
+        },
+        {
+          "line": 70,
+          "text": "        h.update(&[self.profile])"
+        },
+        {
+          "line": 71,
+          "text": "            .update(&self.budget.to_le_bytes())"
+        },
+        {
+          "line": 72,
+          "text": "            .update(&self.frames.to_le_bytes());"
+        },
+        {
+          "line": 73,
+          "text": "        *h.finalize().as_bytes()"
+        },
+        {
+          "line": 74,
+          "text": "    }"
+        },
+        {
+          "line": 75,
+          "text": "}"
+        }
+      ]
+    }
+  ],
+  "production-install/joy/rs/structured/certificate/admission.rs": [
+    {
+      "first": 59,
+      "last": 94,
+      "lines": [
+        {
+          "line": 59,
+          "text": "        let (budget, frames, allocations, transport) = job.as_ref().map_or("
+        },
+        {
+          "line": 60,
+          "text": "            ("
+        },
+        {
+          "line": 61,
+          "text": "                limits.budget,"
+        },
+        {
+          "line": 62,
+          "text": "                limits.frames,"
+        },
+        {
+          "line": 63,
+          "text": "                limits.arena_nodes,"
+        },
+        {
+          "line": 64,
+          "text": "                limits.transport(),"
+        },
+        {
+          "line": 65,
+          "text": "            ),"
+        },
+        {
+          "line": 66,
+          "text": "            |j| {"
+        },
+        {
+          "line": 67,
+          "text": "                ("
+        },
+        {
+          "line": 68,
+          "text": "                    j.limits.reductions,"
+        },
+        {
+          "line": 69,
+          "text": "                    j.limits.evaluator_frames,"
+        },
+        {
+          "line": 70,
+          "text": "                    j.limits.arena_nodes,"
+        },
+        {
+          "line": 71,
+          "text": "                    j.limits.transport(),"
+        },
+        {
+          "line": 72,
+          "text": "                )"
+        },
+        {
+          "line": 73,
+          "text": "            },"
+        },
+        {
+          "line": 74,
+          "text": "        );"
+        },
+        {
+          "line": 75,
+          "text": "        if !ar.limit_allocations(allocations.min(limits.resident_nodes())) {"
+        },
+        {
+          "line": 76,
+          "text": "            return Err(\"admitted arena allowance\".into());"
+        },
+        {
+          "line": 77,
+          "text": "        }"
+        },
+        {
+          "line": 78,
+          "text": "        let context = Context {"
+        },
+        {
+          "line": 79,
+          "text": "            program: particle(&ar, program)?,"
+        },
+        {
+          "line": 80,
+          "text": "            object: particle(&ar, object)?,"
+        },
+        {
+          "line": 81,
+          "text": "            formula: particle(&ar, formula)?,"
+        },
+        {
+          "line": 82,
+          "text": "            profile: profile as u8,"
+        },
+        {
+          "line": 83,
+          "text": "            budget,"
+        },
+        {
+          "line": 84,
+          "text": "            frames,"
+        },
+        {
+          "line": 85,
+          "text": "        };"
+        },
+        {
+          "line": 86,
+          "text": "        Ok(Self {"
+        },
+        {
+          "line": 87,
+          "text": "            ar,"
+        },
+        {
+          "line": 88,
+          "text": "            object,"
+        },
+        {
+          "line": 89,
+          "text": "            formula,"
+        },
+        {
+          "line": 90,
+          "text": "            job,"
+        },
+        {
+          "line": 91,
+          "text": "            context,"
+        },
+        {
+          "line": 92,
+          "text": "            allocations,"
+        },
+        {
+          "line": 93,
+          "text": "            transport,"
+        },
+        {
+          "line": 94,
+          "text": "        })"
+        }
+      ]
+    }
+  ],
+  "production-install/joy/rs/structured/certificate/pipeline.rs": [
+    {
+      "first": 55,
+      "last": 81,
+      "lines": [
+        {
+          "line": 55,
+          "text": "fn report("
+        },
+        {
+          "line": 56,
+          "text": "    context: Context,"
+        },
+        {
+          "line": 57,
+          "text": "    checked: &VerifiedTerminal,"
+        },
+        {
+          "line": 58,
+          "text": "    records: u64,"
+        },
+        {
+          "line": 59,
+          "text": "    transport: transport::Stats,"
+        },
+        {
+          "line": 60,
+          "text": "    started: Instant,"
+        },
+        {
+          "line": 61,
+          "text": "    compiler_job: Option<CompilerReport>,"
+        },
+        {
+          "line": 62,
+          "text": ") -> Report {"
+        },
+        {
+          "line": 63,
+          "text": "    let summary = checked.summary();"
+        },
+        {
+          "line": 64,
+          "text": "    Report {"
+        },
+        {
+          "line": 65,
+          "text": "        format: FORMAT,"
+        },
+        {
+          "line": 66,
+          "text": "        program_particle: text(context.program),"
+        },
+        {
+          "line": 67,
+          "text": "        input_particle: text(context.object),"
+        },
+        {
+          "line": 68,
+          "text": "        output_particle: text(summary.result().particle()),"
+        },
+        {
+          "line": 69,
+          "text": "        charged_reductions: summary.cost(),"
+        },
+        {
+          "line": 70,
+          "text": "        invocations: summary.occurrences(),"
+        },
+        {
+          "line": 71,
+          "text": "        logical_peak_frames: summary.peak_frames(),"
+        },
+        {
+          "line": 72,
+          "text": "        expanded_steps: summary.steps(),"
+        },
+        {
+          "line": 73,
+          "text": "        semantic_events: checked.events(),"
+        },
+        {
+          "line": 74,
+          "text": "        records,"
+        },
+        {
+          "line": 75,
+          "text": "        transport,"
+        },
+        {
+          "line": 76,
+          "text": "        elapsed_micros: started.elapsed().as_micros(),"
+        },
+        {
+          "line": 77,
+          "text": "        disclosure: \"complete public witness\","
+        },
+        {
+          "line": 78,
+          "text": "        physical_resource_claim: \"unattested\","
+        },
+        {
+          "line": 79,
+          "text": "        prover_observations: None,"
+        },
+        {
+          "line": 80,
+          "text": "        compiler_job,"
+        },
+        {
+          "line": 81,
+          "text": "    }"
+        }
+      ]
+    },
+    {
+      "first": 91,
+      "last": 102,
+      "lines": [
+        {
+          "line": 91,
+          "text": "pub(super) fn prove<const N: usize, W: Write>("
+        },
+        {
+          "line": 92,
+          "text": "    program: &[u8],"
+        },
+        {
+          "line": 93,
+          "text": "    input: &[u8],"
+        },
+        {
+          "line": 94,
+          "text": "    output: W,"
+        },
+        {
+          "line": 95,
+          "text": "    host: RunLimits,"
+        },
+        {
+          "line": 96,
+          "text": "    limits: CertificateLimits,"
+        },
+        {
+          "line": 97,
+          "text": ") -> Result<(W, CertificateResult), String> {"
+        },
+        {
+          "line": 98,
+          "text": "    let started = Instant::now();"
+        },
+        {
+          "line": 99,
+          "text": "    let expires = started + Duration::from_millis(host.time_ms);"
+        },
+        {
+          "line": 100,
+          "text": "    let mut admitted = Admission::<N>::load(program, input, host, expires)?;"
+        },
+        {
+          "line": 101,
+          "text": "    let context = admitted.context;"
+        },
+        {
+          "line": 102,
+          "text": "    let session = Session::new(context, limits)?;"
+        }
+      ]
+    },
+    {
+      "first": 201,
+      "last": 218,
+      "lines": [
+        {
+          "line": 201,
+          "text": "    program: &[u8],"
+        },
+        {
+          "line": 202,
+          "text": "    input: &[u8],"
+        },
+        {
+          "line": 203,
+          "text": "    proof: R,"
+        },
+        {
+          "line": 204,
+          "text": "    host: RunLimits,"
+        },
+        {
+          "line": 205,
+          "text": "    limits: CertificateLimits,"
+        },
+        {
+          "line": 206,
+          "text": ") -> Result<CertificateResult, String> {"
+        },
+        {
+          "line": 207,
+          "text": "    let started = Instant::now();"
+        },
+        {
+          "line": 208,
+          "text": "    let expires = started + Duration::from_millis(host.time_ms);"
+        },
+        {
+          "line": 209,
+          "text": "    let mut admitted = Admission::<N>::load(program, input, host, expires)?;"
+        },
+        {
+          "line": 210,
+          "text": "    let context = admitted.context;"
+        },
+        {
+          "line": 211,
+          "text": "    let mut session = Session::new(context, limits)?;"
+        },
+        {
+          "line": 212,
+          "text": "    let mut reader = transport::Reader::new(proof, context.digest(), limits.transport())"
+        },
+        {
+          "line": 213,
+          "text": "        .map_err(|e| format!(\"certificate transport: {e}\"))?;"
+        },
+        {
+          "line": 214,
+          "text": "    loop {"
+        },
+        {
+          "line": 215,
+          "text": "        admission::deadline(expires)?;"
+        },
+        {
+          "line": 216,
+          "text": "        let tag = records::read::<1>(&mut reader)?[0];"
+        },
+        {
+          "line": 217,
+          "text": "        if tag == 6 {"
+        },
+        {
+          "line": 218,
+          "text": "            break;"
+        }
+      ]
+    }
+  ],
+  "production-install/joy/rs/structured/certificate.rs": [
+    {
+      "first": 24,
+      "last": 94,
+      "lines": [
+        {
+          "line": 24,
+          "text": "/// Produce a disclosed certificate, returning the fully flushed output owner."
+        },
+        {
+          "line": 25,
+          "text": "pub fn prove<W: Write + Send + 'static>("
+        },
+        {
+          "line": 26,
+          "text": "    program: Vec<u8>,"
+        },
+        {
+          "line": 27,
+          "text": "    input: Vec<u8>,"
+        },
+        {
+          "line": 28,
+          "text": "    output: W,"
+        },
+        {
+          "line": 29,
+          "text": "    host: RunLimits,"
+        },
+        {
+          "line": 30,
+          "text": "    limits: CertificateLimits,"
+        },
+        {
+          "line": 31,
+          "text": ") -> Result<(W, CertificateResult), String> {"
+        },
+        {
+          "line": 32,
+          "text": "    host.validate()?;"
+        },
+        {
+          "line": 33,
+          "text": "    limits.validate()?;"
+        },
+        {
+          "line": 34,
+          "text": "    worker(move || {"
+        },
+        {
+          "line": 35,
+          "text": "        if host.resident_nodes() > LARGE_ARENA_NODES {"
+        },
+        {
+          "line": 36,
+          "text": "            pipeline::prove::<COMPILER_ARENA, W>(&program, &input, output, host, limits)"
+        },
+        {
+          "line": 37,
+          "text": "        } else if host.resident_nodes() > DEFAULT_ARENA_NODES {"
+        },
+        {
+          "line": 38,
+          "text": "            pipeline::prove::<LARGE_ARENA, W>(&program, &input, output, host, limits)"
+        },
+        {
+          "line": 39,
+          "text": "        } else {"
+        },
+        {
+          "line": 40,
+          "text": "            pipeline::prove::<ARENA, W>(&program, &input, output, host, limits)"
+        },
+        {
+          "line": 41,
+          "text": "        }"
+        },
+        {
+          "line": 42,
+          "text": "    })"
+        },
+        {
+          "line": 43,
+          "text": "}"
+        },
+        {
+          "line": 44,
+          "text": ""
+        },
+        {
+          "line": 45,
+          "text": "/// Verify against explicit expected artifacts, independently of nox execution."
+        },
+        {
+          "line": 46,
+          "text": "pub fn verify<R: Read + Send + 'static>("
+        },
+        {
+          "line": 47,
+          "text": "    program: Vec<u8>,"
+        },
+        {
+          "line": 48,
+          "text": "    input: Vec<u8>,"
+        },
+        {
+          "line": 49,
+          "text": "    proof: R,"
+        },
+        {
+          "line": 50,
+          "text": "    host: RunLimits,"
+        },
+        {
+          "line": 51,
+          "text": "    limits: CertificateLimits,"
+        },
+        {
+          "line": 52,
+          "text": ") -> Result<CertificateResult, String> {"
+        },
+        {
+          "line": 53,
+          "text": "    host.validate()?;"
+        },
+        {
+          "line": 54,
+          "text": "    limits.validate()?;"
+        },
+        {
+          "line": 55,
+          "text": "    worker(move || {"
+        },
+        {
+          "line": 56,
+          "text": "        if host.resident_nodes() > LARGE_ARENA_NODES {"
+        },
+        {
+          "line": 57,
+          "text": "            pipeline::verify::<COMPILER_ARENA, R>(&program, &input, proof, host, limits)"
+        },
+        {
+          "line": 58,
+          "text": "        } else if host.resident_nodes() > DEFAULT_ARENA_NODES {"
+        },
+        {
+          "line": 59,
+          "text": "            pipeline::verify::<LARGE_ARENA, R>(&program, &input, proof, host, limits)"
+        },
+        {
+          "line": 60,
+          "text": "        } else {"
+        },
+        {
+          "line": 61,
+          "text": "            pipeline::verify::<ARENA, R>(&program, &input, proof, host, limits)"
+        },
+        {
+          "line": 62,
+          "text": "        }"
+        },
+        {
+          "line": 63,
+          "text": "    })"
+        },
+        {
+          "line": 64,
+          "text": "}"
+        },
+        {
+          "line": 65,
+          "text": ""
+        },
+        {
+          "line": 66,
+          "text": "pub fn prove_files<W: Write + Send + 'static>("
+        },
+        {
+          "line": 67,
+          "text": "    program: &Path,"
+        },
+        {
+          "line": 68,
+          "text": "    input: &Path,"
+        },
+        {
+          "line": 69,
+          "text": "    output: W,"
+        },
+        {
+          "line": 70,
+          "text": "    host: RunLimits,"
+        },
+        {
+          "line": 71,
+          "text": "    limits: CertificateLimits,"
+        },
+        {
+          "line": 72,
+          "text": ") -> Result<(W, CertificateResult), String> {"
+        },
+        {
+          "line": 73,
+          "text": "    host.validate()?;"
+        },
+        {
+          "line": 74,
+          "text": "    limits.validate()?;"
+        },
+        {
+          "line": 75,
+          "text": "    let program = crate::file_input::read(program, host.artifact_bytes)?;"
+        },
+        {
+          "line": 76,
+          "text": "    let input = crate::file_input::read(input, host.artifact_bytes)?;"
+        },
+        {
+          "line": 77,
+          "text": "    prove(program, input, output, host, limits)"
+        },
+        {
+          "line": 78,
+          "text": "}"
+        },
+        {
+          "line": 79,
+          "text": "pub fn verify_files("
+        },
+        {
+          "line": 80,
+          "text": "    program: &Path,"
+        },
+        {
+          "line": 81,
+          "text": "    input: &Path,"
+        },
+        {
+          "line": 82,
+          "text": "    proof: &Path,"
+        },
+        {
+          "line": 83,
+          "text": "    host: RunLimits,"
+        },
+        {
+          "line": 84,
+          "text": "    limits: CertificateLimits,"
+        },
+        {
+          "line": 85,
+          "text": ") -> Result<CertificateResult, String> {"
+        },
+        {
+          "line": 86,
+          "text": "    host.validate()?;"
+        },
+        {
+          "line": 87,
+          "text": "    limits.validate()?;"
+        },
+        {
+          "line": 88,
+          "text": "    let program = crate::file_input::read(program, host.artifact_bytes)?;"
+        },
+        {
+          "line": 89,
+          "text": "    let input = crate::file_input::read(input, host.artifact_bytes)?;"
+        },
+        {
+          "line": 90,
+          "text": "    let proof = crate::file_input::open("
+        },
+        {
+          "line": 91,
+          "text": "        proof,"
+        },
+        {
+          "line": 92,
+          "text": "        usize::try_from(limits.wire_bytes).map_err(|_| \"proof byte limit exceeds platform\")?,"
+        },
+        {
+          "line": 93,
+          "text": "    )?;"
+        },
+        {
+          "line": 94,
+          "text": "    verify(program, input, proof, host, limits)"
+        }
+      ]
+    }
+  ],
+  "production-install/joy/rs/structured.rs": [
+    {
+      "first": 10,
+      "last": 18,
+      "lines": [
+        {
+          "line": 10,
+          "text": "const LARGE_ARENA: usize = 1 << 20;"
+        },
+        {
+          "line": 11,
+          "text": "const COMPILER_ARENA: usize = 1 << 22;"
+        },
+        {
+          "line": 12,
+          "text": "const LARGE_ARENA_NODES: u32 = (LARGE_ARENA / 4 * 3) as u32;"
+        },
+        {
+          "line": 13,
+          "text": "const DEFAULT_ARENA_NODES: u32 = (ARENA / 4 * 3) as u32;"
+        },
+        {
+          "line": 14,
+          "text": "const MAX_ARENA_NODES: u32 = (COMPILER_ARENA / 4 * 3) as u32;"
+        },
+        {
+          "line": 15,
+          "text": "const MAX_BUDGET: u64 = 100_000_000;"
+        },
+        {
+          "line": 16,
+          "text": "const MAX_TIME_MS: u64 = 300_000;"
+        },
+        {
+          "line": 17,
+          "text": "const STACK: usize = 256 << 20;"
+        },
+        {
+          "line": 18,
+          "text": "#[cfg(test)]"
+        }
+      ]
+    },
+    {
+      "first": 184,
+      "last": 211,
+      "lines": [
+        {
+          "line": 184,
+          "text": "pub fn run(program: Vec<u8>, input: Vec<u8>, limits: RunLimits) -> Result<RunResult, String> {"
+        },
+        {
+          "line": 185,
+          "text": "    limits.validate()?;"
+        },
+        {
+          "line": 186,
+          "text": "    if program.len() > limits.artifact_bytes || input.len() > limits.artifact_bytes {"
+        },
+        {
+          "line": 187,
+          "text": "        return Err(\"input file size limit\".into());"
+        },
+        {
+          "line": 188,
+          "text": "    }"
+        },
+        {
+          "line": 189,
+          "text": "    std::thread::Builder::new()"
+        },
+        {
+          "line": 190,
+          "text": "        .name(\"joy-artifact\".into())"
+        },
+        {
+          "line": 191,
+          "text": "        .stack_size(STACK)"
+        },
+        {
+          "line": 192,
+          "text": "        .spawn(move || {"
+        },
+        {
+          "line": 193,
+          "text": "            if limits.resident_nodes() > LARGE_ARENA_NODES {"
+        },
+        {
+          "line": 194,
+          "text": "                execute::<COMPILER_ARENA>(program, input, limits)"
+        },
+        {
+          "line": 195,
+          "text": "            } else if limits.resident_nodes() > DEFAULT_ARENA_NODES {"
+        },
+        {
+          "line": 196,
+          "text": "                execute::<LARGE_ARENA>(program, input, limits)"
+        },
+        {
+          "line": 197,
+          "text": "            } else {"
+        },
+        {
+          "line": 198,
+          "text": "                execute::<ARENA>(program, input, limits)"
+        },
+        {
+          "line": 199,
+          "text": "            }"
+        },
+        {
+          "line": 200,
+          "text": "        })"
+        },
+        {
+          "line": 201,
+          "text": "        .map_err(|e| format!(\"worker spawn: {e}\"))?"
+        },
+        {
+          "line": 202,
+          "text": "        .join()"
+        },
+        {
+          "line": 203,
+          "text": "        .map_err(|_| \"artifact worker panicked\".to_string())?"
+        },
+        {
+          "line": 204,
+          "text": "}"
+        },
+        {
+          "line": 205,
+          "text": ""
+        },
+        {
+          "line": 206,
+          "text": "pub fn run_files(program: &Path, input: &Path, limits: RunLimits) -> Result<RunResult, String> {"
+        },
+        {
+          "line": 207,
+          "text": "    limits.validate()?;"
+        },
+        {
+          "line": 208,
+          "text": "    let program = crate::file_input::read(program, limits.artifact_bytes)?;"
+        },
+        {
+          "line": 209,
+          "text": "    let input = crate::file_input::read(input, limits.artifact_bytes)?;"
+        },
+        {
+          "line": 210,
+          "text": "    run(program, input, limits)"
+        },
+        {
+          "line": 211,
+          "text": "}"
+        }
+      ]
+    }
+  ],
+  "production-install/joy/cli/artifact_limits.rs": [
+    {
+      "first": 4,
+      "last": 26,
+      "lines": [
+        {
+          "line": 4,
+          "text": "#[derive(Args)]"
+        },
+        {
+          "line": 5,
+          "text": "pub struct LimitArgs {"
+        },
+        {
+          "line": 6,
+          "text": "    #[arg(long, default_value_t = 1_000_000)]"
+        },
+        {
+          "line": 7,
+          "text": "    pub budget: u64,"
+        },
+        {
+          "line": 8,
+          "text": "    #[arg(long, default_value_t = 196_608)]"
+        },
+        {
+          "line": 9,
+          "text": "    pub arena_nodes: u32,"
+        },
+        {
+          "line": 10,
+          "text": "    /// Enable bounded compaction with this resident node ceiling"
+        },
+        {
+          "line": 11,
+          "text": "    #[arg(long, requires = \"collection_work\")]"
+        },
+        {
+          "line": 12,
+          "text": "    pub resident_nodes: Option<u32>,"
+        },
+        {
+          "line": 13,
+          "text": "    /// Maximum collection work; separate from guest reductions"
+        },
+        {
+          "line": 14,
+          "text": "    #[arg(long, requires = \"resident_nodes\")]"
+        },
+        {
+          "line": 15,
+          "text": "    pub collection_work: Option<u64>,"
+        },
+        {
+          "line": 16,
+          "text": "    #[arg(long, default_value_t = 16_384)]"
+        },
+        {
+          "line": 17,
+          "text": "    pub frames: u32,"
+        },
+        {
+          "line": 18,
+          "text": "    #[arg(long, default_value_t = 16_777_216)]"
+        },
+        {
+          "line": 19,
+          "text": "    pub artifact_bytes: usize,"
+        },
+        {
+          "line": 20,
+          "text": "    #[arg(long, default_value_t = 196_608)]"
+        },
+        {
+          "line": 21,
+          "text": "    pub artifact_nodes: u32,"
+        },
+        {
+          "line": 22,
+          "text": "    #[arg(long, default_value_t = 4096)]"
+        },
+        {
+          "line": 23,
+          "text": "    pub artifact_depth: u32,"
+        },
+        {
+          "line": 24,
+          "text": "    /// Cooperative deadline inside the execution worker"
+        },
+        {
+          "line": 25,
+          "text": "    #[arg(long, default_value_t = 30_000)]"
+        },
+        {
+          "line": 26,
+          "text": "    pub time_ms: u64,"
+        }
+      ]
+    },
+    {
+      "first": 39,
+      "last": 63,
+      "lines": [
+        {
+          "line": 39,
+          "text": "impl LimitArgs {"
+        },
+        {
+          "line": 40,
+          "text": "    pub fn values(&self) -> RunLimits {"
+        },
+        {
+          "line": 41,
+          "text": "        RunLimits {"
+        },
+        {
+          "line": 42,
+          "text": "            budget: self.budget,"
+        },
+        {
+          "line": 43,
+          "text": "            arena_nodes: self.arena_nodes,"
+        },
+        {
+          "line": 44,
+          "text": "            frames: self.frames,"
+        },
+        {
+          "line": 45,
+          "text": "            artifact_bytes: self.artifact_bytes,"
+        },
+        {
+          "line": 46,
+          "text": "            artifact_nodes: self.artifact_nodes,"
+        },
+        {
+          "line": 47,
+          "text": "            artifact_depth: self.artifact_depth,"
+        },
+        {
+          "line": 48,
+          "text": "            time_ms: self.time_ms,"
+        },
+        {
+          "line": 49,
+          "text": "            compiler: CompilerCaps {"
+        },
+        {
+          "line": 50,
+          "text": "                source_bytes: self.source_bytes,"
+        },
+        {
+          "line": 51,
+          "text": "                modules: self.modules,"
+        },
+        {
+          "line": 52,
+          "text": "                diagnostics: self.diagnostics,"
+        },
+        {
+          "line": 53,
+          "text": "                sequence_length: self.sequence_length,"
+        },
+        {
+          "line": 54,
+          "text": "                validation_visits: self.validation_visits,"
+        },
+        {
+          "line": 55,
+          "text": "            },"
+        },
+        {
+          "line": 56,
+          "text": "            compaction: self.resident_nodes.zip(self.collection_work).map("
+        },
+        {
+          "line": 57,
+          "text": "                |(resident_nodes, collection_work)| CompactionPolicy {"
+        },
+        {
+          "line": 58,
+          "text": "                    resident_nodes,"
+        },
+        {
+          "line": 59,
+          "text": "                    collection_work,"
+        },
+        {
+          "line": 60,
+          "text": "                },"
+        },
+        {
+          "line": 61,
+          "text": "            ),"
+        },
+        {
+          "line": 62,
+          "text": "        }"
+        },
+        {
+          "line": 63,
+          "text": "    }"
+        }
+      ]
+    }
+  ],
+  "production-install/joy/cli/tests/structured_run.rs": [
+    {
+      "first": 230,
+      "last": 274,
+      "lines": [
+        {
+          "line": 230,
+          "text": "#[test]"
+        },
+        {
+          "line": 231,
+          "text": "fn explicit_compaction_deadline_ceiling_preserves_execution_and_publication() {"
+        },
+        {
+          "line": 232,
+          "text": "    let f = Fixture::new(\"loop4097\");"
+        },
+        {
+          "line": 233,
+          "text": "    let flags = [\"--resident-nodes\", \"256\", \"--collection-work\", \"100000000\"];"
+        },
+        {
+          "line": 234,
+          "text": "    let prior = f.ok(&flags);"
+        },
+        {
+          "line": 235,
+          "text": "    assert!("
+        },
+        {
+          "line": 236,
+          "text": "        prior[\"execution\"][\"compaction\"][\"collections\"]"
+        },
+        {
+          "line": 237,
+          "text": "            .as_u64()"
+        },
+        {
+          "line": 238,
+          "text": "            .unwrap()"
+        },
+        {
+          "line": 239,
+          "text": "            > 1"
+        },
+        {
+          "line": 240,
+          "text": "    );"
+        },
+        {
+          "line": 241,
+          "text": "    for time_ms in [\"3600000\", \"7200000\"] {"
+        },
+        {
+          "line": 242,
+          "text": "        let mut args = flags.to_vec();"
+        },
+        {
+          "line": 243,
+          "text": "        args.extend([\"--force\", \"--time-ms\", time_ms]);"
+        },
+        {
+          "line": 244,
+          "text": "        let result = f.ok(&args);"
+        },
+        {
+          "line": 245,
+          "text": "        for key in ["
+        },
+        {
+          "line": 246,
+          "text": "            \"program_particle\","
+        },
+        {
+          "line": 247,
+          "text": "            \"input_particle\","
+        },
+        {
+          "line": 248,
+          "text": "            \"output_particle\","
+        },
+        {
+          "line": 249,
+          "text": "            \"charged_reductions\","
+        },
+        {
+          "line": 250,
+          "text": "            \"allocated_nodes\","
+        },
+        {
+          "line": 251,
+          "text": "            \"peak_frames\","
+        },
+        {
+          "line": 252,
+          "text": "            \"compaction\","
+        },
+        {
+          "line": 253,
+          "text": "        ] {"
+        },
+        {
+          "line": 254,
+          "text": "            assert_eq!(result[\"execution\"][key], prior[\"execution\"][key]);"
+        },
+        {
+          "line": 255,
+          "text": "        }"
+        },
+        {
+          "line": 256,
+          "text": "        assert_eq!("
+        },
+        {
+          "line": 257,
+          "text": "            fs::read(f.path.join(\"out.dag\")).unwrap(),"
+        },
+        {
+          "line": 258,
+          "text": "            f.bytes(\"expected_output\")"
+        },
+        {
+          "line": 259,
+          "text": "        );"
+        },
+        {
+          "line": 260,
+          "text": "    }"
+        },
+        {
+          "line": 261,
+          "text": "    let mut args = flags.to_vec();"
+        },
+        {
+          "line": 262,
+          "text": "    args.extend([\"--force\", \"--time-ms\", \"7200001\"]);"
+        },
+        {
+          "line": 263,
+          "text": "    let rejected = f.run(&args);"
+        },
+        {
+          "line": 264,
+          "text": "    assert_eq!(rejected.status.code(), Some(1));"
+        },
+        {
+          "line": 265,
+          "text": "    assert!(rejected.stdout.is_empty());"
+        },
+        {
+          "line": 266,
+          "text": "    assert!("
+        },
+        {
+          "line": 267,
+          "text": "        String::from_utf8_lossy(&rejected.stderr).contains(\"limit time_ms must be in 1..=7200000\")"
+        },
+        {
+          "line": 268,
+          "text": "    );"
+        },
+        {
+          "line": 269,
+          "text": "    assert_eq!("
+        },
+        {
+          "line": 270,
+          "text": "        fs::read(f.path.join(\"out.dag\")).unwrap(),"
+        },
+        {
+          "line": 271,
+          "text": "        f.bytes(\"expected_output\")"
+        },
+        {
+          "line": 272,
+          "text": "    );"
+        },
+        {
+          "line": 273,
+          "text": "    f.no_staging();"
+        },
+        {
+          "line": 274,
+          "text": "}"
+        }
+      ]
+    }
+  ],
+  "whole-proof-ci/trisha/docs/reference/whole-self-build-ci.md": [
+    {
+      "first": 3,
+      "last": 8,
+      "lines": [
+        {
+          "line": 3,
+          "text": "This workflow replays the accepted complete C1\u2192C2 and C2\u2192C3 compiler jobs using"
+        },
+        {
+          "line": 4,
+          "text": "the public `joy-nox-disclosed-compiler-v1` certificate profile. Each job builds"
+        },
+        {
+          "line": 5,
+          "text": "native Linux x64 Joy from committed source pins, proves one complete computation,"
+        },
+        {
+          "line": 6,
+          "text": "then checks the certificate in a fresh process against explicit expected compiler"
+        },
+        {
+          "line": 7,
+          "text": "and JOB1 files. It reports successful proof verification separately from durable"
+        },
+        {
+          "line": 8,
+          "text": "evidence retention. Observed results belong in `audit/`."
+        }
+      ]
+    },
+    {
+      "first": 21,
+      "last": 59,
+      "lines": [
+        {
+          "line": 21,
+          "text": "GitHub documents free standard public runners with four CPUs, 16 GB RAM and"
+        },
+        {
+          "line": 22,
+          "text": "14 GB SSD storage. Their job limit is six hours. These are platform constraints,"
+        },
+        {
+          "line": 23,
+          "text": "not measurements of this workflow. The exact 48 GiB free-start preflight must pass"
+        },
+        {
+          "line": 24,
+          "text": "after recorded cleanup of a fixed unused-SDK allowlist; otherwise the job stops."
+        },
+        {
+          "line": 25,
+          "text": "No paid runner or automatic resource increase is selected."
+        },
+        {
+          "line": 26,
+          "text": "Sources: [hosted runners](https://docs.github.com/en/actions/reference/runners/github-hosted-runners)"
+        },
+        {
+          "line": 27,
+          "text": "and [Actions limits](https://docs.github.com/en/actions/reference/limits)."
+        },
+        {
+          "line": 28,
+          "text": ""
+        },
+        {
+          "line": 29,
+          "text": "The immutable input archive is selected by release asset ID, exact size, SHA256"
+        },
+        {
+          "line": 30,
+          "text": "and files.json SHA256. Admission requires its fixed root directory, unique safe"
+        },
+        {
+          "line": 31,
+          "text": "regular-file names, exact manifest membership and every member hash/size. Links,"
+        },
+        {
+          "line": 32,
+          "text": "path traversal, extra/missing files and mismatched bytes fail. Its historical"
+        },
+        {
+          "line": 33,
+          "text": "scripts are evidence only. Both compiler artifacts, both JOB1s, the full 94-module"
+        },
+        {
+          "line": 34,
+          "text": "source graph and accepted SH6 receipts stay byte-identical."
+        },
+        {
+          "line": 35,
+          "text": ""
+        },
+        {
+          "line": 36,
+          "text": "The source build reuses PR21's origin-only fetch, complete clean inventories,"
+        },
+        {
+          "line": 37,
+          "text": "Cargo closure validation and sanitized environment. Absolute Rust 1.89.0 compiler,"
+        },
+        {
+          "line": 38,
+          "text": "Cargo and rustdoc paths share one native toolchain directory. Build caches live"
+        },
+        {
+          "line": 39,
+          "text": "outside source checkouts; explicit isolated Cargo home prevents local overrides."
+        },
+        {
+          "line": 40,
+          "text": "No source patch or working-tree input is accepted. The runtime commands use the"
+        },
+        {
+          "line": 41,
+          "text": "newly built absolute Joy path with empty PATH. Only the locale and the runner's"
+        },
+        {
+          "line": 42,
+          "text": "process-tracking identifier accompany that empty search path; build and network"
+        },
+        {
+          "line": 43,
+          "text": "credentials are excluded. SIGTERM unwinds the process-group guard and saves its"
+        },
+        {
+          "line": 44,
+          "text": "failure receipt. The workflow reserves separate build/replay, retention and"
+        },
+        {
+          "line": 45,
+          "text": "metadata-upload step deadlines within its six-hour job limit."
+        },
+        {
+          "line": 46,
+          "text": ""
+        },
+        {
+          "line": 47,
+          "text": "Host bounds retain 20 billion charge, one billion allocations, 65,536 frames,"
+        },
+        {
+          "line": 48,
+          "text": "3,145,728 resident nouns, 10 billion collection work and 7,200 seconds. Proof bounds"
+        },
+        {
+          "line": 49,
+          "text": "retain 24 GiB wire, 96 GiB decoded, 12 billion records, 16 billion expanded steps"
+        },
+        {
+          "line": 50,
+          "text": "and 262,144 cache slots. Outer bounds retain 7,500 seconds, 6 GiB sampled process"
+        },
+        {
+          "line": 51,
+          "text": "RSS, 30 GiB attempt disk and an 8 GiB free-space floor. Memory, time and physical"
+        },
+        {
+          "line": 52,
+          "text": "disk observations remain unattested host evidence."
+        },
+        {
+          "line": 53,
+          "text": ""
+        },
+        {
+          "line": 54,
+          "text": "Before proving, the full manifest is repacked by native Joy and must reproduce the"
+        },
+        {
+          "line": 55,
+          "text": "frozen JOB1 bytes. Prover and fresh verifier reports must match the accepted"
+        },
+        {
+          "line": 56,
+          "text": "program/input/output particles, charged reductions, logical peak frames, expanded"
+        },
+        {
+          "line": 57,
+          "text": "steps and full compiler response. Fresh verification must omit prover host"
+        },
+        {
+          "line": 58,
+          "text": "observations. Extracted C2/C3 ART1 bytes must match the accepted C2 SHA256 exactly."
+        },
+        {
+          "line": 59,
+          "text": "Binary, source and input identities are rechecked after work completes."
+        }
+      ]
+    },
+    {
+      "first": 82,
+      "last": 84,
+      "lines": [
+        {
+          "line": 82,
+          "text": "Small Actions artifacts retain raw success or failure metadata; complete proof"
+        },
+        {
+          "line": 83,
+          "text": "assets and their manifest have distinct durable-retention status. Missing or"
+        },
+        {
+          "line": 84,
+          "text": "failed work is recorded as incomplete or failed, never as acceptance."
+        }
+      ]
+    }
+  ],
+  "whole-proof-ci/trisha/scripts/whole_self_inputs.py": [
+    {
+      "first": 9,
+      "last": 17,
+      "lines": [
+        {
+          "line": 9,
+          "text": "GIB = 1024**3"
+        },
+        {
+          "line": 10,
+          "text": "PROFILE = dict(wire_bytes=24 * GIB, decoded_bytes=96 * GIB, records=12_000_000_000,"
+        },
+        {
+          "line": 11,
+          "text": "               steps=16_000_000_000, cache_slots=262144, outer_wall_seconds=7500,"
+        },
+        {
+          "line": 12,
+          "text": "               sampled_rss_bytes=6 * GIB, attempt_disk_bytes=30 * GIB,"
+        },
+        {
+          "line": 13,
+          "text": "               minimum_free_start_bytes=48 * GIB,"
+        },
+        {
+          "line": 14,
+          "text": "               expected_artifact_sha256='76a07c08265bd2ef525164472b6b53ac3f0e6cbbedce3250c4202f40ffba34c8')"
+        },
+        {
+          "line": 15,
+          "text": "HOST = ['--arena-nodes', '1000000000', '--budget', '20000000000', '--frames', '65536',"
+        },
+        {
+          "line": 16,
+          "text": "        '--time-ms', '7200000', '--validation-visits', '16777216',"
+        },
+        {
+          "line": 17,
+          "text": "        '--resident-nodes', '3145728', '--collection-work', '10000000000']"
+        }
+      ]
+    },
+    {
+      "first": 124,
+      "last": 153,
+      "lines": [
+        {
+          "line": 124,
+          "text": "    profile = load(destination / 'profile.json')"
+        },
+        {
+          "line": 125,
+          "text": "    require(profile['host_flags'] == HOST, 'unchanged host profile')"
+        },
+        {
+          "line": 126,
+          "text": "    require(all(profile[k] == v for k, v in PROFILE.items()), 'unchanged whole-proof caps')"
+        },
+        {
+          "line": 127,
+          "text": "    before = {name: identity(destination / name) for name in manifest}"
+        },
+        {
+          "line": 128,
+          "text": "    return before"
+        },
+        {
+          "line": 129,
+          "text": ""
+        },
+        {
+          "line": 130,
+          "text": ""
+        },
+        {
+          "line": 131,
+          "text": "def flags():"
+        },
+        {
+          "line": 132,
+          "text": "    result = list(HOST)"
+        },
+        {
+          "line": 133,
+          "text": "    for flag, key in [('proof-bytes', 'wire_bytes'), ('proof-decoded-bytes', 'decoded_bytes'),"
+        },
+        {
+          "line": 134,
+          "text": "                      ('proof-records', 'records'), ('proof-steps', 'steps'), ('proof-cache-slots', 'cache_slots')]:"
+        },
+        {
+          "line": 135,
+          "text": "        result += ['--' + flag, str(PROFILE[key])]"
+        },
+        {
+          "line": 136,
+          "text": "    return result"
+        },
+        {
+          "line": 137,
+          "text": ""
+        },
+        {
+          "line": 138,
+          "text": ""
+        },
+        {
+          "line": 139,
+          "text": "def compare(value, accepted, action):"
+        },
+        {
+          "line": 140,
+          "text": "    require(value.get('ok') is True, 'successful Joy receipt')"
+        },
+        {
+          "line": 141,
+          "text": "    require(value.get('schema') == ('joy/artifact-proof/v1' if action == 'prove' else 'joy/artifact-verification/v1'), 'versioned Joy receipt')"
+        },
+        {
+          "line": 142,
+          "text": "    current = value['verification']"
+        },
+        {
+          "line": 143,
+          "text": "    old = accepted['execution']['execution']"
+        },
+        {
+          "line": 144,
+          "text": "    for key in ('program_particle', 'input_particle', 'output_particle', 'charged_reductions'):"
+        },
+        {
+          "line": 145,
+          "text": "        require(current[key] == old[key], 'accepted self-build coordinate: ' + key)"
+        },
+        {
+          "line": 146,
+          "text": "    require(current['logical_peak_frames'] == old['peak_frames'], 'accepted logical depth')"
+        },
+        {
+          "line": 147,
+          "text": "    require(current['expanded_steps'] == old['compaction']['evaluator_checkpoints'] - 1, 'accepted expanded steps')"
+        },
+        {
+          "line": 148,
+          "text": "    require(current['compiler_job'] == old['compiler_job'], 'exact complete compiler response')"
+        },
+        {
+          "line": 149,
+          "text": "    require(current['format'] == 'joy-nox-disclosed-compiler-v1' and"
+        },
+        {
+          "line": 150,
+          "text": "            current['disclosure'] == 'complete public witness' and current['physical_resource_claim'] == 'unattested', 'proof disclosure/profile')"
+        },
+        {
+          "line": 151,
+          "text": "    if action == 'verify':"
+        },
+        {
+          "line": 152,
+          "text": "        require('prover_observations' not in current, 'fresh verifier has no prover observations')"
+        },
+        {
+          "line": 153,
+          "text": "    return current"
+        }
+      ]
+    }
+  ],
+  "whole-proof-ci/trisha/scripts/whole_self_host.py": [
+    {
+      "first": 79,
+      "last": 142,
+      "lines": [
+        {
+          "line": 79,
+          "text": "def bounded(name, argv, directory, results, binary, frozen, report, save_report):"
+        },
+        {
+          "line": 80,
+          "text": "    directory.mkdir()"
+        },
+        {
+          "line": 81,
+          "text": "    require(disk(directory)['free'] >= (PROFILE['minimum_free_start_bytes'] if name == 'prove' else 8 * GIB), 'whole-proof free-space preflight')"
+        },
+        {
+          "line": 82,
+          "text": "    row = dict(name=name, command=list(map(str, argv)), cwd=str(directory),"
+        },
+        {
+          "line": 83,
+          "text": "               environment={'PATH': ''}, binary_before=identity(binary),"
+        },
+        {
+          "line": 84,
+          "text": "               inputs_before={str(p): identity(p) for p in frozen},"
+        },
+        {
+          "line": 85,
+          "text": "               started_ns=time.time_ns(), sampled_peak_rss_bytes=0, status='running')"
+        },
+        {
+          "line": 86,
+          "text": "    report['proof_commands'].append(row)"
+        },
+        {
+          "line": 87,
+          "text": "    save_report()"
+        },
+        {
+          "line": 88,
+          "text": "    child = None"
+        },
+        {
+          "line": 89,
+          "text": "    tick = time.monotonic_ns()"
+        },
+        {
+          "line": 90,
+          "text": ""
+        },
+        {
+          "line": 91,
+          "text": "    def limit():"
+        },
+        {
+          "line": 92,
+          "text": "        cap = PROFILE['attempt_disk_bytes']"
+        },
+        {
+          "line": 93,
+          "text": "        resource.setrlimit(resource.RLIMIT_FSIZE, (cap, cap))"
+        },
+        {
+          "line": 94,
+          "text": ""
+        },
+        {
+          "line": 95,
+          "text": "    try:"
+        },
+        {
+          "line": 96,
+          "text": "        with (results / (name + '.stdout')).open('xb') as stdout, (results / (name + '.stderr')).open('xb') as stderr, (results / (name + '-resources.jsonl')).open('x') as samples:"
+        },
+        {
+          "line": 97,
+          "text": "            # A positive runtime process receives no inherited tokens or build overrides."
+        },
+        {
+          "line": 98,
+          "text": "            environment = {'PATH': '', 'LANG': 'C.UTF-8'}"
+        },
+        {
+          "line": 99,
+          "text": "            if 'RUNNER_TRACKING_ID' in os.environ:"
+        },
+        {
+          "line": 100,
+          "text": "                environment['RUNNER_TRACKING_ID'] = os.environ['RUNNER_TRACKING_ID']"
+        },
+        {
+          "line": 101,
+          "text": "            child = subprocess.Popen(row['command'], cwd=directory, env=environment, stdout=stdout,"
+        },
+        {
+          "line": 102,
+          "text": "                                     stderr=stderr, start_new_session=True, preexec_fn=limit)"
+        },
+        {
+          "line": 103,
+          "text": "            row['pid'] = child.pid"
+        },
+        {
+          "line": 104,
+          "text": "            while child.poll() is None:"
+        },
+        {
+          "line": 105,
+          "text": "                ps = subprocess.check_output(['/bin/ps', '-axo', 'pid=,pgid=,rss='], text=True)"
+        },
+        {
+          "line": 106,
+          "text": "                members = [dict(pid=p, rss_bytes=rss * 1024)"
+        },
+        {
+          "line": 107,
+          "text": "                           for p, group, rss in (map(int, line.split()) for line in ps.splitlines())"
+        },
+        {
+          "line": 108,
+          "text": "                           if group == child.pid]"
+        },
+        {
+          "line": 109,
+          "text": "                sample = dict(elapsed_ns=time.monotonic_ns() - tick, processes=members,"
+        },
+        {
+          "line": 110,
+          "text": "                              rss_bytes=sum(p['rss_bytes'] for p in members),"
+        },
+        {
+          "line": 111,
+          "text": "                              attempt_bytes=sum(p.stat().st_size for p in directory.rglob('*') if p.is_file()),"
+        },
+        {
+          "line": 112,
+          "text": "                              free_bytes=disk(directory)['free'])"
+        },
+        {
+          "line": 113,
+          "text": "                row['sampled_peak_rss_bytes'] = max(row['sampled_peak_rss_bytes'], sample['rss_bytes'])"
+        },
+        {
+          "line": 114,
+          "text": "                row['latest_sample'] = sample"
+        },
+        {
+          "line": 115,
+          "text": "                samples.write(json.dumps(sample) + '\\n')"
+        },
+        {
+          "line": 116,
+          "text": "                samples.flush()"
+        },
+        {
+          "line": 117,
+          "text": "                reason = ('wall' if sample['elapsed_ns'] > PROFILE['outer_wall_seconds'] * 10**9 else"
+        },
+        {
+          "line": 118,
+          "text": "                          'rss' if sample['rss_bytes'] > PROFILE['sampled_rss_bytes'] else"
+        },
+        {
+          "line": 119,
+          "text": "                          'attempt-disk' if sample['attempt_bytes'] > PROFILE['attempt_disk_bytes'] else"
+        },
+        {
+          "line": 120,
+          "text": "                          'free-disk' if sample['free_bytes'] < 8 * GIB else None)"
+        },
+        {
+          "line": 121,
+          "text": "                if reason:"
+        },
+        {
+          "line": 122,
+          "text": "                    row['resource_stop'] = reason"
+        },
+        {
+          "line": 123,
+          "text": "                    terminate(child)"
+        },
+        {
+          "line": 124,
+          "text": "                    break"
+        },
+        {
+          "line": 125,
+          "text": "                save_report()"
+        },
+        {
+          "line": 126,
+          "text": "                try:"
+        },
+        {
+          "line": 127,
+          "text": "                    child.wait(timeout=1)"
+        },
+        {
+          "line": 128,
+          "text": "                except subprocess.TimeoutExpired:"
+        },
+        {
+          "line": 129,
+          "text": "                    pass"
+        },
+        {
+          "line": 130,
+          "text": "            row.update(exit_code=child.wait(), elapsed_ns=time.monotonic_ns() - tick)"
+        },
+        {
+          "line": 131,
+          "text": "        require(row['exit_code'] == 0 and 'resource_stop' not in row, 'bounded native command failed')"
+        },
+        {
+          "line": 132,
+          "text": "        row['status'] = 'passed'"
+        },
+        {
+          "line": 133,
+          "text": "    except BaseException:"
+        },
+        {
+          "line": 134,
+          "text": "        terminate(child)"
+        },
+        {
+          "line": 135,
+          "text": "        row.update(status='failed', error=traceback.format_exc())"
+        },
+        {
+          "line": 136,
+          "text": "        raise"
+        },
+        {
+          "line": 137,
+          "text": "    finally:"
+        },
+        {
+          "line": 138,
+          "text": "        try:"
+        },
+        {
+          "line": 139,
+          "text": "            row['binary_after'] = identity(binary)"
+        },
+        {
+          "line": 140,
+          "text": "            row['inputs_after'] = {str(p): identity(p) for p in frozen}"
+        },
+        {
+          "line": 141,
+          "text": "            require(row['binary_before'] == row['binary_after'] and row['inputs_before'] == row['inputs_after'], 'runtime input or binary changed')"
+        },
+        {
+          "line": 142,
+          "text": "        except BaseException:"
+        }
+      ]
+    }
+  ],
+  "whole-proof-ci/trisha/.github/workflows/whole-self-build.yml": [
+    {
+      "first": 20,
+      "last": 65,
+      "lines": [
+        {
+          "line": 20,
+          "text": "jobs:"
+        },
+        {
+          "line": 21,
+          "text": "  full:"
+        },
+        {
+          "line": 22,
+          "text": "    if: github.repository == 'cyberia-to/trisha' && github.event.repository.private == false"
+        },
+        {
+          "line": 23,
+          "text": "    strategy:"
+        },
+        {
+          "line": 24,
+          "text": "      fail-fast: false"
+        },
+        {
+          "line": 25,
+          "text": "      matrix:"
+        },
+        {
+          "line": 26,
+          "text": "        generation: [1, 2]"
+        },
+        {
+          "line": 27,
+          "text": "    runs-on: ubuntu-24.04"
+        },
+        {
+          "line": 28,
+          "text": "    timeout-minutes: 360"
+        },
+        {
+          "line": 29,
+          "text": "    permissions:"
+        },
+        {
+          "line": 30,
+          "text": "      contents: write"
+        },
+        {
+          "line": 31,
+          "text": "    steps:"
+        },
+        {
+          "line": 32,
+          "text": "      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+        },
+        {
+          "line": 33,
+          "text": "        with:"
+        },
+        {
+          "line": 34,
+          "text": "          persist-credentials: false"
+        },
+        {
+          "line": 35,
+          "text": "      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1"
+        },
+        {
+          "line": 36,
+          "text": "        with:"
+        },
+        {
+          "line": 37,
+          "text": "          python-version: '3.13.15'"
+        },
+        {
+          "line": 38,
+          "text": "          architecture: x64"
+        },
+        {
+          "line": 39,
+          "text": "      - name: Build pinned native Joy and replay exact full job"
+        },
+        {
+          "line": 40,
+          "text": "        timeout-minutes: 300"
+        },
+        {
+          "line": 41,
+          "text": "        env:"
+        },
+        {
+          "line": 42,
+          "text": "          GH_TOKEN: ${{ github.token }}"
+        },
+        {
+          "line": 43,
+          "text": "          GENERATION: ${{ matrix.generation }}"
+        },
+        {
+          "line": 44,
+          "text": "          RETAIN_DRAFT: ${{ github.event_name == 'push' || inputs.retain_draft }}"
+        },
+        {
+          "line": 45,
+          "text": "        run: >-"
+        },
+        {
+          "line": 46,
+          "text": "          python -B scripts/whole-self-build.py"
+        },
+        {
+          "line": 47,
+          "text": "          --generation \"$GENERATION\""
+        },
+        {
+          "line": 48,
+          "text": "          --results \"$RUNNER_TEMP/whole-self-build-results\""
+        },
+        {
+          "line": 49,
+          "text": "      - name: Retain verified complete proof as checked draft assets"
+        },
+        {
+          "line": 50,
+          "text": "        timeout-minutes: 45"
+        },
+        {
+          "line": 51,
+          "text": "        if: success() && (github.event_name == 'push' || inputs.retain_draft)"
+        },
+        {
+          "line": 52,
+          "text": "        env:"
+        },
+        {
+          "line": 53,
+          "text": "          GH_TOKEN: ${{ github.token }}"
+        },
+        {
+          "line": 54,
+          "text": "          RETAIN_DRAFT: ${{ github.event_name == 'push' || inputs.retain_draft }}"
+        },
+        {
+          "line": 55,
+          "text": "        run: >-"
+        },
+        {
+          "line": 56,
+          "text": "          python -B scripts/whole-self-retain.py"
+        },
+        {
+          "line": 57,
+          "text": "          --results \"$RUNNER_TEMP/whole-self-build-results\""
+        },
+        {
+          "line": 58,
+          "text": "      - name: Preserve exact success or failure receipts and native executable"
+        },
+        {
+          "line": 59,
+          "text": "        timeout-minutes: 10"
+        },
+        {
+          "line": 60,
+          "text": "        if: always()"
+        },
+        {
+          "line": 61,
+          "text": "        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
+        },
+        {
+          "line": 62,
+          "text": "        with:"
+        },
+        {
+          "line": 63,
+          "text": "          name: whole-self-build-c${{ matrix.generation }}-${{ github.run_attempt }}"
+        },
+        {
+          "line": 64,
+          "text": "          path: ${{ runner.temp }}/whole-self-build-results/"
+        },
+        {
+          "line": 65,
+          "text": "          if-no-files-found: error"
+        }
+      ]
+    }
+  ],
+  "whole-proof-ci/trisha/.github/whole-self-build-sources.json": [
+    {
+      "first": 1,
+      "last": 18,
+      "lines": [
+        {
+          "line": 1,
+          "text": "{"
+        },
+        {
+          "line": 2,
+          "text": "  \"format\": \"native-public-proof-profile-v1\","
+        },
+        {
+          "line": 3,
+          "text": "  \"rust\": \"1.89.0\","
+        },
+        {
+          "line": 4,
+          "text": "  \"sources\": {"
+        },
+        {
+          "line": 5,
+          "text": "    \"bbg\": \"1d39975ad199b48c350fa4cc011cbf6f289480ee\","
+        },
+        {
+          "line": 6,
+          "text": "    \"hemera\": \"a931a0a8e7ed369852ce0f8bc6451a59745ee692\","
+        },
+        {
+          "line": 7,
+          "text": "    \"honeycrisp\": \"ff735e6c262926bc9bab7534786a575020cbe442\","
+        },
+        {
+          "line": 8,
+          "text": "    \"joy\": \"6e0ec4d8440e2521df08f442d64f54e667044716\","
+        },
+        {
+          "line": 9,
+          "text": "    \"lens\": \"17cafe91431977b738e5b72361187cd01ad93638\","
+        },
+        {
+          "line": 10,
+          "text": "    \"neuron\": \"fd24e768d623604b67e20b4b93fa8e82c83ac373\","
+        },
+        {
+          "line": 11,
+          "text": "    \"nox\": \"2f09ca3c3f18ae470365310cca8db5208eda75c6\","
+        },
+        {
+          "line": 12,
+          "text": "    \"strata\": \"d2eb1763b8caf04e6c7647ac6fe99761519c2ef9\","
+        },
+        {
+          "line": 13,
+          "text": "    \"tade\": \"c1d81c75725df0a666c36d81ef33c3a60eb007f3\","
+        },
+        {
+          "line": 14,
+          "text": "    \"trident\": \"da0d1a59cd8208fab96f219ccedef29122d5221a\","
+        },
+        {
+          "line": 15,
+          "text": "    \"trisha\": \"d59738198aff278e7166e5958fbbc5f9777986b7\","
+        },
+        {
+          "line": 16,
+          "text": "    \"zheng\": \"0d7ba6d422d9b825f9685e903e55252f88ebecd9\""
+        },
+        {
+          "line": 17,
+          "text": "  }"
+        },
+        {
+          "line": 18,
+          "text": "}"
+        }
+      ]
+    }
+  ],
+  "whole-proof/profile.json": [
+    {
+      "first": 1,
+      "last": 30,
+      "lines": [
+        {
+          "line": 1,
+          "text": "{"
+        },
+        {
+          "line": 2,
+          "text": "  \"wire_bytes\": 25769803776,"
+        },
+        {
+          "line": 3,
+          "text": "  \"decoded_bytes\": 103079215104,"
+        },
+        {
+          "line": 4,
+          "text": "  \"records\": 12000000000,"
+        },
+        {
+          "line": 5,
+          "text": "  \"steps\": 16000000000,"
+        },
+        {
+          "line": 6,
+          "text": "  \"cache_slots\": 262144,"
+        },
+        {
+          "line": 7,
+          "text": "  \"host_flags\": ["
+        },
+        {
+          "line": 8,
+          "text": "    \"--arena-nodes\","
+        },
+        {
+          "line": 9,
+          "text": "    \"1000000000\","
+        },
+        {
+          "line": 10,
+          "text": "    \"--budget\","
+        },
+        {
+          "line": 11,
+          "text": "    \"20000000000\","
+        },
+        {
+          "line": 12,
+          "text": "    \"--frames\","
+        },
+        {
+          "line": 13,
+          "text": "    \"65536\","
+        },
+        {
+          "line": 14,
+          "text": "    \"--time-ms\","
+        },
+        {
+          "line": 15,
+          "text": "    \"7200000\","
+        },
+        {
+          "line": 16,
+          "text": "    \"--validation-visits\","
+        },
+        {
+          "line": 17,
+          "text": "    \"16777216\","
+        },
+        {
+          "line": 18,
+          "text": "    \"--resident-nodes\","
+        },
+        {
+          "line": 19,
+          "text": "    \"3145728\","
+        },
+        {
+          "line": 20,
+          "text": "    \"--collection-work\","
+        },
+        {
+          "line": 21,
+          "text": "    \"10000000000\""
+        },
+        {
+          "line": 22,
+          "text": "  ],"
+        },
+        {
+          "line": 23,
+          "text": "  \"outer_wall_seconds\": 7500,"
+        },
+        {
+          "line": 24,
+          "text": "  \"sampled_rss_bytes\": 6442450944,"
+        },
+        {
+          "line": 25,
+          "text": "  \"attempt_disk_bytes\": 32212254720,"
+        },
+        {
+          "line": 26,
+          "text": "  \"minimum_free_start_bytes\": 51539607552,"
+        },
+        {
+          "line": 27,
+          "text": "  \"expected_artifact_sha256\": \"76a07c08265bd2ef525164472b6b53ac3f0e6cbbedce3250c4202f40ffba34c8\","
+        },
+        {
+          "line": 28,
+          "text": "  \"status\": \"prepared; no full proof started\","
+        },
+        {
+          "line": 29,
+          "text": "  \"scope\": \"Separate bounded public certificate profile over unchanged accepted complete SH6 jobs and compilers. Guest limits and host deadline retain SH6 values. No automatic retry or bound increase.\""
+        },
+        {
+          "line": 30,
+          "text": "}"
+        }
+      ]
+    }
+  ]
+}

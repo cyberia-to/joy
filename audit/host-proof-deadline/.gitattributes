@@ -1,0 +1,2 @@
+# Preserve exact raw evidence bytes and diagnostic whitespace.
+** -text whitespace=-blank-at-eof,-blank-at-eol

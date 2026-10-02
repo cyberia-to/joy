@@ -1,0 +1,89 @@
+{
+  "schema": "sh8-linux-host-clock-contract-review/v1",
+  "observed_ns": 1790921752725010000,
+  "scope": "Read-only source/contract review. No edits to inspected repositories, tests, proof reruns, cap changes or dispatch. Parent supplied the remote Capture(Cancelled) outcome; this review does not independently reproduce it.",
+  "sources": {
+    "whole-validation-v2/trident": {
+      "head": "8cb43f652501bf7689211bae793ac1757eb125b7",
+      "status": ""
+    },
+    "whole-proof-ci/trisha": {
+      "head": "5d14ae46f327a7f0ee1f9812b4ba62b73cf035bc",
+      "status": "?? audit/whole-self-build-linux-20261002/\n"
+    },
+    "production-install/joy": {
+      "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+      "status": ""
+    }
+  },
+  "source_files": 20,
+  "conclusion": "7200 seconds is an explicitly selected physical host allowance AND the currently enforced compacting Joy API ceiling. It is not an SH8 semantic clock assertion or an explicit two-hour user SLA. A separately reviewed Linux profile can prove the same SH8 relation, but cannot exceed two hours with the unchanged pinned Joy API or unchanged CI profile.",
+  "normative_map": [
+    {
+      "claim": "SH8 exact-relation acceptance and measured performance",
+      "references": [
+        "whole-validation-v2/trident/reference/self-hosting.md:958-976"
+      ],
+      "detail": "Both full self-builds, exact compiler/source/options/output/machine/profile/cost binding, fresh independent verification, mutation rejection, equal C2/C3 and regression corpus; elapsed time is recorded, with no maximum in SH8."
+    },
+    {
+      "claim": "Predetermined bounds and explicit contract changes",
+      "references": [
+        "whole-validation-v2/trident/reference/self-hosting.md:98-112,867-873"
+      ],
+      "detail": "SH6 currently fixes 7200000ms as a host allowance. Numeric bounds are set before acceptance; changing a bound requires contract and boundary-test updates. An exhausted original repetition remains failed; no in-run increase."
+    },
+    {
+      "claim": "Physical clock is separate from the logical claim",
+      "references": [
+        "whole-validation-v2/trident/reference/self-hosting-runtime.md:139-167",
+        "whole-validation-v2/trident/reference/self-hosting-jobs.md:19-25,309-316",
+        "production-install/joy/specs/structured-certificates.md:20-26,118-124",
+        "production-install/joy/rs/structured/certificate/types.rs:49-73"
+      ],
+      "detail": "JOB1 LIM1 has no time_ms. Context binds program/formula/object full particles, profile, budget and logical frame allowance. Physical allocation, resident storage, GC, elapsed time and RSS remain independently checked host observations, not proved quantities."
+    },
+    {
+      "claim": "Current API rejects more than two hours",
+      "references": [
+        "production-install/joy/rs/structured/limits.rs:14,47-65",
+        "production-install/joy/specs/structured-run.md:91-102",
+        "production-install/joy/cli/tests/structured_run.rs:241-267"
+      ],
+      "detail": "Explicit compacting time ceiling is 7200000ms; test admits exact ceiling and rejects 7200001. Ordinary execution maximum is 300000ms and default time_ms is 30000ms."
+    },
+    {
+      "claim": "No existing run/prove/verify ceiling split",
+      "references": [
+        "production-install/joy/rs/structured.rs:184-207",
+        "production-install/joy/rs/structured/certificate.rs:24-94",
+        "production-install/joy/cli/artifact_limits.rs:24-26,39-61"
+      ],
+      "detail": "All public routes validate the same RunLimits; ordinary versus explicit compaction is the existing distinction."
+    },
+    {
+      "claim": "Frozen local and Linux profile checks cannot silently admit a new timer",
+      "references": [
+        "whole-proof/profile.json",
+        "whole-proof-ci/trisha/scripts/whole_self_inputs.py:9-17,124-153",
+        "whole-proof-ci/trisha/docs/reference/whole-self-build-ci.md:29-59"
+      ],
+      "detail": "The archive validator requires exact original host flags and proof caps. Preserve that historical profile unchanged; a new reviewed host-clock selection must be explicit and separately identified."
+    },
+    {
+      "claim": "Whole-run outer deadlines also need coherent review",
+      "references": [
+        "whole-proof-ci/trisha/scripts/whole_self_host.py:117-124",
+        "whole-proof-ci/trisha/.github/workflows/whole-self-build.yml:28,40,50,59"
+      ],
+      "detail": "Current process outer deadline is 7500 seconds. The replay step is 300min, retention 45min and final metadata 10min within a 360min job."
+    }
+  ],
+  "recommendation": {
+    "change": "Smallest coherent production change: raise only COMPACT_TIME_MS to 14400000 and document the explicit compacting host ceiling. Preserve default 30000, ordinary maximum 300000, all work/storage/proof caps, context encoding and JOB1 schema.",
+    "tests": "Retain old exact 7200000 acceptance; add 14400000 acceptance, 14400001 and zero rejection, output/cost equivalence, failed-publication preservation and applicable prove/verify admission/cancellation checks. No actual multi-hour test is needed to test admission boundaries.",
+    "separate_jobs": "A 240min cooperative producer and 120min fresh verifier in separate native Linux jobs need no semantic-context change. Producer outer/process/step bounds must exceed its internal deadline enough to join, persist failures and retain evidence. Build, input/proof transfer and retention must fit each 360min job; 240min step exactly matching its cooperative deadline is insufficient. A four-hour bound does not establish that this workload will finish within it.",
+    "identity": "Commit and pin the new Joy source and distinct Linux host profile. Preserve both complete compiler inputs, 94-module JOB1/source package, accepted particles/cost/frames/steps/RES1/ART1 and current proof caps. Retain original failed Linux attempts unchanged; label future results separately. Fresh consumer must authenticate the exact producer certificate identity and inputs, then all SH8 adversarial/regression conditions remain required."
+  },
+  "initial_review_attempt": "initial-invocation.json preserves a conservative clean-whole-worktree assertion failure caused by a concurrently created untracked CI audit directory. The successful review instead checks every inspected tracked file byte-for-byte against its recorded committed blob; the untracked directory was not read or modified."
+}

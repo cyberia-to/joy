@@ -1,0 +1,47 @@
+{
+  "schema": "joy-host-deadline-independent-source-review/v1",
+  "observed_ns": 1790922172248933000,
+  "base": "11b7bad201cbfc03955290b5479fa6684f8e2b82",
+  "worktree": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/joy",
+  "status": "passed-source-review",
+  "findings": [],
+  "scope": "Read-only review of all seven production/spec/test delta files, unchanged admission/context/runtime owners, the plan and gate driver. No edits in reviewed worktrees, no independent compilation/test run, no interference with active gates. This is not a complete Linux proof or long-duration clock measurement.",
+  "source_snapshot": "source-map.json",
+  "gate_observations": [
+    {
+      "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/joy/audit/host-proof-deadline/boundary/receipt.json",
+      "status": "passed",
+      "kind": "boundary",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/joy/audit/host-proof-deadline/check/receipt.json",
+      "status": "passed",
+      "kind": "check",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/joy/audit/host-proof-deadline/focused/receipt.json",
+      "status": "passed",
+      "kind": "focused",
+      "exit_code": 0
+    },
+    {
+      "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/joy/audit/host-proof-deadline/test/receipt.json",
+      "status": "passed",
+      "kind": "test",
+      "exit_code": 0
+    }
+  ],
+  "conclusions": [
+    "Production delta is exactly COMPACT_TIME_MS 7200000 -> 14400000. Shared validation still rejects zero and above-ceiling values before deadline arithmetic. Ordinary 300000 maximum and 30000 defaults are unchanged.",
+    "Run, prove and verify intentionally share the same explicit compacting host policy. No JOB1, context digest, wire format, semantic equations, budget, allocation, frame, collection or proof limit changed.",
+    "New CLI test constructs a genuine admitted compiler JOB1 fixture. Three successful producer processes select 30000, 7200000 and 14400000ms and compare complete proof bytes; each is checked by three fresh verifier processes at the same three deadlines. It removes only elapsed_micros from report comparison, checks unattested physical status, absence of prover observations and exact extracted ART1 bytes.",
+    "Both proof CLI routes explicitly reject 0, 14400001 and u64::MAX; assertions require exit1, empty stdout, the time_ms boundary diagnostic, unchanged existing destination bytes and absence of staging files.",
+    "Existing unit tests retain default/ordinary-limit assertions, old long-deadline acceptance, one-below/above policy distinctions and expired-evaluator cancellation. Compiler compaction test compares full result/extracted artifact/report excluding elapsed_micros across the new ceiling and explicitly establishes repeated collection.",
+    "The updated normative paragraph correctly describes independent producer/verifier host clocks outside the certificate context. Original two-hour SH6 and Linux measurements remain valid historical profiles rather than silently raised attempts.",
+    "No multi-hour runtime or full self-build success is inferred from these short equivalence/boundary cases. The new Linux phase-transport design, fresh full proofs, durable transport and SH8 acceptance still need their separate evidence."
+  ],
+  "gate_driver_note": "Read-only inspected; explicit Rust1.89 executables and source identities are retained. Selected inherited compiler-wrapper/override variables were absent in this reviewer process. Active gate results are not promoted to final pass by this source review.",
+  "normative_review": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/whole-linux-clock-contract-review/review.json"
+}
