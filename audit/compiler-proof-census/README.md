@@ -111,3 +111,22 @@ isolated census family. The resulting binary reports `joy 0.5.0` and has SHA256
 records the matching rustc version and sysroot. Earlier `run.py` receipts did
 not capture PATH or RUSTUP variables; the supplement labels their current
 observation as retrospective rather than inventing contemporaneous evidence.
+
+## Rust 1.89 baseline replay
+
+At evidence revision `ffd86cd37c87e8e0bfe9579d79dbbcc429074da1`,
+`python3 audit/compiler-proof-census/run-rust189.py check`, `focused` and
+`prefix1m` each passed with zero warnings. The focused suite passed all seven
+fixtures and left the actual-input diagnostic ignored until its explicit run.
+Each new command receipt records the exact rustup invocation, Cargo/rustc paths,
+executable hashes, verbose versions, PATH and Rust/Cargo environment. The
+separate `target-rust189` directory preserves the earlier toolchain's build.
+
+Cargo is 1.89.0 (`c24e1064277fe51ab72011e2612e556ac56addf7`); rustc is 1.89.0
+(`29483883eed69d5fb4db01964cdf2af4d86e9cb2`), both from the explicit rustup
+`1.89.0-aarch64-apple-darwin` toolchain. `rust189-prefix1m-comparison.json`
+binds the replay and `prefix1m-2.json` by SHA256 and confirms equality of every
+JSON field except the two top-level microsecond timings. Source-file and sibling
+revision maps also match. The Rust 1.89 prefix observed 750899 execution
+microseconds, 2277620 setup microseconds and 431296 KiB sampled peak process-tree
+RSS. It again stops at the prefix cap without collection or compiler completion.
