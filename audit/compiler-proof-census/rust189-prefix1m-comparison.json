@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "scope": "same frozen-input bounded host prefix, no proof acceptance",
+  "revision": "ffd86cd37c87e8e0bfe9579d79dbbcc429074da1",
+  "comparison": "Remove only the two named top-level timing fields, then compare the complete parsed JSON objects for equality",
+  "ignored_top_level_fields": [
+    "execution_micros",
+    "setup_micros"
+  ],
+  "all_other_json_fields_equal": true,
+  "source_file_and_sibling_maps_equal": true,
+  "inputs": {
+    "prefix1m-2.json": {
+      "bytes": 4184,
+      "sha256": "871c2cba4b7b07828cc79ceb3735b509a5b07853658c0426af960ac810610683"
+    },
+    "rust189-prefix1m.json": {
+      "bytes": 4184,
+      "sha256": "97387d6d9185c201de0acbb2653a0110ccb6267c5a93dbdaf21856209c0a6af9"
+    }
+  },
+  "timings": {
+    "prefix1m-2.json": {
+      "execution_micros": 719296,
+      "setup_micros": 2098158
+    },
+    "rust189-prefix1m.json": {
+      "execution_micros": 750899,
+      "setup_micros": 2277620
+    }
+  },
+  "rust189_sampled_peak_tree_rss_kib": 431296
+}

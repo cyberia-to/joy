@@ -1,0 +1,12 @@
+
+running 7 tests
+test structured::tests::census::driver::frozen_compiler_prefix ... ignored, bounded actual ART1/JOB1 diagnostic; requires JOY_CENSUS_PROGRAM, INPUT, OUTPUT
+test structured::tests::census::tests::capture_cap_failure_preserves_prefix_and_reports_no_success ... ok
+test structured::tests::census::tests::prefix_ceiling_stops_without_reporting_successful_cost ... ok
+test structured::tests::census::tests::repeated_evaluations_count_occurrences_and_distinct_keys_separately ... ok
+test structured::tests::census::tests::saturated_dictionaries_report_lower_bounds_and_preserve_exact_totals ... ok
+test structured::tests::census::tests::sink_rejects_conflicting_retained_header_without_publishing_event ... ok
+test structured::tests::census::tests::observed_loop_includes_compose_and_branch_continuations ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 50 filtered out; finished in 0.00s
+

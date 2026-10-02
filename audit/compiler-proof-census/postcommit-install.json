@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "cargo",
+    "install",
+    "--path",
+    "cli",
+    "--force",
+    "--root",
+    "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/installed",
+    "--locked",
+    "--offline"
+  ],
+  "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy",
+  "revision": "51da51797f2af1a8acf8f053143c7a86fe53f455",
+  "started_ns": 1790903858485488000,
+  "PATH": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/installed/bin:/Users/master/.grok/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/pkg/env/active/bin:/opt/pmk/env/global/bin:/opt/homebrew/bin:/Users/master/Library/Application Support/Zed/external_agents/registry/npx/codex-acp/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path:/Users/master/.codex/tmp/arg0/codex-arg00dVQaB:/Users/master/.cargo/bin:/Users/master/.foundry/bin",
+  "exit_code": 0,
+  "ended_ns": 1790903858572077000,
+  "stdout": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "bytes": 528,
+    "sha256": "0c2cdeea747293848d08a6def1081a88eecd94af315033575e2694623f386da7"
+  },
+  "warning_lines": [],
+  "binary": {
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/installed/bin/joy",
+    "bytes": 4961920,
+    "sha256": "886c1edaa7372ef3a0d04af53d4d6b46723e48199977f31935a236e66bd03f28"
+  },
+  "version": "joy 0.5.0",
+  "final_git_status": "",
+  "status": "passed"
+}

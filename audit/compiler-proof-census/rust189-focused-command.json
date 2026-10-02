@@ -1,0 +1,252 @@
+{
+  "schema": 1,
+  "scope": "Rust 1.89 compatibility; host census, no proof acceptance",
+  "label": "rust189-focused",
+  "argv": [
+    "/Users/master/.cargo/bin/rustup",
+    "run",
+    "1.89.0",
+    "/Users/master/.rustup/toolchains/1.89.0-aarch64-apple-darwin/bin/cargo",
+    "test",
+    "-p",
+    "joy-rs",
+    "--lib",
+    "--release",
+    "--locked",
+    "--offline",
+    "structured::tests::census",
+    "--",
+    "--nocapture",
+    "--test-threads=2"
+  ],
+  "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy",
+  "started_ns": 1790904525389040000,
+  "environment": {
+    "PATH": "/Users/master/.rustup/toolchains/1.89.0-aarch64-apple-darwin/bin:/Users/master/.grok/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/pkg/env/active/bin:/opt/pmk/env/global/bin:/opt/homebrew/bin:/Users/master/Library/Application Support/Zed/external_agents/registry/npx/codex-acp/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path:/Users/master/.codex/tmp/arg0/codex-arg00dVQaB:/Users/master/.cargo/bin:/Users/master/.foundry/bin",
+    "RUSTUP_TOOLCHAIN": "1.89.0",
+    "RUSTC": "/Users/master/.rustup/toolchains/1.89.0-aarch64-apple-darwin/bin/rustc",
+    "RUSTDOC": "/Users/master/.rustup/toolchains/1.89.0-aarch64-apple-darwin/bin/rustdoc",
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_TARGET_DIR": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/target-rust189"
+  },
+  "toolchain": {
+    "cargo": {
+      "path": "/Users/master/.rustup/toolchains/1.89.0-aarch64-apple-darwin/bin/cargo",
+      "bytes": 28655992,
+      "sha256": "798a97c06e6fc3a63f1b7e3141f87e515e6bc8da1527bc32e19ba27d86bb89c5",
+      "version": "cargo 1.89.0 (c24e10642 2025-06-23)\nrelease: 1.89.0\ncommit-hash: c24e1064277fe51ab72011e2612e556ac56addf7\ncommit-date: 2025-06-23\nhost: aarch64-apple-darwin\nlibgit2: 1.9.0 (sys:0.20.2 vendored)\nlibcurl: 8.7.1 (sys:0.4.80+curl-8.12.1 system ssl:(SecureTransport) LibreSSL/3.3.6)\nssl: OpenSSL 3.5.0 8 Apr 2025\nos: Mac OS 26.4.1 [64-bit]\n"
+    },
+    "rustc": {
+      "path": "/Users/master/.rustup/toolchains/1.89.0-aarch64-apple-darwin/bin/rustc",
+      "bytes": 414776,
+      "sha256": "af4a9eb303553510e9d74220636dc4b21f8574ddeab73741bf6b892adc49c21c",
+      "version": "rustc 1.89.0 (29483883e 2025-08-04)\nbinary: rustc\ncommit-hash: 29483883eed69d5fb4db01964cdf2af4d86e9cb2\ncommit-date: 2025-08-04\nhost: aarch64-apple-darwin\nrelease: 1.89.0\nLLVM version: 20.1.7\n"
+    }
+  },
+  "sources_before": {
+    "revision": "ffd86cd37c87e8e0bfe9579d79dbbcc429074da1",
+    "files": {
+      "specs/compiler-proof-census.md": {
+        "bytes": 3686,
+        "sha256": "fd9f3e09df12194a11b0a6644c714afb6d12cb3c7e91ebcec806c2a5cf64daef"
+      },
+      "rs/structured/tests.rs": {
+        "bytes": 10139,
+        "sha256": "d72bd05901bfeca8d5ac850ccd1e9637451472faf45dc975ecc9f8a07d1f3443"
+      },
+      "rs/structured/tests/census.rs": {
+        "bytes": 10420,
+        "sha256": "6a666039e0c5b8a48dda8ea2619fb267e1e03c668cb344a1cef86d0170103a12"
+      },
+      "rs/structured/tests/census/driver.rs": {
+        "bytes": 9350,
+        "sha256": "c070c390424d0608e634d60697ce42240b60c7d0e3077f62801d203d3e2824d5"
+      },
+      "rs/structured/tests/census/tests.rs": {
+        "bytes": 6613,
+        "sha256": "992acb3a6baf2287db760c1a9fbfe75fd3aba535cc55148faf75fbacc23f6bbb"
+      }
+    },
+    "siblings": {
+      "trident": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/trident",
+        "revision": "da0d1a59cd8208fab96f219ccedef29122d5221a",
+        "status": ""
+      },
+      "nox": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/nox",
+        "revision": "172811b7746cdcd6ab198a3ed976dc6c19f55d5b",
+        "status": ""
+      },
+      "zheng": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/zheng",
+        "revision": "633e5ba980db94ca10d9d6b67cf24d9d3aef63a7",
+        "status": ""
+      },
+      "bbg": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/bbg",
+        "revision": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+        "status": ""
+      },
+      "hemera": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/hemera",
+        "revision": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+        "status": ""
+      },
+      "neuron": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/neuron",
+        "revision": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+        "status": ""
+      },
+      "lens": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/lens",
+        "revision": "17cafe91431977b738e5b72361187cd01ad93638",
+        "status": ""
+      },
+      "honeycrisp": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/honeycrisp",
+        "revision": "ff735e6c262926bc9bab7534786a575020cbe442",
+        "status": ""
+      },
+      "strata/nebu": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/strata/nebu",
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      },
+      "strata/jali": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/strata/jali",
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      },
+      "strata/kuro": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/strata/kuro",
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      },
+      "strata/genies": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/strata/genies",
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      },
+      "strata/trop": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/strata/trop",
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      }
+    }
+  },
+  "inputs": {},
+  "runner": {
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/audit/compiler-proof-census/run-rust189.py",
+    "bytes": 5427,
+    "sha256": "2627b786149ecd16bd83fffdc2560ff31d752b84329a6db4c485d690988dd940"
+  },
+  "rss_limit_kib": 2097152,
+  "rss_sampling_ms": 250,
+  "log_limit_bytes": 134217728,
+  "sampled_peak_tree_rss_kib": 821184,
+  "status": "passed",
+  "exit_code": 0,
+  "ended_ns": 1790904568207447000,
+  "sources_after": {
+    "revision": "ffd86cd37c87e8e0bfe9579d79dbbcc429074da1",
+    "files": {
+      "specs/compiler-proof-census.md": {
+        "bytes": 3686,
+        "sha256": "fd9f3e09df12194a11b0a6644c714afb6d12cb3c7e91ebcec806c2a5cf64daef"
+      },
+      "rs/structured/tests.rs": {
+        "bytes": 10139,
+        "sha256": "d72bd05901bfeca8d5ac850ccd1e9637451472faf45dc975ecc9f8a07d1f3443"
+      },
+      "rs/structured/tests/census.rs": {
+        "bytes": 10420,
+        "sha256": "6a666039e0c5b8a48dda8ea2619fb267e1e03c668cb344a1cef86d0170103a12"
+      },
+      "rs/structured/tests/census/driver.rs": {
+        "bytes": 9350,
+        "sha256": "c070c390424d0608e634d60697ce42240b60c7d0e3077f62801d203d3e2824d5"
+      },
+      "rs/structured/tests/census/tests.rs": {
+        "bytes": 6613,
+        "sha256": "992acb3a6baf2287db760c1a9fbfe75fd3aba535cc55148faf75fbacc23f6bbb"
+      }
+    },
+    "siblings": {
+      "trident": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/trident",
+        "revision": "da0d1a59cd8208fab96f219ccedef29122d5221a",
+        "status": ""
+      },
+      "nox": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/nox",
+        "revision": "172811b7746cdcd6ab198a3ed976dc6c19f55d5b",
+        "status": ""
+      },
+      "zheng": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/zheng",
+        "revision": "633e5ba980db94ca10d9d6b67cf24d9d3aef63a7",
+        "status": ""
+      },
+      "bbg": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/bbg",
+        "revision": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+        "status": ""
+      },
+      "hemera": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/hemera",
+        "revision": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+        "status": ""
+      },
+      "neuron": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/neuron",
+        "revision": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+        "status": ""
+      },
+      "lens": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/lens",
+        "revision": "17cafe91431977b738e5b72361187cd01ad93638",
+        "status": ""
+      },
+      "honeycrisp": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/honeycrisp",
+        "revision": "ff735e6c262926bc9bab7534786a575020cbe442",
+        "status": ""
+      },
+      "strata/nebu": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/strata/nebu",
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      },
+      "strata/jali": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/strata/jali",
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      },
+      "strata/kuro": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/strata/kuro",
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      },
+      "strata/genies": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/strata/genies",
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      },
+      "strata/trop": {
+        "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/distribution/strata/trop",
+        "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+        "status": ""
+      }
+    }
+  },
+  "stdout": {
+    "bytes": 1028,
+    "sha256": "e7166cfbfaed6d83ef1204e8e308bb2f53e9268f81742d285d85e99650be19ea"
+  },
+  "stderr": {
+    "bytes": 5545,
+    "sha256": "e471a7c8e7f513f8d2965bb11217eaa58063d1acc0b038a3c1348c26456d992e"
+  },
+  "warning_lines": []
+}

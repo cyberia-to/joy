@@ -1,0 +1,1 @@
+{"ok": true, "packages": 145, "compiler_features": [], "command": ["cargo", "metadata", "--format-version", "1", "--locked", "--offline", "--all-features"]}
