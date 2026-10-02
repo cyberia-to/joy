@@ -1,0 +1,108 @@
+    Checking serde_core v1.0.229
+    Checking strata-core v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/strata/core)
+    Checking stable_deref_trait v1.2.1
+    Checking zerofrom v0.1.8
+    Checking yoke v0.8.3
+    Checking strata-proof v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/strata/proof)
+    Checking strata-ext v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/strata/ext)
+    Checking zerovec v0.11.8
+    Checking strata-compute v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/strata/compute)
+    Checking tinystr v0.8.4
+    Checking litemap v0.8.3
+    Checking writeable v0.6.4
+    Checking icu_locale_core v2.3.0
+    Checking serde v1.0.229
+    Checking strata-nebu v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/strata/nebu/rs)
+    Checking cyber-hemera v0.3.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/hemera/rs)
+    Checking zerotrie v0.2.5
+    Checking potential_utf v0.1.6
+    Checking utf8_iter v1.0.4
+    Checking smallvec v1.16.0
+    Checking cyber-lens-core v0.1.2 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/lens/core)
+    Checking icu_collections v2.3.0
+    Checking icu_provider v2.3.1
+    Checking libc v0.2.189
+    Checking pin-project-lite v0.2.17
+    Checking cyber-lens-brakedown v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/lens/brakedown)
+    Checking icu_properties_data v2.3.0
+    Checking icu_normalizer_data v2.3.0
+    Checking futures-sink v0.3.34
+    Checking memchr v2.8.3
+    Checking futures-core v0.3.34
+    Checking cfg-if v1.0.4
+    Checking icu_normalizer v2.3.0
+    Checking icu_properties v2.3.0
+    Checking futures-channel v0.3.34
+    Checking utf8parse v0.2.2
+    Checking futures-io v0.3.34
+    Checking once_cell v1.21.4
+    Checking futures-task v0.3.34
+    Checking slab v0.4.12
+    Checking percent-encoding v2.3.2
+    Checking idna_adapter v1.2.2
+    Checking form_urlencoded v1.2.2
+    Checking idna v1.1.0
+    Checking futures-util v0.3.34
+    Checking anstyle-parse v1.0.0
+    Checking zmij v1.0.23
+    Checking strata-jali v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/strata/jali/rs)
+    Checking strata-kuro v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/strata/kuro/rs)
+    Checking strata-genies v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/strata/genies/rs)
+    Checking strata-trop v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/strata/trop/rs)
+    Checking anstyle-query v1.1.5
+    Checking itoa v1.0.18
+    Checking scopeguard v1.2.0
+    Checking anstyle v1.0.14
+    Checking colorchoice v1.0.5
+    Checking is_terminal_polyfill v1.70.2
+    Checking anstream v1.0.0
+    Checking lock_api v0.4.14
+    Checking serde_json v1.0.151
+    Checking pin-project v1.1.13
+    Checking tokio v1.53.1
+    Checking cyber-lens-assayer v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/lens/assayer)
+    Checking cyber-lens-porphyry v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/lens/porphyry)
+    Checking cyber-lens-binius v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/lens/binius)
+    Checking cyber-lens-ikat v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/lens/ikat)
+    Checking parking_lot_core v0.9.12
+    Checking url v2.5.8
+    Checking tracing-core v0.1.36
+    Checking cyber-nox v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/nox/rs)
+    Checking bitflags v1.3.2
+    Checking byteorder v1.5.0
+    Checking bytes v1.12.1
+    Checking strsim v0.11.1
+    Checking tower-layer v0.3.3
+    Checking tower-service v0.3.3
+    Checking hashbrown v0.14.5
+    Checking clap_lex v1.1.0
+    Checking clap_builder v4.6.6
+    Checking dashmap v5.5.3
+    Checking tower v0.4.13
+    Checking tokio-util v0.7.19
+    Checking hash32 v0.2.1
+    Checking lsp-types v0.94.1
+    Checking thiserror v2.0.20
+    Checking tracing v0.1.44
+    Checking cyber-lens v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/lens/src)
+    Checking httparse v1.10.1
+    Checking futures v0.3.34
+    Checking getrandom v0.3.4
+    Checking yansi v1.0.1
+    Checking zeroize v1.9.0
+    Checking unicode-width v0.1.14
+    Checking ariadne v0.4.1
+    Checking zheng v0.4.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/zheng/rs)
+    Checking heapless v0.7.17
+    Checking cobs v0.3.0
+    Checking clap v4.6.6
+    Checking neuron-id v0.1.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/neuron/id)
+    Checking adler2 v2.0.1
+    Checking miniz_oxide v0.8.9
+    Checking bbg v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/bbg/rs)
+    Checking postcard v1.1.3
+    Checking tower-lsp v0.20.0
+    Checking trident-lang v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/trident)
+    Checking joy-rs v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/rs)
+    Checking cyber-joy v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/cli)
+    Finished `release` profile [optimized] target(s) in 10.01s

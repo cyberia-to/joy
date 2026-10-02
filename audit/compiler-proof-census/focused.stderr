@@ -1,0 +1,3 @@
+   Compiling joy-rs v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/rs)
+    Finished `release` profile [optimized] target(s) in 3.51s
+     Running unittests lib.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/target/release/deps/joy_rs-fe4136cd97f8c8a9)

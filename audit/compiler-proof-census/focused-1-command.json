@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "-p",
+    "joy-rs",
+    "--lib",
+    "--release",
+    "--locked",
+    "--offline",
+    "structured::tests::census",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy",
+  "environment": {
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_TARGET_DIR": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/target"
+  },
+  "exit_code": 101,
+  "base_revision": "77fec58bd39f9e9cb1e957590831109439352e45",
+  "files": {
+    "specs/compiler-proof-census.md": "fd9f3e09df12194a11b0a6644c714afb6d12cb3c7e91ebcec806c2a5cf64daef",
+    "rs/structured/tests.rs": "d72bd05901bfeca8d5ac850ccd1e9637451472faf45dc975ecc9f8a07d1f3443",
+    "rs/structured/tests/census.rs": "6a666039e0c5b8a48dda8ea2619fb267e1e03c668cb344a1cef86d0170103a12",
+    "rs/structured/tests/census/driver.rs": "10e76f2f3ccf8d5d5d3569f2540388cb263618b37dc4baddb729b068a0ddf0f8",
+    "rs/structured/tests/census/tests.rs": "214c097f806c104c67819215f5f1a338ef8788c0d9718f71c4d1d44c520ba5a6"
+  },
+  "raw_log_sha256": "8c8a4d1db90956f2a37bd0bbc0dc9db9dbee56b3d09b1ff2b8cff8b76d22a2b0",
+  "result": "5 passed; 1 failed; 1 ignored",
+  "failure": "Expected Capture(Cancelled); actual Execution(Execution(Cancelled))",
+  "rss": "not measured for this initial focused build/test"
+}

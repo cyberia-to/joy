@@ -2,6 +2,7 @@ use super::*;
 use nebu::Goldilocks;
 
 mod admission;
+mod census;
 mod compaction;
 mod compiler;
 mod heap;

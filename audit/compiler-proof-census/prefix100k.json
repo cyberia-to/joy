@@ -1,0 +1,174 @@
+{
+  "admission": {
+    "entry_function": "main",
+    "entry_module": "native_compiler",
+    "input_validation_visits": 191990,
+    "limits": {
+      "arena_nodes": 1000000000,
+      "artifact_bytes": 16777216,
+      "artifact_depth": 4096,
+      "artifact_nodes": 196608,
+      "diagnostics": 16,
+      "evaluator_frames": 65536,
+      "modules": 128,
+      "reductions": 20000000000,
+      "sequence_length": 65536,
+      "source_bytes": 370544,
+      "validation_visits": 16777216
+    },
+    "module_count": 94,
+    "package_particle": "08190578bf480dc03c59277712e7a2c8a5e643b95975a03ff781dc253450a172"
+  },
+  "arena_reserved_bytes": 419430416,
+  "capture_attempts": {
+    "bytes": 49446232,
+    "events": 285952,
+    "work": 771904
+  },
+  "capture_caps": {
+    "bytes": 1073741824,
+    "events": 4000000,
+    "work": 16000000
+  },
+  "census": {
+    "action_order": [
+      "Enter",
+      "Return",
+      "Halt",
+      "Error"
+    ],
+    "caps": {
+      "evaluations": 262144,
+      "frames": 65536,
+      "nouns": 262144,
+      "transitions": 100000
+    },
+    "completed_evaluation_keys": {
+      "capacity": 262144,
+      "distinct_is_lower_bound": false,
+      "hits": 7428,
+      "refused": 0,
+      "retained": 42233
+    },
+    "counts": {
+      "after_actions": [
+        50339,
+        49661,
+        0,
+        0
+      ],
+      "before_actions": [
+        50339,
+        49661,
+        0,
+        0
+      ],
+      "completed_events": 0,
+      "encoded_bytes": 49446232,
+      "entered_opcodes": [
+        18865,
+        9014,
+        5458,
+        12158,
+        3056,
+        284,
+        266,
+        34,
+        0,
+        710,
+        488,
+        0,
+        6,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "events": 285952,
+      "failed_evaluations": 0,
+      "fresh_node_events": 9076,
+      "initial_node_events": 176875,
+      "peak_active_invocations": 688,
+      "popped_phases": [
+        0,
+        19382,
+        19360,
+        3056,
+        2826,
+        5037
+      ],
+      "pushed_phases": [
+        0,
+        19404,
+        19382,
+        3056,
+        3056,
+        5441
+      ],
+      "successful_evaluations": 49661,
+      "transitions": 100000,
+      "unclassified_enters": 0
+    },
+    "entered_evaluation_keys": {
+      "capacity": 262144,
+      "distinct_is_lower_bound": false,
+      "hits": 7428,
+      "refused": 0,
+      "retained": 42911
+    },
+    "noun_particles": {
+      "capacity": 262144,
+      "distinct_is_lower_bound": false,
+      "hits": 0,
+      "refused": 0,
+      "retained": 185951
+    },
+    "open_invocations": 678,
+    "phase_order": [
+      "Unary",
+      "BinaryLeft",
+      "BinaryRight",
+      "BranchTest",
+      "BranchChosen",
+      "Compose"
+    ],
+    "prefix_ceiling_reached": true,
+    "reserved_invocation_bytes": 4718592,
+    "retained_completed_payload_bytes": 4392232,
+    "retained_enter_key_payload_bytes": 2746304,
+    "retained_noun_payload_bytes": 28264552,
+    "storage_note": "Payload sizes exclude BTreeMap and allocator overhead; no event stream retained"
+  },
+  "execution_micros": 148618,
+  "failure": "Execution(Execution(Cancelled))",
+  "identities": {
+    "formula": "ab3a8aa4a125ccadfb3ec09da5c9703d67f23ce287e39fef3aad1ee6bdb9780a",
+    "program": "2eea2ac5f611012877b4e7291a3a6f534aee7281bb358a0b8e5fabe2ac1f9fbe",
+    "subject": "b9454107f6296f21febd6e68dd98b1b108cc31e195acdad7fe1fb9246f422d36",
+    "subject_is_unmodified_input": true
+  },
+  "initial_budget": 20000000000,
+  "max_frames": 65536,
+  "output_disk_cap_bytes": 1048576,
+  "peak_frames": 688,
+  "physical": {
+    "collection_checkpoints": 0,
+    "collection_work": 0,
+    "collections": 0,
+    "evaluator_checkpoints": 100002,
+    "peak_resident_nodes": 185951,
+    "pinned_nodes": 176875,
+    "reclaimed_nodes": 0,
+    "resident_nodes": 185951,
+    "scratch_bytes": 29360128,
+    "total_allocations": 185951
+  },
+  "raw_outcome": null,
+  "schema": "joy/compiler-proof-census/v1",
+  "scope": "host prefix observations; no proof or SH7/SH8 closure",
+  "setup_micros": 2312068,
+  "status": "prefix-ceiling",
+  "success": null,
+  "trace_disk_bytes": 0
+}
