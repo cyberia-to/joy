@@ -18,7 +18,7 @@ joy verify program.tri --proof program.zheng --claim 24
 joy verify program.tri --claim 24 --input-values 3,5  # native re-execution
 ```
 
-Public proving uses `zheng-nox-public-execution-v2`: Zheng derives the global
+Public `joy prove` uses `zheng-nox-public-execution-v2`: Zheng derives the global
 CCS from the canonical program, authenticates the complete public witness and
 checks all constraints and public coordinates. This certificate discloses the
 witness and has linear verification cost. Verification does not run nox.
@@ -57,9 +57,11 @@ joy prove state.tri --state state.json --input-values 11 --output state.zheng
 joy verify state.zheng --state state.json --claim 82
 ```
 
-Dynamic continuations and variable branch shapes remain unsupported. Budgets
-must cover the authenticated cost of the selected execution path. The relation
-also bounds every possible cost below the field modulus. See
+These bounded static proof profiles reject dynamic continuations and variable
+branch shapes. Public structured artifacts use the separate
+[dynamic compiler profile](#structured-native-artifacts-04-integration).
+Budgets must cover the authenticated cost of the selected execution path.
+The static relation also bounds every possible cost below the field modulus. See
 [Zheng's exact contract](../zheng/specs/execution.md) and
 [proof backend/state contract](../zheng/specs/ccs-execution-backends.md).
 
@@ -108,8 +110,10 @@ cargo install --path cli --locked
 ```
 
 Versions in the working branches are development candidates. Public/private
-execution and authenticated state proofs are implemented for the bounded static
-relation. Full nox proof coverage and live node/database integration remain open.
+execution and authenticated state proofs use the bounded static relation;
+public structured artifacts also support dynamic continuations through the
+native compiler profile below. Private dynamic compiler proofs and live
+node/database integration remain open.
 Historical receipts in [the release audit](audit/release-validation.md) describe
 their recorded revisions; native private acceptance is recorded in `audit/native-private/`.
 State commitment v2 changes all BBG roots; regenerate certificates and proofs.
@@ -123,5 +127,15 @@ ART1 raw-noun program and preserves the output DAG. It emits a JSON execution
 receipt after atomic publication; `--force` permits replacing an existing file.
 This path uses bounded sequential nox without retaining a trace. See
 [the structured-run contract](specs/structured-run.md) for limits and profiles.
-Compiler JOB1/RES1 admission is implemented; proofs of dynamic execution remain
-a subsequent gate.
+
+`joy prove-artifact` and `joy verify-artifact` implement
+`joy-nox-disclosed-compiler-v1` for complete ART1/JOB1/RES1 nouns, computed
+continuations and variable result shapes. Zheng independently verifies the
+semantic derivation against the expected program and input. The certificate
+discloses the complete public witness; verification work and certificate size
+are linear in its records. Logical execution cost is authenticated; physical
+allocation, collection and elapsed time remain host observations. See the
+[proof contract](specs/structured-certificates.md) and
+[implementation validation](audit/structured-certificates/README.md).
+Full self-build SH8 acceptance and final durable retention of its proofs remain
+open; component validation covers its stated fixtures and source revisions.
