@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "scope": "retrospective toolchain identity supplement; no execution proof",
+  "recorded_ns": 1790904241970947000,
+  "revision": "51da51797f2af1a8acf8f053143c7a86fe53f455",
+  "PATH": "/Users/master/.grok/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/pkg/env/active/bin:/opt/pmk/env/global/bin:/opt/homebrew/bin:/Users/master/Library/Application Support/Zed/external_agents/registry/npx/codex-acp/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path:/Users/master/.codex/tmp/arg0/codex-arg00dVQaB:/Users/master/.cargo/bin:/Users/master/.foundry/bin",
+  "rust_and_cargo_environment": {},
+  "tools": {
+    "cargo": {
+      "executable": {
+        "path": "/opt/homebrew/bin/cargo",
+        "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/cargo",
+        "bytes": 31754752,
+        "sha256": "c905263371d3b9cf800ff0e89bb255e03eca6ff0b1db576d316cd9b5f2b68532"
+      },
+      "argv": [
+        "/opt/homebrew/bin/cargo",
+        "--version",
+        "--verbose"
+      ],
+      "stdout": "cargo 1.95.0 (f2d3ce0bd 2026-03-21) (Homebrew)\nrelease: 1.95.0\ncommit-hash: f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\ncommit-date: 2026-03-21\nhost: aarch64-apple-darwin\nlibgit2: 1.9.2 (sys:0.20.4 system)\nlibcurl: 8.7.1 (sys:0.4.83+curl-8.15.0 system ssl:(SecureTransport) LibreSSL/3.3.6)\nos: Mac OS 26.4.1 [64-bit]\n"
+    },
+    "rustc": {
+      "executable": {
+        "path": "/opt/homebrew/bin/rustc",
+        "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/rustc",
+        "bytes": 359584,
+        "sha256": "54fc6be3de239a33058f5c11586b97d590337d26de9bcf575f28d9e6a43e4918"
+      },
+      "argv": [
+        "/opt/homebrew/bin/rustc",
+        "--version",
+        "--verbose"
+      ],
+      "stdout": "rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.3\n"
+    },
+    "rustfmt": {
+      "executable": {
+        "path": "/opt/homebrew/bin/rustfmt",
+        "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/rustfmt",
+        "bytes": 5959840,
+        "sha256": "afa8914e2d48d8c0df6b56670fd8d9fcc94a550187b8d86c155e48ada00f6e6e"
+      },
+      "argv": [
+        "/opt/homebrew/bin/rustfmt",
+        "--version"
+      ],
+      "stdout": "rustfmt 1.9.0\n"
+    }
+  },
+  "cargo_rustc_cache": {
+    "path": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/target/.rustc_info.json",
+    "resolved": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/target/.rustc_info.json",
+    "bytes": 1671,
+    "sha256": "54e27a73b03b397ecea55b4a12cb854188358401e92468d67eeeeb9a89750ccd",
+    "content": {
+      "rustc_fingerprint": 1472109994434652186,
+      "outputs": {
+        "7971740275564407648": {
+          "success": true,
+          "status": "",
+          "code": 0,
+          "stdout": "___\nlib___.rlib\nlib___.dylib\nlib___.dylib\nlib___.a\nlib___.dylib\n/opt/homebrew/Cellar/rust/1.95.0\noff\npacked\nunpacked\n___\ndebug_assertions\npanic=\"unwind\"\nproc_macro\ntarget_abi=\"\"\ntarget_arch=\"aarch64\"\ntarget_endian=\"little\"\ntarget_env=\"\"\ntarget_family=\"unix\"\ntarget_feature=\"aes\"\ntarget_feature=\"crc\"\ntarget_feature=\"dit\"\ntarget_feature=\"dotprod\"\ntarget_feature=\"dpb\"\ntarget_feature=\"dpb2\"\ntarget_feature=\"fcma\"\ntarget_feature=\"fhm\"\ntarget_feature=\"flagm\"\ntarget_feature=\"fp16\"\ntarget_feature=\"frintts\"\ntarget_feature=\"jsconv\"\ntarget_feature=\"lor\"\ntarget_feature=\"lse\"\ntarget_feature=\"neon\"\ntarget_feature=\"paca\"\ntarget_feature=\"pacg\"\ntarget_feature=\"pan\"\ntarget_feature=\"pmuv3\"\ntarget_feature=\"ras\"\ntarget_feature=\"rcpc\"\ntarget_feature=\"rcpc2\"\ntarget_feature=\"rdm\"\ntarget_feature=\"sb\"\ntarget_feature=\"sha2\"\ntarget_feature=\"sha3\"\ntarget_feature=\"ssbs\"\ntarget_feature=\"vh\"\ntarget_has_atomic=\"128\"\ntarget_has_atomic=\"16\"\ntarget_has_atomic=\"32\"\ntarget_has_atomic=\"64\"\ntarget_has_atomic=\"8\"\ntarget_has_atomic=\"ptr\"\ntarget_os=\"macos\"\ntarget_pointer_width=\"64\"\ntarget_vendor=\"apple\"\nunix\n",
+          "stderr": ""
+        },
+        "17747080675513052775": {
+          "success": true,
+          "status": "",
+          "code": 0,
+          "stdout": "rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.3\n",
+          "stderr": ""
+        }
+      },
+      "successes": {}
+    }
+  },
+  "historical_limit": "The earlier run.py receipts did not record PATH or RUSTUP variables. Executable paths, hashes and current environment were collected after the runs. The retained Cargo compiler cache records the matching rustc version and sysroot; the postcommit install receipt records its actual PATH. This supplement does not claim a contemporaneous PATH record for the earlier census commands.",
+  "postcommit_install_receipt": "postcommit-install.json"
+}

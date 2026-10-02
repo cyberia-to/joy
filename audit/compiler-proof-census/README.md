@@ -95,3 +95,19 @@ the test expected `Capture(Cancelled)`. The retained `focused-1.log` and command
 receipt show the failure. The corrected tests preserve both raw failure forms:
 terminal Return at the prefix cap can cancel delivery of Completed, and still
 cannot publish a successful result. No evaluator behavior was changed.
+
+## Toolchain and installed binary
+
+The postcommit installation at Joy
+`51da51797f2af1a8acf8f053143c7a86fe53f455` passed with zero warnings; its exact
+command, PATH, binary hash and raw output are retained in
+`postcommit-install.json`, `.stdout` and `.stderr`. It installed only into this
+isolated census family. The resulting binary reports `joy 0.5.0` and has SHA256
+`886c1edaa7372ef3a0d04af53d4d6b46723e48199977f31935a236e66bd03f28`.
+
+`toolchain.json` records the resolved executables and hashes: Homebrew Cargo
+1.95.0 at `/opt/homebrew/Cellar/rust/1.95.0/bin/cargo` and rustc 1.95.0 at
+`/opt/homebrew/Cellar/rust/1.95.0/bin/rustc`. The retained Cargo compiler cache
+records the matching rustc version and sysroot. Earlier `run.py` receipts did
+not capture PATH or RUSTUP variables; the supplement labels their current
+observation as retrospective rather than inventing contemporaneous evidence.
