@@ -137,5 +137,7 @@ are linear in its records. Logical execution cost is authenticated; physical
 allocation, collection and elapsed time remain host observations. See the
 [proof contract](specs/structured-certificates.md) and
 [implementation validation](audit/structured-certificates/README.md).
-Full self-build SH8 acceptance and final durable retention of its proofs remain
-open; component validation covers its stated fixtures and source revisions.
+Both original whole self-build certificates have
+[accepted byte-equivalence retention](https://github.com/cyberia-to/trisha/blob/fbea3cef9a4139075e529c319ff75488ed5df625/audit/whole-retention-byte-closure/README.md).
+Full self-build SH8 adversarial and final-checker acceptance remain open;
+component validation covers its stated fixtures and source revisions.
