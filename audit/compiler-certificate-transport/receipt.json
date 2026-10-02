@@ -1,0 +1,54 @@
+{
+  "source": "source.json",
+  "toolchain": "rustc 1.89.0 (29483883e 2025-08-04)\nbinary: rustc\ncommit-hash: 29483883eed69d5fb4db01964cdf2af4d86e9cb2\ncommit-date: 2025-08-04\nhost: aarch64-apple-darwin\nrelease: 1.89.0\nLLVM version: 20.1.7\n",
+  "commands": [
+    {
+      "argv": [
+        "/Users/master/.cargo/bin/rustup",
+        "run",
+        "1.89.0",
+        "cargo",
+        "test",
+        "--workspace",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 101.97385512496112,
+      "log": "gate-1.log",
+      "sha256": "7faaf87b9402db2d8bdb0b00f53d71cefb3c56651a87c3e9fb83937f91d84845",
+      "warning_lines": []
+    },
+    {
+      "argv": [
+        "/Users/master/.cargo/bin/rustup",
+        "run",
+        "1.89.0",
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--locked",
+        "--offline"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 18.55562108400045,
+      "log": "gate-2.log",
+      "sha256": "229db48202143e29c95d0773ef8db36eb65f7cd42cefa38cfca2759dfcd837b7",
+      "warning_lines": []
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check-soft3-boundary.py"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.08000762498704717,
+      "log": "gate-3.log",
+      "sha256": "3cbcca0afbaa0029acb4405cfc2ad7a7f3bc92f6e418456dba19a667f4bc5638",
+      "warning_lines": []
+    }
+  ]
+}
