@@ -27,6 +27,7 @@ COMMANDS = {
     'install': [str(BIN / 'cargo'), 'install', '--path', 'cli', '--root', str(FAMILY / 'installed'),
                 '--locked', '--offline', '--force'],
 }
+COMMANDS['install-path'] = COMMANDS['install']
 
 def identity(p):
     b = p.read_bytes()
@@ -51,10 +52,13 @@ def group(pid):
 def run(kind):
     dest = OUT / kind
     dest.mkdir()
-    env = dict(os.environ, **ENV)
+    selected_env = dict(ENV)
+    if kind == 'install-path':
+        selected_env['PATH'] = str(FAMILY / 'installed/bin') + ':' + ENV['PATH']
+    env = dict(os.environ, **selected_env)
     before = sources()
     receipt = dict(schema='joy/host-proof-deadline-gate/v1', status='running', kind=kind,
-                   argv=COMMANDS[kind], cwd=str(ROOT), environment=ENV, sources_before=before,
+                   argv=COMMANDS[kind], cwd=str(ROOT), environment=selected_env, sources_before=before,
                    driver=identity(Path(__file__)), started_ns=time.time_ns(),
                    versions={n:subprocess.check_output([str(BIN/n), '--version', '--verbose'],env=env,text=True)
                              for n in ['cargo','rustc']},
@@ -96,7 +100,7 @@ def run(kind):
     receipt['status']='passed' if (receipt['exit_code']==0 and not receipt['warning_lines']
         and not receipt.get('resource_stop') and not receipt.get('orphan_group')
         and receipt['sources_before']==receipt['sources_after']) else 'failed'
-    if kind=='install' and receipt['status']=='passed':
+    if kind.startswith('install') and receipt['status']=='passed':
         receipt['binary']=identity(FAMILY/'installed/bin/joy')
     save()
     print(json.dumps({k:receipt[k] for k in ['kind','status','exit_code','elapsed_seconds']}),flush=True)

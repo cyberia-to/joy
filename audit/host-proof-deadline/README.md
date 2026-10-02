@@ -37,3 +37,17 @@ group to 1800 seconds and 6 GiB sampled RSS, preserving failure evidence.
 `independent-review/` records separate code/spec/test review; `contract-review/`
 records why the physical deadline is outside the authenticated logical claim.
 Post-commit installation is recorded separately after this source commit.
+
+## Post-commit installation
+
+`python3 -B audit/host-proof-deadline/run.py install` built and installed source
+commit `2151e2bd67ca7ea4ae19ee4c8ca8ec5a93c4a881` successfully, but the audit
+wrapper marked it failed because Cargo warned that the fresh destination was
+absent from PATH. The original receipt/logs remain in `install/`.
+
+The corrected wrapper places that explicit destination on PATH;
+`python3 -B audit/host-proof-deadline/run.py install-path` passed with the same
+source, actual Rust1.89 and zero warnings. The original and corrected runs use
+a warm Cargo target and preserve all tested production files. `install-path/`
+records the installed binary identity. This installation confirms packaging of
+the source change; full Linux proof validation remains separate.

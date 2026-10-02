@@ -1,0 +1,4 @@
+  Installing cyber-joy v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/joy/cli)
+    Finished `release` profile [optimized] target(s) in 0.28s
+   Replacing /Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/installed/bin/joy
+    Replaced package `cyber-joy v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/joy/cli)` with `cyber-joy v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/joy/cli)` (executable `joy`)
