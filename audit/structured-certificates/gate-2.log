@@ -1,0 +1,7 @@
+    Checking cyber-nox v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/nox/rs)
+    Checking zheng v0.4.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/zheng/rs)
+    Checking trident-lang v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/trident)
+    Checking bbg v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/bbg/rs)
+    Checking joy-rs v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/joy/rs)
+    Checking cyber-joy v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/joy/cli)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.81s

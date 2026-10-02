@@ -5,6 +5,13 @@ release/0.4. Defaults, frozen compiler inputs, accepted evidence and installed
 frozen Joy binaries remain untouched. Root owns Joy, other agents own bounded
 Zheng semantics, nox collection snapshots and distribution validation.
 
+Implemented and checked: steps 1–3. Transport is merged in Joy PR25;
+Zheng PR40–43 and nox PR26 provide authenticated noun memory, derivations,
+bounded semantic checking and complete collection snapshots. Production Joy
+gates and independent mutation/review evidence are retained in
+audit/structured-certificates{,-review}/. Actual frozen-compiler pilot and
+both whole self-build certificates remain pending; SH7/SH8 stay open.
+
 1. Specify and implement bounded framed transport with exact input context,
    ordered Hemera chain, strict decompression and terminal EOF. Check malformed
    and interrupted streams independently before committing this component.

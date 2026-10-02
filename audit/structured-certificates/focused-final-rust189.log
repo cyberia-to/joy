@@ -1,0 +1,17 @@
+   Compiling joy-rs v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/joy/rs)
+    Finished `release` profile [optimized] target(s) in 5.33s
+     Running unittests lib.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/target-capture/release/deps/joy_rs-43287368127c9086)
+
+running 9 tests
+test structured::certificate::capture::tests::mutations::failed_sink_leaves_capture_unusable_and_never_complete ... ok
+test structured::certificate::capture::tests::mutations::reused_scope_checks_actual_return_particle_before_completion ... ok
+test structured::certificate::capture::tests::mutations::observed_work_cap_applies_while_semantic_records_are_suppressed ... ok
+test structured::certificate::capture::tests::mutations::fresh_count_and_depth_mutations_poison_capture ... ok
+test structured::certificate::capture::tests::mutations::begin_noun_sequence_and_snapshot_mutations_cannot_complete ... ok
+test structured::certificate::capture::tests::mutations::reused_scope_checks_actual_return_cost_even_after_semantic_reuse ... ok
+test structured::certificate::capture::tests::repeated_computed_subtree_reuses_summary_across_actual_gc_snapshots ... ok
+test structured::certificate::capture::tests::complete_requires_delivered_completed_and_rejects_later_events ... ok
+test structured::certificate::capture::tests::one_slot_eviction_and_large_cache_verify_the_same_result_and_charge ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 80 filtered out; finished in 0.02s
+

@@ -3,6 +3,7 @@ mod artifact_run;
 mod batch;
 mod bench;
 mod build_cmd;
+mod certificate;
 mod compile;
 mod error;
 mod execution_verify;
@@ -52,6 +53,10 @@ enum Command {
     Run(run::RunArgs),
     /// Execute an ART1 program on a complete raw noun without retaining a trace
     RunArtifact(artifact_run::RunArgs),
+    /// Prove complete pure ART1 execution with a disclosed native certificate
+    ProveArtifact(certificate::ProveArgs),
+    /// Verify a disclosed ART1 certificate without running nox or a compiler
+    VerifyArtifact(certificate::VerifyArgs),
     /// Package exact source files into JOB1 without compiling them
     PackJob(pack_job::PackArgs),
     /// Execute and generate a zheng proof artifact
@@ -159,8 +164,20 @@ fn main() {
         Command::Bench(args) => bench::cmd_bench(args),
         Command::Run(args) => run::cmd_run(args),
         Command::RunArtifact(args) => artifact_run::cmd_run(args),
+        Command::ProveArtifact(args) => certificate_result(certificate::prove(args)),
+        Command::VerifyArtifact(args) => certificate_result(certificate::verify(args)),
         Command::PackJob(args) => pack_job::cmd_pack(args),
         Command::Prove(args) => prove::cmd_prove(args),
         Command::Verify(args) => verify::cmd_verify(args),
+    }
+}
+
+fn certificate_result(result: Result<serde_json::Value, JoyError>) {
+    match result {
+        Ok(report) => println!("{report}"),
+        Err(error) => {
+            eprintln!("error: {error}");
+            std::process::exit(1);
+        }
     }
 }

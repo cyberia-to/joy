@@ -18,7 +18,7 @@ pub struct Limits {
     pub frames: u64,
 }
 
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, serde::Serialize)]
 pub struct Stats {
     pub wire_bytes: u64,
     pub decoded_bytes: u64,

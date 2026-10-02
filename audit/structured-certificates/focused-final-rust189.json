@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-10-02T02:14:19.098067+00:00",
+  "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/joy",
+  "argv": [
+    "/Users/master/.cargo/bin/rustup",
+    "run",
+    "1.89.0",
+    "cargo",
+    "test",
+    "-p",
+    "joy-rs",
+    "--lib",
+    "--release",
+    "--locked",
+    "structured::certificate::capture::tests",
+    "--",
+    "--nocapture"
+  ],
+  "env": {
+    "PATH": "/Users/master/.rustup/toolchains/1.89.0-aarch64-apple-darwin/bin:/Users/master/.cargo/bin:/opt/homebrew/bin:/usr/bin:/bin",
+    "RUSTC": "/Users/master/.rustup/toolchains/1.89.0-aarch64-apple-darwin/bin/rustc",
+    "RUSTDOC": "/Users/master/.rustup/toolchains/1.89.0-aarch64-apple-darwin/bin/rustdoc",
+    "CARGO_TARGET_DIR": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/target-capture",
+    "CARGO_BUILD_JOBS": "2"
+  },
+  "cargo": "cargo 1.89.0 (c24e10642 2025-06-23)\nrelease: 1.89.0\ncommit-hash: c24e1064277fe51ab72011e2612e556ac56addf7\ncommit-date: 2025-06-23\nhost: aarch64-apple-darwin\nlibgit2: 1.9.0 (sys:0.20.2 vendored)\nlibcurl: 8.7.1 (sys:0.4.80+curl-8.12.1 system ssl:(SecureTransport) LibreSSL/3.3.6)\nssl: OpenSSL 3.5.0 8 Apr 2025\nos: Mac OS 26.4.1 [64-bit]\n",
+  "rustc": "rustc 1.89.0 (29483883e 2025-08-04)\nbinary: rustc\ncommit-hash: 29483883eed69d5fb4db01964cdf2af4d86e9cb2\ncommit-date: 2025-08-04\nhost: aarch64-apple-darwin\nrelease: 1.89.0\nLLVM version: 20.1.7\n",
+  "joy_head": "bd91dd6281714ea794672ba83c26bf7bf12d1bad",
+  "source_sha256": {
+    "rs/structured/certificate/capture.rs": "ba591dd91c861287e6f3c24a50318a4a48fb2a9c4f2ea347a078300e30700dc4",
+    "rs/structured/certificate/capture/actions.rs": "2c9dad9cb1cba56300ca4ae372c3118dbcb7e5bcd405e86f41ebfb6ef9e0bd49",
+    "rs/structured/certificate/capture/tests/mutations.rs": "6f02292342065de9a08221d878a2e08338958ca65042fbb1c0e9568c10a6d5b9",
+    "rs/structured/certificate/capture/tests.rs": "acf2cad8b4c955aad3a8cdcc6921eeced15d50a661528c7bbff1c8cd092d5d77"
+  },
+  "exit_code": 0
+}

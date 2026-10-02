@@ -1,0 +1,94 @@
+{
+  "source": "source.json",
+  "toolchain": "rustc 1.89.0 (29483883e 2025-08-04)\nbinary: rustc\ncommit-hash: 29483883eed69d5fb4db01964cdf2af4d86e9cb2\ncommit-date: 2025-08-04\nhost: aarch64-apple-darwin\nrelease: 1.89.0\nLLVM version: 20.1.7\n",
+  "commands": [
+    {
+      "argv": [
+        "/Users/master/.cargo/bin/rustup",
+        "run",
+        "1.89.0",
+        "cargo",
+        "test",
+        "--workspace",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "exit": 0,
+      "elapsed_ms": 79910,
+      "log": "gate-1.log",
+      "sha256": "45c04ef30860404d369ddbd1f007101244d39801ea392b9006fb654a91db03ed",
+      "warning_lines": []
+    },
+    {
+      "argv": [
+        "/Users/master/.cargo/bin/rustup",
+        "run",
+        "1.89.0",
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--locked",
+        "--offline"
+      ],
+      "exit": 0,
+      "elapsed_ms": 2847,
+      "log": "gate-2.log",
+      "sha256": "c71ec797faf507ea17be2f666867dc47ba96a76fea8e8e64273782233129de2e",
+      "warning_lines": []
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check-soft3-boundary.py"
+      ],
+      "exit": 0,
+      "elapsed_ms": 77,
+      "log": "gate-3.log",
+      "sha256": "3cbcca0afbaa0029acb4405cfc2ad7a7f3bc92f6e418456dba19a667f4bc5638",
+      "warning_lines": []
+    },
+    {
+      "argv": [
+        "/Users/master/.cargo/bin/rustup",
+        "run",
+        "1.89.0",
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2021",
+        "--config",
+        "skip_children=true",
+        "cli/main.rs",
+        "cli/publication.rs",
+        "cli/certificate.rs",
+        "cli/tests/structured_certificates.rs",
+        "rs/structured/certificate.rs",
+        "rs/structured/certificate/admission.rs",
+        "rs/structured/certificate/capture/actions.rs",
+        "rs/structured/certificate/capture/tests/mutations.rs",
+        "rs/structured/certificate/capture/tests.rs",
+        "rs/structured/certificate/capture.rs",
+        "rs/structured/certificate/pipeline.rs",
+        "rs/structured/certificate/records.rs",
+        "rs/structured/certificate/session.rs",
+        "rs/structured/certificate/tests/attacks.rs",
+        "rs/structured/certificate/tests/compiler.rs",
+        "rs/structured/certificate/tests/epochs.rs",
+        "rs/structured/certificate/tests.rs",
+        "rs/structured/certificate/transport/reader.rs",
+        "rs/structured/certificate/transport/tests.rs",
+        "rs/structured/certificate/transport/writer.rs",
+        "rs/structured/certificate/transport.rs",
+        "rs/structured/certificate/types.rs"
+      ],
+      "exit": 0,
+      "elapsed_ms": 36,
+      "log": "gate-4.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "warning_lines": []
+    }
+  ]
+}

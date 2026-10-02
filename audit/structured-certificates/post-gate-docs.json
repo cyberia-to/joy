@@ -1,0 +1,12 @@
+{
+  "CLAUDE.md": {
+    "tested_sha256": "1f0ae350878a32e5ef95be8f8928556b98e13e0d4179579a9d72e8d73250581b",
+    "final_sha256": "af4cdc1ab8fcab494f4177243d2d6946cf682a51b4acf914ce2ab763c7b05dab",
+    "reason": "Documentation-only clarification of structured JSON receipt output after gates."
+  },
+  "specs/cli.md": {
+    "tested_sha256": "7f62fc75cbe87e37639c32a7ccc7e86f974d3482f52c6efe08d1bb186a03b019",
+    "final_sha256": "fe7e3a7bd3fa9d13940faa7339cfc139e611ee8d75b20fcc29f07d599a2c3e55",
+    "reason": "Documentation-only clarification of structured JSON receipt output after gates."
+  }
+}

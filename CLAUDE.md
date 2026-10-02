@@ -57,8 +57,9 @@ rs/             CPU backend (crate: joy-rs)
 or nox assembly. Explicit target overrides the project, then falls back to nox;
 debug/release and named project profiles use one compiler path across source
 build/run/prove. Publication refuses overwrite unless `--force` is explicit.
-Build supports the `joy/cli/v1` result envelope. Other commands retain their
-human CLI output and application exit 1 convention.
+Build supports the `joy/cli/v1` result envelope. Structured commands have
+their own versioned JSON receipts; other commands retain human CLI output.
+Application failures exit 1.
 
 `run` accepts bundles, sources/projects and raw nox. Public inputs form the
 subject list; secret call witnesses are served sequentially. `verify --claim`
@@ -116,6 +117,12 @@ connection or authority to modify state.
 - `run-artifact` executes complete ART1 raw and compiler JOB1/RES1 NOXDAG01
   nouns with the bounded sequential heap evaluator and NoTrace; see
   `specs/structured-run.md` and `specs/compiler-jobs.md`.
+- `prove-artifact` / `verify-artifact` use the disclosed native compiler
+  certificate (`JOYSC001`) for complete ART1/JOB1/RES1 nouns, computed
+  continuations and variable result shapes. Zheng checks bounded semantic
+  derivations without evaluator replay. This public profile has explicit
+  disclosure and resource limits in `specs/structured-certificates.md`;
+  whole compiler and SH7/SH8 acceptance require separate workload receipts.
 
 ## CLI contract
 
@@ -142,8 +149,9 @@ joy verify <input> --claim <values> [--input-values ...]  # re-execution
 machine values come from Trident's upstream nox contract. CLI `--state`
 accepts authenticated public certificates; cyber supplies no live network binding.
 
-Build JSON-v1, describe and run-artifact have versioned machine output. Other stdout
-is human-readable; stderr carries progress/diagnostics.
+Build JSON-v1, describe, run-artifact, prove-artifact and verify-artifact
+have versioned machine output. Other stdout is human-readable; stderr carries
+progress/diagnostics.
 `--target` accepts `nox` (terrain) or `cyber` (battlefield); anything
 else is refused as unsupported.
 
