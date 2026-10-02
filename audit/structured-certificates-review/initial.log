@@ -1,0 +1,160 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling serde_core v1.0.229
+   Compiling syn v3.0.5
+   Compiling syn v2.0.119
+   Compiling serde v1.0.229
+   Compiling serde_derive v1.0.229
+   Compiling synstructure v0.13.2
+   Compiling strata-core v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/core)
+   Compiling stable_deref_trait v1.2.1
+   Compiling zerofrom-derive v0.1.7
+   Compiling zerofrom v0.1.8
+   Compiling yoke-derive v0.8.2
+   Compiling strata-ext v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/ext)
+   Compiling strata-proof v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/proof)
+   Compiling zerovec-derive v0.11.6
+   Compiling yoke v0.8.3
+   Compiling strata-compute v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/compute)
+   Compiling displaydoc v0.2.7
+   Compiling strata-nebu v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/nebu/rs)
+   Compiling zerovec v0.11.8
+   Compiling cyber-hemera v0.3.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/hemera/rs)
+   Compiling tinystr v0.8.4
+   Compiling cyber-lens-core v0.1.2 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/core)
+   Compiling libc v0.2.189
+   Compiling litemap v0.8.3
+   Compiling writeable v0.6.4
+   Compiling icu_locale_core v2.3.0
+   Compiling potential_utf v0.1.6
+   Compiling zerotrie v0.2.5
+   Compiling smallvec v1.16.0
+   Compiling icu_normalizer_data v2.3.0
+   Compiling icu_properties_data v2.3.0
+   Compiling utf8_iter v1.0.4
+   Compiling icu_collections v2.3.0
+   Compiling icu_provider v2.3.1
+   Compiling pin-project-lite v0.2.17
+   Compiling cyber-lens-brakedown v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/brakedown)
+   Compiling cfg-if v1.0.4
+   Compiling futures-sink v0.3.34
+   Compiling memchr v2.8.3
+   Compiling futures-core v0.3.34
+   Compiling icu_properties v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling zmij v1.0.23
+   Compiling idna_adapter v1.2.2
+   Compiling futures-channel v0.3.34
+   Compiling futures-macro v0.3.34
+   Compiling percent-encoding v2.3.2
+   Compiling serde_json v1.0.151
+   Compiling parking_lot_core v0.9.12
+   Compiling futures-io v0.3.34
+   Compiling futures-task v0.3.34
+   Compiling semver v1.0.28
+   Compiling once_cell v1.21.4
+   Compiling utf8parse v0.2.2
+   Compiling slab v0.4.12
+   Compiling anstyle-parse v1.0.0
+   Compiling futures-util v0.3.34
+   Compiling rustc_version v0.4.1
+   Compiling form_urlencoded v1.2.2
+   Compiling idna v1.1.0
+   Compiling strata-jali v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/jali/rs)
+   Compiling strata-genies v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/genies/rs)
+   Compiling strata-kuro v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/kuro/rs)
+   Compiling strata-trop v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/trop/rs)
+   Compiling pin-project-internal v1.1.13
+   Compiling tokio-macros v2.7.2
+   Compiling thiserror v2.0.20
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling colorchoice v1.0.5
+   Compiling anstyle-query v1.1.5
+   Compiling getrandom v0.3.4
+   Compiling anstyle v1.0.14
+   Compiling scopeguard v1.2.0
+   Compiling httparse v1.10.1
+   Compiling itoa v1.0.18
+   Compiling lock_api v0.4.14
+   Compiling anstream v1.0.0
+   Compiling tokio v1.53.1
+   Compiling pin-project v1.1.13
+   Compiling cyber-lens-assayer v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/assayer)
+   Compiling cyber-lens-binius v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/binius)
+   Compiling cyber-lens-porphyry v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/porphyry)
+   Compiling url v2.5.8
+   Compiling cyber-lens-ikat v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/ikat)
+   Compiling heapless v0.7.17
+   Compiling tracing-core v0.1.36
+   Compiling cyber-nox v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/nox/rs)
+   Compiling tracing-attributes v0.1.31
+   Compiling serde_repr v0.1.21
+   Compiling thiserror-impl v2.0.20
+   Compiling heck v0.5.0
+   Compiling hashbrown v0.14.5
+   Compiling tower-layer v0.3.3
+   Compiling tower-service v0.3.3
+   Compiling strsim v0.11.1
+   Compiling bitflags v1.3.2
+   Compiling clap_lex v1.1.0
+   Compiling byteorder v1.5.0
+   Compiling bytes v1.12.1
+   Compiling hash32 v0.2.1
+   Compiling clap_builder v4.6.6
+   Compiling tokio-util v0.7.19
+   Compiling lsp-types v0.94.1
+   Compiling tower v0.4.13
+   Compiling dashmap v5.5.3
+   Compiling clap_derive v4.6.4
+   Compiling tracing v0.1.44
+   Compiling cyber-lens v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/src)
+   Compiling futures v0.3.34
+   Compiling auto_impl v1.3.0
+   Compiling tower-lsp-macros v0.9.0
+   Compiling async-trait v0.1.92
+   Compiling trident-lang v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/trident)
+   Compiling unicode-width v0.1.14
+   Compiling yansi v1.0.1
+   Compiling zeroize v1.9.0
+   Compiling zheng v0.4.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/zheng/rs)
+   Compiling ariadne v0.4.1
+   Compiling tower-lsp v0.20.0
+   Compiling clap v4.6.6
+   Compiling cobs v0.3.0
+   Compiling adler2 v2.0.1
+   Compiling neuron-id v0.1.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/neuron/id)
+   Compiling bbg v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/bbg/rs)
+   Compiling miniz_oxide v0.8.9
+   Compiling postcard v1.1.3
+   Compiling joy-rs v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/joy/rs)
+    Finished `release` profile [optimized] target(s) in 52.17s
+     Running unittests lib.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/target-review/release/deps/joy_rs-f9ea9b35a15f2122)
+
+running 10 tests
+test structured::certificate::tests::epochs::session_cannot_recover_after_any_failed_record ... ok
+test structured::certificate::tests::attacks::selected_arms_and_both_computed_continuation_coordinates_are_bound ... ok
+test structured::certificate::tests::attacks::exact_limits_pass_and_one_below_rejects_after_fresh_context_chaining ... ok
+test structured::certificate::tests::epochs::cache_reuse_survives_reset_but_generation_key_and_eviction_cannot_be_forged ... ok
+test structured::certificate::tests::handcrafted_quote_add_compose_and_both_branch_derivations_verify ... ok
+test structured::certificate::tests::epochs::epoch_snapshot_counts_prior_indices_and_canonical_atoms_are_enforced ... ok
+test structured::certificate::tests::attacks::every_public_context_coordinate_and_expected_artifact_is_bound ... ok
+test structured::certificate::tests::attacks::terminal_particle_cost_complete_output_and_transport_end_are_all_required ... ok
+test structured::certificate::tests::attacks::authenticated_frames_cannot_substitute_child_keys_results_or_order ... FAILED
+test structured::certificate::tests::epochs::unknown_record_tags_and_short_record_fields_are_rejected_after_rechaining ... ok
+
+failures:
+
+---- structured::certificate::tests::attacks::authenticated_frames_cannot_substitute_child_keys_results_or_order stdout ----
+
+thread 'structured::certificate::tests::attacks::authenticated_frames_cannot_substitute_child_keys_results_or_order' (23684626) panicked at rs/structured/certificate/tests/attacks.rs:24:60:
+called `Result::unwrap_err()` on an `Ok` value: CertificateResult { output: [78, 79, 88, 68, 65, 71, 48, 49, 186, 121, 205, 153, 43, 224, 39, 195, 209, 76, 235, 21, 248, 253, 171, 150, 252, 250, 141, 229, 10, 148, 131, 80, 142, 161, 1, 155, 96, 128, 18, 145, 1, 0, 0, 0, 186, 121, 205, 153, 43, 224, 39, 195, 209, 76, 235, 21, 248, 253, 171, 150, 252, 250, 141, 229, 10, 148, 131, 80, 142, 161, 1, 155, 96, 128, 18, 145, 8, 7, 0, 0, 0, 0, 0, 0, 0], compiled: None, report: Report { format: "joy-nox-disclosed-compiler-v1", program_particle: "bb22e1568ae1161e1e02b7eb1bc49935d858fde14a3404f688b6738e1edb0d08", input_particle: "47ff2df1749c1a6c30bba58202ddb7dacacdf95db5f2abacff8fcb81202f7702", output_particle: "ba79cd992be027c3d14ceb15f8fdab96fcfa8de50a9483508ea1019b60801291", charged_reductions: 3, invocations: 3, logical_peak_frames: 2, expanded_steps: 6, semantic_events: 6, records: 25, transport: Stats { wire_bytes: 391, decoded_bytes: 350, frames: 2 }, elapsed_micros: 366, disclosure: "complete public witness", physical_resource_claim: "unattested", prover_observations: None, compiler_job: None } }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    structured::certificate::tests::attacks::authenticated_frames_cannot_substitute_child_keys_results_or_order
+
+test result: FAILED. 9 passed; 1 failed; 0 ignored; 0 measured; 72 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p joy-rs --lib`

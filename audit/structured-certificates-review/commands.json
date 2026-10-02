@@ -1,0 +1,54 @@
+[
+  {
+    "name": "independent-tests",
+    "command": [
+      "/Users/master/.cargo/bin/rustup",
+      "run",
+      "1.89.0",
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "--release",
+      "-p",
+      "joy-rs",
+      "--lib",
+      "structured::certificate::tests"
+    ],
+    "environment": {
+      "CARGO_BUILD_JOBS": "2",
+      "CARGO_TARGET_DIR": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/target-review"
+    },
+    "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/joy",
+    "started_utc": "2026-10-02T02:15:20.594575+00:00",
+    "elapsed_ns": 5163550875,
+    "exit_code": 0,
+    "log_sha256": "6b72188751fc24a4c84240d2326ff7d123b00897e0601bace6e51bb7ee20c9cc"
+  },
+  {
+    "name": "certificate-family",
+    "command": [
+      "/Users/master/.cargo/bin/rustup",
+      "run",
+      "1.89.0",
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "--release",
+      "-p",
+      "joy-rs",
+      "--lib",
+      "structured::certificate::"
+    ],
+    "environment": {
+      "CARGO_BUILD_JOBS": "2",
+      "CARGO_TARGET_DIR": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/target-review"
+    },
+    "cwd": "/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/joy",
+    "started_utc": "2026-10-02T02:15:25.758795+00:00",
+    "elapsed_ns": 129898084,
+    "exit_code": 0,
+    "log_sha256": "851def268c18b522d49e06e9ae6dbed9adc3aac1c4178cc80366c06c4e9bfe90"
+  }
+]

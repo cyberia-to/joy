@@ -1,0 +1,47 @@
+{
+  "base": "bd91dd6281714ea794672ba83c26bf7bf12d1bad",
+  "files": {
+    "specs/structured-certificates.md": "0a349f91e59983f574e8a45de4abd45799b158997631f9d0f0f18c9e97b3c313",
+    "cli/main.rs": "746faf371497541c27f40facde568bcc18d7afe919f4d142e3f28003a748c087",
+    "cli/publication.rs": "8cfbc240f78f49be25b1f6615812ce3a7939296458990a576c0b367849df49e1",
+    "cli/certificate.rs": "3f349f5089270a957dfdf4906229dc4c998924f46490f70188b47ecfa00071d8",
+    "cli/tests/structured_certificates.rs": "43d03cee8eced05897d0559e3737a35be236f6dafbc482a8a8937508247f015d",
+    "rs/structured/certificate.rs": "1e2ca43ed05cabd3390c597cac423c3259b120a84e1076d3c292c864c0f2ff84",
+    "rs/structured/certificate/admission.rs": "243c967811e6a2028d091a82663848552596fa866b5c5adfd14f8eb2c9b06efc",
+    "rs/structured/certificate/capture/actions.rs": "2c9dad9cb1cba56300ca4ae372c3118dbcb7e5bcd405e86f41ebfb6ef9e0bd49",
+    "rs/structured/certificate/capture/tests/mutations.rs": "6f02292342065de9a08221d878a2e08338958ca65042fbb1c0e9568c10a6d5b9",
+    "rs/structured/certificate/capture/tests.rs": "acf2cad8b4c955aad3a8cdcc6921eeced15d50a661528c7bbff1c8cd092d5d77",
+    "rs/structured/certificate/capture.rs": "ba591dd91c861287e6f3c24a50318a4a48fb2a9c4f2ea347a078300e30700dc4",
+    "rs/structured/certificate/pipeline.rs": "794881982c011a5e1b93e77f2e17d6b4d4e6fd443868b28246cbbedd1050165a",
+    "rs/structured/certificate/records.rs": "4143e3650ac04802b8b08e7ed1d0f655c56ac42a73920d8b70193bda7d0409d2",
+    "rs/structured/certificate/session.rs": "a68b366a64dec82b5474e32a5ab4cedff143f7083f38ba10f298f18426c08e60",
+    "rs/structured/certificate/tests/attacks.rs": "7d7d2e9ead02af6be00d53f39a387c8ad852578805347605600101a0c90aa98c",
+    "rs/structured/certificate/tests/compiler.rs": "96728b86835d27af9562df37711a50bc75c0c5583a5d9cd05636b1d1ea0cce4a",
+    "rs/structured/certificate/tests/epochs.rs": "5c79d524223949ae70aef9b1b051ef8729f2b8e26e698ad8ef2018b52d091a07",
+    "rs/structured/certificate/tests.rs": "d087ddb41acae3633d809273e71b2023418b8fe34854367e3aa067993dc1061c",
+    "rs/structured/certificate/transport/reader.rs": "cdb20eb6eefe9316160c0f2e1c41722fa64fc6e2260ff7fbeb8ec7300b5c8589",
+    "rs/structured/certificate/transport/tests.rs": "72cc3f94c88d5b0610633cf6ef4ac949a710de32155c085ed8a101f3a71f56b3",
+    "rs/structured/certificate/transport/writer.rs": "d60cf341dd6bcd4553cda492a0139a6386515522bb58be49440c36b7454ed95f",
+    "rs/structured/certificate/transport.rs": "eac8dd88c711b0a65c398b0ff513859933197238100ed7c81bfee9c70b6ddab4",
+    "rs/structured/certificate/types.rs": "825ed4c59db8395fc31955bfcfe2bf756a13a6fe42e6cba320cf550e019d4483"
+  },
+  "root_review": [
+    "Capture v2 event/epoch state, complete snapshots, semantic suppression on cached reuse, checked native return cost/result and bounded maps.",
+    "CLI binding, explicit proof and host limits, atomic publication/race behavior, error propagation and fresh-process tests.",
+    "Reviewed integrated Zheng stream and Nox snapshot implementation before exact-tree feature merges."
+  ],
+  "independent_reviews": [
+    "Verifier admission/context/codec/session/pipeline: audit/structured-certificates-review, independently authored re-chained adversarial proofs.",
+    "Capture author independently reviewed CLI/publication/tests/spec against listed hashes; no finding."
+  ],
+  "remaining": [
+    "Actual frozen C2 compiler pilot and adversarial fresh-process evidence.",
+    "Native changed-profile gates on all six supported architecture/OS combinations.",
+    "Both full frozen self-build proofs, independent fresh verification and SH8 acceptance."
+  ],
+  "test_totals": {
+    "passed": 215,
+    "failed": 0,
+    "ignored": 1
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "base_revision": "bd91dd6281714ea794672ba83c26bf7bf12d1bad",
+  "reviewed_files": {
+    "rs/structured/certificate.rs": "1e2ca43ed05cabd3390c597cac423c3259b120a84e1076d3c292c864c0f2ff84",
+    "rs/structured/certificate/session.rs": "a68b366a64dec82b5474e32a5ab4cedff143f7083f38ba10f298f18426c08e60",
+    "rs/structured/certificate/records.rs": "4143e3650ac04802b8b08e7ed1d0f655c56ac42a73920d8b70193bda7d0409d2",
+    "rs/structured/certificate/types.rs": "825ed4c59db8395fc31955bfcfe2bf756a13a6fe42e6cba320cf550e019d4483",
+    "rs/structured/certificate/admission.rs": "243c967811e6a2028d091a82663848552596fa866b5c5adfd14f8eb2c9b06efc",
+    "rs/structured/certificate/pipeline.rs": "794881982c011a5e1b93e77f2e17d6b4d4e6fd443868b28246cbbedd1050165a",
+    "rs/structured/certificate/transport.rs": "eac8dd88c711b0a65c398b0ff513859933197238100ed7c81bfee9c70b6ddab4",
+    "rs/structured/certificate/transport/reader.rs": "cdb20eb6eefe9316160c0f2e1c41722fa64fc6e2260ff7fbeb8ec7300b5c8589",
+    "rs/structured/certificate/transport/writer.rs": "d60cf341dd6bcd4553cda492a0139a6386515522bb58be49440c36b7454ed95f",
+    "specs/structured-certificates.md": "0a349f91e59983f574e8a45de4abd45799b158997631f9d0f0f18c9e97b3c313"
+  },
+  "test_files": {
+    "rs/structured/certificate/tests.rs": "d087ddb41acae3633d809273e71b2023418b8fe34854367e3aa067993dc1061c",
+    "rs/structured/certificate/tests/attacks.rs": "7d7d2e9ead02af6be00d53f39a387c8ad852578805347605600101a0c90aa98c",
+    "rs/structured/certificate/tests/compiler.rs": "96728b86835d27af9562df37711a50bc75c0c5583a5d9cd05636b1d1ea0cce4a",
+    "rs/structured/certificate/tests/epochs.rs": "5c79d524223949ae70aef9b1b051ef8729f2b8e26e698ad8ef2018b52d091a07"
+  },
+  "dependencies": {
+    "nox": {
+      "revision": "2f09ca3c3f18ae470365310cca8db5208eda75c6",
+      "status": ""
+    },
+    "zheng": {
+      "revision": "0d7ba6d422d9b825f9685e903e55252f88ebecd9",
+      "status": ""
+    },
+    "trident": {
+      "revision": "da0d1a59cd8208fab96f219ccedef29122d5221a",
+      "status": ""
+    },
+    "hemera": {
+      "revision": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+      "status": ""
+    },
+    "strata": {
+      "revision": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+      "status": ""
+    },
+    "lens": {
+      "revision": "17cafe91431977b738e5b72361187cd01ad93638",
+      "status": ""
+    },
+    "bbg": {
+      "revision": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+      "status": ""
+    },
+    "honeycrisp": {
+      "revision": "ff735e6c262926bc9bab7534786a575020cbe442",
+      "status": ""
+    },
+    "neuron": {
+      "revision": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+      "status": ""
+    }
+  }
+}

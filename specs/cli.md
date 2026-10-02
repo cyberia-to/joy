@@ -43,6 +43,8 @@ joy describe [--target nox|cyber]
 joy build INPUT [--target nox|cyber] [--profile NAME] [--emit bundle|nox|artifact] [-o PATH] [--force] [--format human|json-v1]
 joy run INPUT [COMMON]
 joy run-artifact PROGRAM --input INPUT --output OUTPUT [--emit result|program] [LIMITS] [--force]
+joy prove-artifact PROGRAM --input INPUT --output CERTIFICATE [LIMITS] [--force]
+joy verify-artifact PROGRAM --input INPUT --proof CERTIFICATE [--output OUTPUT] [--emit result|program] [LIMITS] [--force]
 joy pack-job --compiler PROGRAM --manifest PACKAGE.json --output JOB [LIMITS] [--force]
 joy prove INPUT [COMMON] [--zk] [--output PATH] [--force]
 joy batch run|prove|verify INPUT... [--max-parallel N]
@@ -89,6 +91,8 @@ for complete noun transport and its resource limits.
 | build | artifact path, or one `joy/cli/v1` JSON result | human-mode errors |
 | run | one decimal output value per line | reductions and errors |
 | run-artifact | one joy/artifact-run/v1 JSON success receipt after complete output publication | errors |
+| prove-artifact | one joy/artifact-proof/v1 JSON receipt after public certificate publication | errors |
+| verify-artifact | one joy/artifact-verification/v1 JSON receipt after independent semantic verification and any requested publication | errors |
 | pack-job | one joy/job-pack/v1 JSON receipt after canonical JOB1 publication | errors |
 | prove | saved artifact path | timing, reductions, bytes and public output |
 | verify execution certificate | PASS and checked public coordinates | failure diagnostics |
@@ -96,10 +100,12 @@ for complete noun transport and its resource limits.
 | legacy inspection | labelled statement result and unverified metadata | refusal/errors |
 
 Success exits 0. Application failures, proof rejection and claim mismatch
-exit 1. Clap syntax errors exit 2. Help/version exit 0. Verification output
+exit 1. Clap syntax errors exit 2. Help/version exit 0. `verify` output
 is human-readable; consumers MUST NOT infer a stable machine schema from it.
 Build supports the `--format json-v1` envelope. Structured artifact execution
-uses its distinct `joy/artifact-run/v1` receipt.
+uses its distinct `joy/artifact-run/v1` receipt. `prove-artifact` and
+`verify-artifact` use the versioned JSON receipts specified in
+[structured certificates](structured-certificates.md).
 Proof publication is atomic and refuses an existing path unless `--force` is
 explicit. Failure preserves existing output. Batch/test/bench contracts and the
 versioned input-file schema are in [native CLI operations](native-cli-parity.md).

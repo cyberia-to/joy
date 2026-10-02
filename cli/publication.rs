@@ -1,17 +1,26 @@
 use crate::error::JoyError;
 use std::{
-    fs::{self, OpenOptions},
+    fs::{self, File, OpenOptions},
     io::Write,
     path::PathBuf,
     sync::atomic::{AtomicU64, Ordering},
 };
+static NEXT: AtomicU64 = AtomicU64::new(0);
 pub(crate) fn atomic_write(
     path: &std::path::Path,
     bytes: &[u8],
     replace: bool,
 ) -> Result<(), JoyError> {
-    static NEXT: AtomicU64 = AtomicU64::new(0);
     write_with_counter(path, bytes, replace, &NEXT)
+}
+
+/// Keep streamed proof prefixes private until the producer and flush succeed.
+pub(crate) fn atomic_produce<T>(
+    path: &std::path::Path,
+    replace: bool,
+    produce: impl FnOnce(File) -> Result<(File, T), JoyError>,
+) -> Result<T, JoyError> {
+    produce_with_counter(path, replace, &NEXT, produce)
 }
 
 fn write_with_counter(
@@ -20,6 +29,30 @@ fn write_with_counter(
     replace: bool,
     next: &AtomicU64,
 ) -> Result<(), JoyError> {
+    produce_with_counter(path, replace, next, |mut file| {
+        file.write_all(bytes)?;
+        Ok((file, ()))
+    })
+}
+
+fn produce_with_counter<T>(
+    path: &std::path::Path,
+    replace: bool,
+    next: &AtomicU64,
+    produce: impl FnOnce(File) -> Result<(File, T), JoyError>,
+) -> Result<T, JoyError> {
+    if !replace {
+        match fs::symlink_metadata(path) {
+            Ok(_) => {
+                return Err(JoyError::Io(format!(
+                    "destination '{}' exists; --force permits replacement",
+                    path.display()
+                )))
+            }
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
+            Err(e) => return Err(e.into()),
+        }
+    }
     let parent = path
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
@@ -50,7 +83,7 @@ fn write_with_counter(
             Err(e) => return Err(e.into()),
         }
     }
-    let (name, mut file) =
+    let (name, file) =
         temporary.ok_or_else(|| JoyError::Io("cannot allocate artifact staging file".into()))?;
     struct Cleanup(PathBuf);
     impl Drop for Cleanup {
@@ -59,7 +92,7 @@ fn write_with_counter(
         }
     }
     let _cleanup = Cleanup(name.clone());
-    file.write_all(bytes)?;
+    let (file, result) = produce(file)?;
     file.sync_all()?;
     drop(file);
     if replace {
@@ -72,7 +105,7 @@ fn write_with_counter(
             ))
         })?;
     }
-    Ok(())
+    Ok(result)
 }
 
 #[cfg(test)]

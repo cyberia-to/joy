@@ -1,0 +1,38 @@
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running unittests lib.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/target-review/release/deps/joy_rs-f9ea9b35a15f2122)
+
+running 31 tests
+test structured::certificate::capture::tests::mutations::failed_sink_leaves_capture_unusable_and_never_complete ... ok
+test structured::certificate::capture::tests::mutations::fresh_count_and_depth_mutations_poison_capture ... ok
+test structured::certificate::capture::tests::mutations::reused_scope_checks_actual_return_particle_before_completion ... ok
+test structured::certificate::capture::tests::mutations::observed_work_cap_applies_while_semantic_records_are_suppressed ... ok
+test structured::certificate::tests::attacks::exact_limits_pass_and_one_below_rejects_after_fresh_context_chaining ... ok
+test structured::certificate::capture::tests::mutations::begin_noun_sequence_and_snapshot_mutations_cannot_complete ... ok
+test structured::certificate::capture::tests::mutations::reused_scope_checks_actual_return_cost_even_after_semantic_reuse ... ok
+test structured::certificate::tests::compiler::invalid_job_and_wrong_compiler_identity_reject_before_semantic_certificate ... ok
+test structured::certificate::tests::epochs::session_cannot_recover_after_any_failed_record ... ok
+test structured::certificate::tests::epochs::real_cache_eviction_invalidates_previous_generation ... ok
+test structured::certificate::tests::attacks::every_public_context_coordinate_and_expected_artifact_is_bound ... ok
+test structured::certificate::tests::epochs::cache_reuse_survives_reset_but_generation_key_and_eviction_cannot_be_forged ... ok
+test structured::certificate::transport::tests::failure_poisons_reader_and_writer ... ok
+test structured::certificate::transport::tests::partial_destinations_and_flush_failure_cannot_finish ... ok
+test structured::certificate::transport::tests::reordered_cross_context_and_duplicate_frames_fail ... ok
+test structured::certificate::capture::tests::repeated_computed_subtree_reuses_summary_across_actual_gc_snapshots ... ok
+test structured::certificate::transport::tests::small_reads_and_explicit_semantic_finish_are_strict ... ok
+test structured::certificate::tests::attacks::selected_arms_and_both_computed_continuation_coordinates_are_bound ... ok
+test structured::certificate::tests::handcrafted_quote_add_compose_and_both_branch_derivations_verify ... ok
+test structured::certificate::tests::compiler::job_source_identity_is_bound_even_after_valid_transport_rechaining ... ok
+test structured::certificate::transport::tests::self_consistent_bad_lengths_deflate_end_and_bombs_fail ... ok
+test structured::certificate::tests::epochs::epoch_snapshot_counts_prior_indices_and_canonical_atoms_are_enforced ... ok
+test structured::certificate::capture::tests::complete_requires_delivered_completed_and_rejects_later_events ... ok
+test structured::certificate::tests::epochs::complete_epoch_remapping_between_every_continuation_phase_preserves_derivation ... ok
+test structured::certificate::transport::tests::every_truncated_prefix_and_changed_byte_fails ... ok
+test structured::certificate::capture::tests::one_slot_eviction_and_large_cache_verify_the_same_result_and_charge ... ok
+test structured::certificate::tests::attacks::terminal_particle_cost_complete_output_and_transport_end_are_all_required ... ok
+test structured::certificate::tests::compiler::valid_computation_must_also_pass_job_bound_res1_admission ... ok
+test structured::certificate::tests::attacks::authenticated_frames_cannot_substitute_child_keys_results_or_order ... ok
+test structured::certificate::tests::epochs::unknown_record_tags_and_short_record_fields_are_rejected_after_rechaining ... ok
+test structured::certificate::transport::tests::complete_empty_raw_compressed_and_multiframe_streams ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 58 filtered out; finished in 0.06s
+
