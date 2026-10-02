@@ -1,0 +1,20 @@
+
+running 5 tests
+test certificate_file_admission_rejects_links_and_pipes_without_blocking ... ok
+test compiler_res1_success_diagnostics_and_extracted_artifact_are_bound ... ok
+test deadline::compiler_certificate_bytes_and_claim_survive_independent_host_deadlines ... ok
+test failed_proofs_and_verification_preserve_destinations_and_remove_prefixes ... ok
+test raw_complete_nouns_and_loop_proofs_verify_in_fresh_processes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.14s
+
+
+running 5 tests
+test cli_publishes_complete_nouns_with_exact_identity_and_execution_cost ... ok
+test explicit_compaction_finishes_with_bounded_resident_storage_and_preserves_failed_outputs ... ok
+test failures_preserve_destinations_and_never_publish_partial_success ... ok
+test invalid_input_has_no_published_output ... ok
+test explicit_compaction_deadline_ceiling_preserves_execution_and_publication ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.88s
+

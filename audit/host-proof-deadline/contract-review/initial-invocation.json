@@ -1,0 +1,19 @@
+{
+  "observed_ns": 1790921623592249000,
+  "status": "failed",
+  "error": "Read-only audit driver assertion that all inspected source worktrees were clean failed before writing review/source-map/passages. No source files changed by the reviewer.",
+  "current_sources": {
+    "whole-validation-v2/trident": {
+      "head": "8cb43f652501bf7689211bae793ac1757eb125b7\n",
+      "status": ""
+    },
+    "whole-proof-ci/trisha": {
+      "head": "5d14ae46f327a7f0ee1f9812b4ba62b73cf035bc\n",
+      "status": "?? audit/whole-self-build-linux-20261002/\n"
+    },
+    "production-install/joy": {
+      "head": "6e0ec4d8440e2521df08f442d64f54e667044716\n",
+      "status": ""
+    }
+  }
+}

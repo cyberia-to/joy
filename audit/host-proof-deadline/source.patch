@@ -1,0 +1,129 @@
+diff --git a/cli/tests/structured_certificates.rs b/cli/tests/structured_certificates.rs
+index 5c02f4b..9ea093e 100644
+--- a/cli/tests/structured_certificates.rs
++++ b/cli/tests/structured_certificates.rs
+@@ -1,4 +1,6 @@
+ use serde_json::Value;
++#[path = "structured_certificates/deadline.rs"]
++mod deadline;
+ use std::{
+     fs,
+     path::PathBuf,
+diff --git a/cli/tests/structured_run.rs b/cli/tests/structured_run.rs
+index d1a5ac3..91dfcb4 100644
+--- a/cli/tests/structured_run.rs
++++ b/cli/tests/structured_run.rs
+@@ -238,7 +238,7 @@ fn explicit_compaction_deadline_ceiling_preserves_execution_and_publication() {
+             .unwrap()
+             > 1
+     );
+-    for time_ms in ["3600000", "7200000"] {
++    for time_ms in ["3600000", "7200000", "14400000"] {
+         let mut args = flags.to_vec();
+         args.extend(["--force", "--time-ms", time_ms]);
+         let result = f.ok(&args);
+@@ -259,12 +259,12 @@ fn explicit_compaction_deadline_ceiling_preserves_execution_and_publication() {
+         );
+     }
+     let mut args = flags.to_vec();
+-    args.extend(["--force", "--time-ms", "7200001"]);
++    args.extend(["--force", "--time-ms", "14400001"]);
+     let rejected = f.run(&args);
+     assert_eq!(rejected.status.code(), Some(1));
+     assert!(rejected.stdout.is_empty());
+     assert!(
+-        String::from_utf8_lossy(&rejected.stderr).contains("limit time_ms must be in 1..=7200000")
++        String::from_utf8_lossy(&rejected.stderr).contains("limit time_ms must be in 1..=14400000")
+     );
+     assert_eq!(
+         fs::read(f.path.join("out.dag")).unwrap(),
+diff --git a/rs/structured/limits.rs b/rs/structured/limits.rs
+index 8a2d1da..8f3179d 100644
+--- a/rs/structured/limits.rs
++++ b/rs/structured/limits.rs
+@@ -11,7 +11,7 @@ pub struct CompactionPolicy {
+ const COMPACT_ALLOCATIONS: u64 = 1_000_000_000;
+ const COMPACT_REDUCTIONS: u64 = 20_000_000_000;
+ const COMPACT_WORK: u64 = 10_000_000_000;
+-const COMPACT_TIME_MS: u64 = 7_200_000;
++const COMPACT_TIME_MS: u64 = 14_400_000;
+ 
+ #[derive(Debug, Clone, Copy)]
+ pub struct RunLimits {
+diff --git a/rs/structured/tests/compaction.rs b/rs/structured/tests/compaction.rs
+index 375bc1f..900fd0b 100644
+--- a/rs/structured/tests/compaction.rs
++++ b/rs/structured/tests/compaction.rs
+@@ -154,7 +154,7 @@ fn extended_caps_require_explicit_compaction_and_remain_bounded() {
+     let maximum = RunLimits {
+         arena_nodes: 1_000_000_000,
+         budget: 20_000_000_000,
+-        time_ms: 7_200_000,
++        time_ms: 14_400_000,
+         compaction: Some(CompactionPolicy {
+             resident_nodes: MAX_ARENA_NODES,
+             collection_work: 10_000_000_000,
+@@ -238,7 +238,7 @@ fn explicit_compaction_deadlines_preserve_defaults_and_cancellation() {
+     .validate()
+     .is_err());
+ 
+-    for time_ms in [3_600_000, 7_200_000] {
++    for time_ms in [3_600_000, 7_200_000, 14_400_000] {
+         RunLimits {
+             time_ms,
+             ..limits()
+@@ -247,6 +247,16 @@ fn explicit_compaction_deadlines_preserve_defaults_and_cancellation() {
+         .unwrap();
+     }
+ 
++    for time_ms in [0, 14_400_001, u64::MAX] {
++        let error = RunLimits {
++            time_ms,
++            ..limits()
++        }
++        .validate()
++        .unwrap_err();
++        assert_eq!(error, "limit time_ms must be in 1..=14400000");
++    }
++
+     // A short expired worker start exercises evaluator cancellation without
+     // requiring a clock that can represent times hours before process startup.
+     let run_limits = RunLimits {
+diff --git a/rs/structured/tests/compiler/compaction.rs b/rs/structured/tests/compiler/compaction.rs
+index 6b62561..45bc70e 100644
+--- a/rs/structured/tests/compiler/compaction.rs
++++ b/rs/structured/tests/compiler/compaction.rs
+@@ -31,7 +31,7 @@ fn compiler_job_binding_and_extracted_artifact_survive_repeated_collection() {
+         result.report.charged_reductions,
+         ordinary.report.charged_reductions
+     );
+-    for time_ms in [3_600_000, 7_200_000] {
++    for time_ms in [3_600_000, 7_200_000, 14_400_000] {
+         let at_deadline = run(
+             encoded(&ar, compiler),
+             encoded(&ar, job),
+diff --git a/specs/structured-run.md b/specs/structured-run.md
+index 8bf79e7..459d055 100644
+--- a/specs/structured-run.md
++++ b/specs/structured-run.md
+@@ -88,7 +88,7 @@ allocations, including loaded nodes and allocations left by failed operations.
+ Hash-cons hits in the current arena are free. Reconstructing a previously
+ collected value charges again. This is a conservative allocation allowance,
+ separate from resident storage; no collection replenishes it. The host ceiling
+-is 1,000,000,000 allocations, 20,000,000,000 reductions and 7,200,000 ms in this
++is 1,000,000,000 allocations, 20,000,000,000 reductions and 14,400,000 ms in this
+ explicit mode. Defaults remain unchanged. All transport, frame and compiler
+ schema ceilings remain unchanged. No JOB1 field or source option is added.
+ `--budget` explicitly selects the reduction allowance within this ceiling;
+@@ -100,6 +100,11 @@ the default remains 30,000 ms and ordinary execution retains its 300,000 ms
+ ceiling. Selecting a longer deadline leaves every work and storage allowance
+ unchanged. The worker still joins before returning a cancellation failure,
+ and cancellation preserves the destination without publishing a result.
++The same explicit deadline policy applies to `prove-artifact` and
++`verify-artifact`. Each process selects its own deadline; elapsed time remains
++a host observation outside the certificate context. Certificate verification
++therefore permits a different deadline from its producer while enforcing the
++same expected program, input and logical claim.
+ 
+ Resident nodes must be positive and at most 3,145,728. Physical tier selection
+ uses this resident bound, capped by the cumulative allowance. JOB1 admission

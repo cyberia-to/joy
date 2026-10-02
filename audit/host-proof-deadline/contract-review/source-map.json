@@ -1,0 +1,121 @@
+{
+  "whole-validation-v2/trident/reference/self-hosting.md": {
+    "bytes": 62854,
+    "sha256": "b402bd0add56dcdd5fcb71883a77660fca329a1837a551831688582e745b1433",
+    "head": "8cb43f652501bf7689211bae793ac1757eb125b7",
+    "matches_committed_blob": true
+  },
+  "whole-validation-v2/trident/reference/self-hosting-runtime.md": {
+    "bytes": 14755,
+    "sha256": "64c757b710e8f2376938b07ca86aafc106a4c980e26f1abc2187a77daf66bf2a",
+    "head": "8cb43f652501bf7689211bae793ac1757eb125b7",
+    "matches_committed_blob": true
+  },
+  "whole-validation-v2/trident/reference/self-hosting-jobs.md": {
+    "bytes": 25379,
+    "sha256": "c1e3e6783ed6bc3582bd25f0a82330407da50ec93fe7fa92cbfe90388971b2b4",
+    "head": "8cb43f652501bf7689211bae793ac1757eb125b7",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/specs/structured-run.md": {
+    "bytes": 9922,
+    "sha256": "bfd90991f9fdcc522dad6bf86510af6ef6d56f82657a484f4e646d4e213d624c",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/specs/structured-certificates.md": {
+    "bytes": 10069,
+    "sha256": "0a349f91e59983f574e8a45de4abd45799b158997631f9d0f0f18c9e97b3c313",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/specs/compiler-certificate-transport.md": {
+    "bytes": 4333,
+    "sha256": "08cbc58b744042f0338f3b7b7419fc3b28a720bbe630aacec569348c2af8f769",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/rs/structured/limits.rs": {
+    "bytes": 2940,
+    "sha256": "b7adbee9300d3136705270abf72081e95fc26ca810b0fff0a947e77201116447",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/rs/structured/certificate/types.rs": {
+    "bytes": 2137,
+    "sha256": "825ed4c59db8395fc31955bfcfe2bf756a13a6fe42e6cba320cf550e019d4483",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/rs/structured/certificate/admission.rs": {
+    "bytes": 4120,
+    "sha256": "243c967811e6a2028d091a82663848552596fa866b5c5adfd14f8eb2c9b06efc",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/rs/structured/certificate/pipeline.rs": {
+    "bytes": 8610,
+    "sha256": "794881982c011a5e1b93e77f2e17d6b4d4e6fd443868b28246cbbedd1050165a",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/rs/structured/certificate.rs": {
+    "bytes": 3421,
+    "sha256": "1e2ca43ed05cabd3390c597cac423c3259b120a84e1076d3c292c864c0f2ff84",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/rs/structured.rs": {
+    "bytes": 7399,
+    "sha256": "3d9305cf17fd8768bfb9a0790533871ba4e3264c81ebd7b0d8e8d7f2524dd360",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/cli/artifact_limits.rs": {
+    "bytes": 2264,
+    "sha256": "7382132380d17fe08dccd7f05f7433094210f26db39b2c56cd78aa71bd80b9b2",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "production-install/joy/cli/tests/structured_run.rs": {
+    "bytes": 8984,
+    "sha256": "b67f6218af3ac7ce846b478d3782f2b626968722347c0ea84a3a9803147e9e0b",
+    "head": "6e0ec4d8440e2521df08f442d64f54e667044716",
+    "matches_committed_blob": true
+  },
+  "whole-proof-ci/trisha/docs/reference/whole-self-build-ci.md": {
+    "bytes": 5892,
+    "sha256": "60ad27714ea0ed0f661153aef64eeedbf5825b5a1012154321fd4693dd9ad5c0",
+    "head": "5d14ae46f327a7f0ee1f9812b4ba62b73cf035bc",
+    "matches_committed_blob": true
+  },
+  "whole-proof-ci/trisha/scripts/whole_self_inputs.py": {
+    "bytes": 8053,
+    "sha256": "066c1f68031432a83174c52503710eafc0d4f04654b714882336b8d5fa445779",
+    "head": "5d14ae46f327a7f0ee1f9812b4ba62b73cf035bc",
+    "matches_committed_blob": true
+  },
+  "whole-proof-ci/trisha/scripts/whole_self_host.py": {
+    "bytes": 6813,
+    "sha256": "a640e80649f46a2ff4c369423738f73eb563d99a1dd2daebc66d7b2175f29466",
+    "head": "5d14ae46f327a7f0ee1f9812b4ba62b73cf035bc",
+    "matches_committed_blob": true
+  },
+  "whole-proof-ci/trisha/.github/workflows/whole-self-build.yml": {
+    "bytes": 2404,
+    "sha256": "8f11fa414f2adee08bc9918ecbc2d0f0c565e29aecf1ba4fa2f025ed75506b98",
+    "head": "5d14ae46f327a7f0ee1f9812b4ba62b73cf035bc",
+    "matches_committed_blob": true
+  },
+  "whole-proof-ci/trisha/.github/whole-self-build-sources.json": {
+    "bytes": 775,
+    "sha256": "a5a6df5b5b858ea09b91921961656dc559937092b91c0570a1fd172db6a2fed6",
+    "head": "5d14ae46f327a7f0ee1f9812b4ba62b73cf035bc",
+    "matches_committed_blob": true
+  },
+  "whole-proof/profile.json": {
+    "bytes": 916,
+    "sha256": "285dd5bb549795eda00beda023b91af07a047b1995cda7b99fffe3c4fe5c4fa2",
+    "scope": "Read-only original local measurement profile; no source-repository claim."
+  }
+}

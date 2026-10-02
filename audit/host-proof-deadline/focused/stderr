@@ -1,0 +1,112 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling serde_core v1.0.229
+   Compiling syn v3.0.5
+   Compiling syn v2.0.119
+   Compiling serde v1.0.229
+   Compiling serde_derive v1.0.229
+   Compiling synstructure v0.13.2
+   Compiling strata-core v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/strata/core)
+   Compiling zerofrom-derive v0.1.7
+   Compiling zerofrom v0.1.8
+   Compiling yoke-derive v0.8.2
+   Compiling strata-ext v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/strata/ext)
+   Compiling strata-proof v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/strata/proof)
+   Compiling zerovec-derive v0.11.6
+   Compiling yoke v0.8.3
+   Compiling strata-compute v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/strata/compute)
+   Compiling displaydoc v0.2.7
+   Compiling strata-nebu v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/strata/nebu/rs)
+   Compiling zerovec v0.11.8
+   Compiling cyber-hemera v0.3.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/hemera/rs)
+   Compiling tinystr v0.8.4
+   Compiling cyber-lens-core v0.1.2 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/lens/core)
+   Compiling litemap v0.8.3
+   Compiling libc v0.2.189
+   Compiling writeable v0.6.4
+   Compiling icu_locale_core v2.3.0
+   Compiling potential_utf v0.1.6
+   Compiling zerotrie v0.2.5
+   Compiling icu_normalizer_data v2.3.0
+   Compiling smallvec v1.16.0
+   Compiling icu_properties_data v2.3.0
+   Compiling icu_collections v2.3.0
+   Compiling icu_provider v2.3.1
+   Compiling pin-project-lite v0.2.17
+   Compiling cyber-lens-brakedown v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/lens/brakedown)
+   Compiling memchr v2.8.3
+   Compiling futures-core v0.3.34
+   Compiling futures-sink v0.3.34
+   Compiling icu_properties v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling zmij v1.0.23
+   Compiling idna_adapter v1.2.2
+   Compiling futures-channel v0.3.34
+   Compiling futures-macro v0.3.34
+   Compiling slab v0.4.12
+   Compiling semver v1.0.28
+   Compiling futures-io v0.3.34
+   Compiling futures-task v0.3.34
+   Compiling serde_json v1.0.151
+   Compiling futures-util v0.3.34
+   Compiling rustc_version v0.4.1
+   Compiling anstyle-parse v1.0.0
+   Compiling idna v1.1.0
+   Compiling strata-jali v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/strata/jali/rs)
+   Compiling strata-kuro v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/strata/kuro/rs)
+   Compiling strata-genies v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/strata/genies/rs)
+   Compiling strata-trop v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/strata/trop/rs)
+   Compiling pin-project-internal v1.1.13
+   Compiling tokio-macros v2.7.2
+   Compiling thiserror v2.0.20
+   Compiling itoa v1.0.18
+   Compiling anstyle v1.0.14
+   Compiling colorchoice v1.0.5
+   Compiling anstream v1.0.0
+   Compiling tokio v1.53.1
+   Compiling pin-project v1.1.13
+   Compiling cyber-lens-assayer v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/lens/assayer)
+   Compiling cyber-lens-porphyry v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/lens/porphyry)
+   Compiling cyber-lens-binius v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/lens/binius)
+   Compiling cyber-lens-ikat v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/lens/ikat)
+   Compiling url v2.5.8
+   Compiling heapless v0.7.17
+   Compiling parking_lot_core v0.9.12
+   Compiling cyber-nox v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/nox/rs)
+   Compiling tracing-attributes v0.1.31
+   Compiling serde_repr v0.1.21
+   Compiling thiserror-impl v2.0.20
+   Compiling byteorder v1.5.0
+   Compiling bytes v1.12.1
+   Compiling clap_lex v1.1.0
+   Compiling clap_builder v4.6.6
+   Compiling tower v0.4.13
+   Compiling clap_derive v4.6.4
+   Compiling tokio-util v0.7.19
+   Compiling lsp-types v0.94.1
+   Compiling hash32 v0.2.1
+   Compiling dashmap v5.5.3
+   Compiling tracing v0.1.44
+   Compiling cyber-lens v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/lens/src)
+   Compiling getrandom v0.3.4
+   Compiling futures v0.3.34
+   Compiling auto_impl v1.3.0
+   Compiling tower-lsp-macros v0.9.0
+   Compiling async-trait v0.1.92
+   Compiling zeroize v1.9.0
+   Compiling trident-lang v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/trident)
+   Compiling tower-lsp v0.20.0
+   Compiling zheng v0.4.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/zheng/rs)
+   Compiling cobs v0.3.0
+   Compiling clap v4.6.6
+   Compiling neuron-id v0.1.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/neuron/id)
+   Compiling adler2 v2.0.1
+   Compiling miniz_oxide v0.8.9
+   Compiling bbg v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/bbg/rs)
+   Compiling postcard v1.1.3
+   Compiling joy-rs v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/joy/rs)
+   Compiling cyber-joy v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/host-deadline/joy/cli)
+    Finished `release` profile [optimized] target(s) in 57.67s
+     Running tests/structured_certificates.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/structured_certificates-046edcf408f6147a)
+     Running tests/structured_run.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/structured_run-726a4bc4d0ec7465)
