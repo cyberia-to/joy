@@ -1,0 +1,481 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling syn v3.0.5
+   Compiling syn v2.0.119
+   Compiling serde v1.0.229
+   Compiling serde_derive v1.0.229
+   Compiling synstructure v0.13.2
+   Compiling strata-core v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/core)
+   Compiling stable_deref_trait v1.2.1
+   Compiling zerofrom-derive v0.1.7
+   Compiling zerofrom v0.1.8
+   Compiling yoke-derive v0.8.2
+   Compiling strata-proof v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/proof)
+   Compiling strata-ext v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/ext)
+   Compiling zerovec-derive v0.11.6
+   Compiling yoke v0.8.3
+   Compiling strata-compute v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/compute)
+   Compiling displaydoc v0.2.7
+   Compiling zerovec v0.11.8
+   Compiling strata-nebu v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/nebu/rs)
+   Compiling cyber-hemera v0.3.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/hemera/rs)
+   Compiling tinystr v0.8.4
+   Compiling cyber-lens-core v0.1.2 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/core)
+   Compiling writeable v0.6.4
+   Compiling litemap v0.8.3
+   Compiling libc v0.2.189
+   Compiling icu_locale_core v2.3.0
+   Compiling potential_utf v0.1.6
+   Compiling zerotrie v0.2.5
+   Compiling icu_normalizer_data v2.3.0
+   Compiling icu_properties_data v2.3.0
+   Compiling utf8_iter v1.0.4
+   Compiling smallvec v1.16.0
+   Compiling icu_collections v2.3.0
+   Compiling icu_provider v2.3.1
+   Compiling pin-project-lite v0.2.17
+   Compiling cyber-lens-brakedown v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/brakedown)
+   Compiling memchr v2.8.3
+   Compiling cfg-if v1.0.4
+   Compiling futures-sink v0.3.34
+   Compiling futures-core v0.3.34
+   Compiling icu_properties v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling zmij v1.0.23
+   Compiling idna_adapter v1.2.2
+   Compiling futures-channel v0.3.34
+   Compiling futures-macro v0.3.34
+   Compiling serde_json v1.0.151
+   Compiling futures-io v0.3.34
+   Compiling futures-task v0.3.34
+   Compiling slab v0.4.12
+   Compiling percent-encoding v2.3.2
+   Compiling parking_lot_core v0.9.12
+   Compiling utf8parse v0.2.2
+   Compiling semver v1.0.28
+   Compiling once_cell v1.21.4
+   Compiling rustc_version v0.4.1
+   Compiling anstyle-parse v1.0.0
+   Compiling form_urlencoded v1.2.2
+   Compiling futures-util v0.3.34
+   Compiling idna v1.1.0
+   Compiling strata-jali v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/jali/rs)
+   Compiling strata-kuro v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/kuro/rs)
+   Compiling strata-genies v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/genies/rs)
+   Compiling strata-trop v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/strata/trop/rs)
+   Compiling pin-project-internal v1.1.13
+   Compiling tokio-macros v2.7.2
+   Compiling colorchoice v1.0.5
+   Compiling getrandom v0.3.4
+   Compiling anstyle v1.0.14
+   Compiling anstyle-query v1.1.5
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling scopeguard v1.2.0
+   Compiling thiserror v2.0.20
+   Compiling httparse v1.10.1
+   Compiling itoa v1.0.18
+   Compiling lock_api v0.4.14
+   Compiling anstream v1.0.0
+   Compiling tokio v1.53.1
+   Compiling pin-project v1.1.13
+   Compiling cyber-lens-assayer v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/assayer)
+   Compiling cyber-lens-porphyry v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/porphyry)
+   Compiling cyber-lens-binius v0.1.1 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/binius)
+   Compiling cyber-lens-ikat v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/ikat)
+   Compiling url v2.5.8
+   Compiling heapless v0.7.17
+   Compiling tracing-core v0.1.36
+   Compiling cyber-nox v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/nox/rs)
+   Compiling tracing-attributes v0.1.31
+   Compiling thiserror-impl v2.0.20
+   Compiling serde_repr v0.1.21
+   Compiling clap_lex v1.1.0
+   Compiling byteorder v1.5.0
+   Compiling bitflags v1.3.2
+   Compiling tower-layer v0.3.3
+   Compiling bytes v1.12.1
+   Compiling strsim v0.11.1
+   Compiling heck v0.5.0
+   Compiling hashbrown v0.14.5
+   Compiling tower-service v0.3.3
+   Compiling tower v0.4.13
+   Compiling clap_derive v4.6.4
+   Compiling dashmap v5.5.3
+   Compiling tokio-util v0.7.19
+   Compiling clap_builder v4.6.6
+   Compiling lsp-types v0.94.1
+   Compiling hash32 v0.2.1
+   Compiling tracing v0.1.44
+   Compiling cyber-lens v0.2.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/lens/src)
+   Compiling futures v0.3.34
+   Compiling auto_impl v1.3.0
+   Compiling tower-lsp-macros v0.9.0
+   Compiling async-trait v0.1.92
+   Compiling yansi v1.0.1
+   Compiling trident-lang v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/trident)
+   Compiling unicode-width v0.1.14
+   Compiling zeroize v1.9.0
+   Compiling ariadne v0.4.1
+   Compiling zheng v0.4.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/zheng/rs)
+   Compiling tower-lsp v0.20.0
+   Compiling cobs v0.3.0
+   Compiling clap v4.6.6
+   Compiling neuron-id v0.1.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/neuron/id)
+   Compiling adler2 v2.0.1
+   Compiling miniz_oxide v0.8.9
+   Compiling bbg v0.3.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/bbg/rs)
+   Compiling postcard v1.1.3
+   Compiling joy-rs v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/joy/rs)
+   Compiling cyber-joy v0.5.0 (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/certificate/joy/cli)
+    Finished `release` profile [optimized] target(s) in 1m 06s
+     Running unittests main.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/joy-2a8d418e45eda256)
+
+running 2 tests
+test batch::tests::flag_values_preserve_native_bytes_and_cannot_become_child_options ... ok
+test publication::tests::staging_cannot_alias_destination_or_delete_successful_output ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/artifact_files.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/artifact_files-f6f72f4ceb7fdeab)
+
+running 1 test
+test verification_rejects_streams_links_and_oversize_files_but_keeps_real_proof_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+
+     Running tests/build_pipeline.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/build_pipeline-209696287b4f81c2)
+
+running 5 tests
+test json_v1_reports_exact_result_identity_and_structured_failure ... ok
+test explicit_target_overrides_project_for_build_run_and_prove ... ok
+test publication_requires_force_and_failures_preserve_existing_artifact ... ok
+test source_default_name_nox_export_and_checkout_independent_bundles ... ok
+test project_build_run_prove_verify_preserves_custom_profile_and_imports ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/compiler_jobs.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/compiler_jobs-ebb3acf4d2e7dc12)
+
+running 3 tests
+test guest_diagnostics_are_distinct_from_job_failure_and_never_publish_a_program ... ok
+test compiler_result_and_extracted_program_are_published_exactly_and_executed ... ok
+test all_failed_boundaries_preserve_previous_file_even_with_force ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/execution_claim.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/execution_claim-a7ca1b411cb55e2a)
+
+running 6 tests
+test excess_secret_inputs_are_refused_and_single_quote_is_provable ... ok
+test fresh_verifier_authenticates_requested_public_io_without_execution_inputs ... ok
+test malformed_execution_artifacts_fail_directly_and_legacy_needs_opt_in ... ok
+test retired_private_envelopes_never_fall_back_to_execution_or_legacy ... ok
+test changing_statement_values_cannot_reauthorize_an_execution ... ok
+test native_private_proving_verifies_without_secrets_and_publishes_atomically ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.04s
+
+     Running tests/native_cli_parity.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/native_cli_parity-afddafc257b25487)
+
+running 6 tests
+test batch_witness_preparation_failure_creates_no_proofs ... ok
+test witness_links_and_streams_are_refused_without_opening ... ok
+test input_file_serves_native_divine_and_conflicts_with_explicit_flags ... ok
+test batch_execution_preserves_order_and_failure_of_any_job ... ok
+test malformed_witnesses_never_echo_their_contents ... ok
+test batch_proofs_use_isolated_paths_and_verify_each_artifact ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/native_test_bench.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/native_test_bench-3ff21a12af7c4efc)
+
+running 5 tests
+test test_command_executes_assertions_and_never_substitutes_main ... ok
+test bench_state_execution_reports_the_authenticated_root_and_rejects_tampering ... ok
+test test_command_uses_project_profiles_and_imported_test_entries ... ok
+test bench_restarts_private_input_stream_and_accepts_exported_bundles ... ok
+test bench_reports_actual_native_execution_counts_and_independent_expectations ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/raw_source.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/raw_source-682eb916c42c4d3b)
+
+running 5 tests
+test named_profile_and_target_override_preserve_exact_nested_input ... ok
+test imported_source_compiles_to_art1_and_joy_executes_the_complete_output ... ok
+test artifact_publication_preserves_existing_output_on_every_compile_failure ... ok
+test explicit_compiler_profile_export_matches_seed_api_and_refuses_other_formats ... ok
+test compact_source_loop_uses_explicit_frames_and_never_publishes_partial_execution ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+
+     Running tests/reaudit_cli.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/reaudit_cli-fecae8160a73e14f)
+
+running 4 tests
+test witness_file_byte_limit_accepts_exact_size_and_rejects_growth ... ok
+test batch_preserves_option_looking_inputs_witnesses_and_output_paths ... ok
+test forced_proof_publication_replaces_the_link_and_preserves_its_target ... ok
+test source_commands_reject_entry_import_and_manifest_streams_before_publication ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/source_packages.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/source_packages-abf56f19bdab7dd0)
+
+running 8 tests
+test duplicate_json_keys_are_rejected_without_last_value_wins ... ok
+test packed_exact_source_bytes_match_independent_job_and_execute_on_the_guest ... ok
+test raw_compiler_and_nonregular_source_files_are_rejected_without_publication ... ok
+test aggregate_source_allowance_can_end_with_empty_files_but_cannot_reset ... ok
+test host_paths_order_and_timestamps_do_not_change_canonical_jobs ... ok
+test requested_and_independent_host_caps_bound_packaging ... ok
+test unknown_missing_duplicate_and_unsupported_manifest_fields_reject_atomically ... ok
+test packing_and_compiler_execution_preserve_bytes_across_physical_arena_sizes ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+     Running tests/state_execution.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/state_execution-77b9c50c7fdb7477)
+
+running 3 tests
+test compiled_helper_state_proof_verifies_in_a_fresh_process_and_rejects_substitution ... ok
+test secret_state_query_proves_and_preserves_existing_output_without_force ... ok
+test native_private_state_binds_root_and_build_in_a_fresh_verifier ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.06s
+
+     Running tests/structured_run.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/structured_run-8caa2c24e46510a4)
+
+running 5 tests
+test invalid_input_has_no_published_output ... ok
+test failures_preserve_destinations_and_never_publish_partial_success ... ok
+test cli_publishes_complete_nouns_with_exact_identity_and_execution_cost ... ok
+test explicit_compaction_finishes_with_bounded_resident_storage_and_preserves_failed_outputs ... ok
+test explicit_compaction_deadline_ceiling_preserves_execution_and_publication ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.60s
+
+     Running tests/target_package.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/target_package-72d61d32ef10f1e7)
+
+running 5 tests
+test stateless_library_runner_rejects_state_marked_bundle ... ok
+test installed_compiler_uses_embedded_target_constants ... ok
+test installed_soft3_compiler_rejects_foreign_targets_and_resources ... ok
+test installed_description_matches_machine_and_native_certificate_capabilities ... ok
+test installed_cli_rejects_state_instead_of_executing_statelessly ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.77s
+
+     Running unittests lib.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/joy_rs-43287368127c9086)
+
+running 65 tests
+test formula::tests::empty_subject_is_zero ... ok
+test formula::tests::atom_roundtrips ... ok
+test formula::tests::unclosed_bracket_errors ... ok
+test formula::tests::singleton_cell_errors ... ok
+test formula::tests::cell_roundtrips ... ok
+test formula::tests::trailing_input_errors ... ok
+test formula::tests::subject_puts_last_input_at_head ... ok
+test formula::tests::whitespace_is_insignificant ... ok
+test formula::tests::leaves_flatten_left_to_right ... ok
+test formula::tests::nary_cell_folds_right ... ok
+test structured::tests::census::driver::frozen_compiler_prefix ... ignored, bounded actual ART1/JOB1 diagnostic; requires JOY_CENSUS_PROGRAM, INPUT, OUTPUT
+test structured::certificate::transport::tests::failure_poisons_reader_and_writer ... ok
+test structured::certificate::transport::tests::small_reads_and_explicit_semantic_finish_are_strict ... ok
+test structured::tests::census::tests::sink_rejects_conflicting_retained_header_without_publishing_event ... ok
+test structured::tests::census::tests::capture_cap_failure_preserves_prefix_and_reports_no_success ... ok
+test structured::certificate::transport::tests::partial_destinations_and_flush_failure_cannot_finish ... ok
+test structured::certificate::transport::tests::reordered_cross_context_and_duplicate_frames_fail ... ok
+test structured::tests::census::tests::saturated_dictionaries_report_lower_bounds_and_preserve_exact_totals ... ok
+test structured::tests::compaction::extended_caps_require_explicit_compaction_and_remain_bounded ... ok
+test structured::tests::census::tests::repeated_evaluations_count_occurrences_and_distinct_keys_separately ... ok
+test structured::tests::census::tests::terminal_transition_at_prefix_cap_requires_completed_delivery ... ok
+test structured::tests::census::tests::prefix_ceiling_stops_without_reporting_successful_cost ... ok
+test structured::tests::compaction::explicit_compaction_deadlines_preserve_defaults_and_cancellation ... ok
+test structured::certificate::transport::tests::self_consistent_bad_lengths_deflate_end_and_bombs_fail ... ok
+test structured::tests::admission::exact_input_bounds_and_shared_code_input_charge_once ... ok
+test structured::tests::admission::worker_deadline_returns_failure_without_output_bytes ... ok
+test structured::tests::census::tests::observed_loop_includes_compose_and_branch_continuations ... ok
+test structured::certificate::transport::tests::every_truncated_prefix_and_changed_byte_fails ... ok
+test structured::tests::admission::exact_art1_fields_and_terminator_are_enforced ... ok
+test structured::tests::compaction::compacting_policy_keeps_resource_and_service_rejections ... ok
+test structured::tests::compiler::compile_errors_are_valid_results_with_ordered_utf8_diagnostics_and_no_program ... ok
+test structured::tests::compiler::generated_compiler_profile_is_admitted_only_when_requested_explicitly ... ok
+test structured::tests::compiler::guest_constructed_result_matches_independent_reference_and_program_executes ... ok
+test structured::tests::compiler::changed_bindings_and_sufficient_limits_preserve_generated_program_bytes ... ok
+test structured::tests::compaction::explicit_larger_reduction_allowance_preserves_prior_execution_and_defaults ... ok
+test structured::tests::compaction::collection_never_replenishes_cumulative_or_work_allowances ... ok
+test structured::tests::compiler::quotas::shared_logical_trees_and_noncanonical_empty_padding_cannot_bypass_admission ... ok
+test structured::tests::compiler::quotas::aggregate_source_and_repeated_records_share_one_admission_allowance ... ok
+test structured::tests::compiler::compaction::larger_host_allowance_still_admits_and_enforces_explicit_job_reductions ... ok
+test structured::tests::compiler::quotas::output_diagnostics_have_a_separate_shared_allowance_and_count_limit ... ok
+test structured::tests::compiler::rejection::generated_profile_status_and_runtime_faults_cannot_become_success ... ok
+test structured::tests::compiler::rejection::all_four_compiler_and_result_identity_limbs_are_bound ... ok
+test structured::tests::hard_limits_and_expired_deadlines_are_explicit ... ok
+test structured::tests::heap::compiler_scale_allowances_are_explicit_and_bounded ... ok
+test structured::certificate::transport::tests::complete_empty_raw_compressed_and_multiframe_streams ... ok
+test structured::tests::malformed_containers_profiles_and_host_services_are_rejected ... ok
+test structured::tests::compiler::compaction::compiler_job_binding_and_extracted_artifact_survive_repeated_collection ... ok
+test structured::tests::compiler::trident_source_seed_exports_compiler_profile_and_executes_bound_job_on_nox ... ok
+test structured::tests::compiler::rejection::malformed_records_collections_and_byte_padding_are_rejected ... ok
+test structured::tests::resource_boundaries_apply_during_evaluation_not_only_loading ... ok
+test structured::tests::runtime_generated_formula_executes_and_reports_bound_identities ... ok
+test structured::tests::raw_topology_and_shared_dag_roundtrip_without_flattening ... ok
+test structured::tests::heap::physical_arena_capacity_preserves_output_identity_and_execution_accounting ... ok
+test structured::tests::compiler::quotas::requested_execution_and_shared_visit_limits_are_used_exactly ... ok
+test structured::tests::compiler::quotas::runtime_constructed_res1_obeys_requested_transport_caps_before_extraction ... ok
+test structured::tests::compiler::rejection::diagnostic_codes_spans_order_utf8_and_overflow_marker_are_enforced ... ok
+test structured::tests::compiler::vectors::cli_vectors_bind_actual_guest_results_to_independent_canonical_files ... ok
+test structured::tests::output_transport_limits_are_checked_after_runtime_construction ... ok
+test structured::tests::compiler::rejection::packages_options_and_entry_are_structurally_validated_without_source_parsing ... ok
+test structured::tests::compiler::quotas::every_job_limit_is_positive_and_cannot_raise_independent_host_caps ... ok
+test structured::tests::compiler::package::packed_collections_match_independent_reference_across_word_and_tree_boundaries ... ok
+test structured::tests::compiler::quotas::compiler_container_must_fit_the_job_request_even_when_input_is_smaller ... ok
+test structured::tests::compaction::reclaiming_worker_preserves_nouns_and_gas_beyond_the_resident_allowance ... ok
+test structured::tests::compiler::quotas::requested_transport_caps_cover_both_compiler_and_job_at_inclusive_boundaries ... ok
+test structured::tests::compact_4097_iteration_program_runs_through_joy ... ok
+
+test result: ok. 64 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.27s
+
+     Running tests/integration.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/integration-c6ca06eb5e84370b)
+
+running 26 tests
+test prove_refuses_look_rows_honestly ... ok
+test prove_refuses_single_row_traces_honestly ... ok
+test budget_exhaustion_halts ... ok
+test add_literals_reduces_to_eight ... ok
+test missing_secret_halts_honestly ... ok
+test fixture_bundle_json_runs ... ok
+test compile_tri_end_to_end ... ok
+test public_inputs_bind_as_subject ... ok
+test prove_works_on_a_minimal_bundle ... ok
+test secret_input_served_by_call_pattern ... ok
+test verify_refuses_foreign_proof_formats ... ok
+test wrong_target_vm_rejected ... ok
+test verify_by_rerun_pass_and_fail ... ok
+test prove_verify_roundtrip_through_traits_and_disk ... ok
+test look_against_stale_root_refused_at_prove ... ok
+test look_artifact_root_mismatch_rejected ... ok
+test look_program_proves_and_verifies_against_state ... ok
+test look_artifact_tampered_binding_and_table_rejected ... ok
+test proof_for_a_different_program_rejected ... ok
+test artifact_load_error_paths ... ok
+test tampered_proof_rejected ... ok
+test artifact_is_self_contained_and_binds_its_assembly ... ok
+test metadata_cannot_authorize_an_output_claim ... ok
+test prove_verify_roundtrip ... ok
+test tampered_hash_group_rejected ... ok
+test hash_program_proves_and_verifies ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running tests/legacy_assembly_bounds.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/legacy_assembly_bounds-5b914f738b20b958)
+
+running 1 test
+test compressed_legacy_assembly_cannot_expand_past_the_formula_limit ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/loop_indices.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/loop_indices-1e5f508420f3df3f)
+
+running 2 tests
+test exact_final4_imported_loop_indices_have_public_proofs ... ok
+test loop_index_constants_do_not_escape_shadowed_or_returning_frames ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/native_private.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/native_private-b21bcdd1a82d055f)
+
+running 5 tests
+test explicit_budget_and_expected_claim_are_enforced_without_secret_replay ... ok
+test every_public_statement_and_build_identity_is_bound ... ok
+test malformed_outer_metadata_and_inner_wire_fail_at_their_boundaries ... ok
+test native_profiles_select_correctly_and_private_proofs_use_fresh_randomness ... ok
+test hidden_namespace_uses_authenticated_tables_and_canonical_certificate_metadata ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.15s
+
+     Running tests/nox_loop_return.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/nox_loop_return-55e324e5de4eac58)
+
+running 2 tests
+test private_loop_return_proves_and_skips_later_witness ... ok
+test bounded_loop_return_proof_binds_selected_result_input_and_cost ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.41s
+
+     Running tests/public_execution.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/public_execution-78cc7677a8b63aeb)
+
+running 5 tests
+test unsupported_secret_state_and_call_inputs_are_refused ... ok
+test artifact_format_and_claim_filters_are_exact ... ok
+test explicit_public_budget_controls_native_confirmation ... ok
+test prover_and_verifier_traits_bind_claim_without_legacy_downgrade ... ok
+test compiled_source_roundtrip_and_changed_statement_rejection ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/reaudit_native.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/reaudit_native-e30b40c2e682a4e8)
+
+running 5 tests
+test dynamic_self_application_hits_the_native_depth_guard ... ok
+test shared_result_expansion_is_checked_before_flat_output_allocation ... ok
+test malformed_raw_formula_returns_an_error_without_process_abort ... ok
+test binary_and_nary_formulas_share_the_noun_depth_ceiling ... ok
+test hash_consing_does_not_bypass_the_syntactic_node_ceiling ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.95s
+
+     Running tests/secret_execution.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/secret_execution-2855e66c921fce69)
+
+running 3 tests
+test missing_witnesses_are_refused_by_execution ... ok
+test relabeling_legacy_statement_cannot_enable_another_format ... ok
+test secret_execution_works_but_all_public_provers_refuse_witnesses ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running tests/secret_stream.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/secret_stream-06dc7fecaaae6bd0)
+
+running 4 tests
+test inactive_calls_do_not_consume_witnesses_and_nested_checks_preserve_order ... ok
+test successful_execution_consumes_exactly_the_ordered_active_stream ... ok
+test canonical_field_inputs_are_required_in_both_native_entry_points ... ok
+test state_execution_enforces_the_same_stream_contract_for_hidden_reads ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/terminal_returns.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/terminal_returns-adabbac475122e7d)
+
+running 2 tests
+test terminal_branch_public_certificates_bind_selected_values ... ok
+test terminal_branch_executes_secrets_without_public_proof_fallback ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s
+
+     Running tests/typed_entry.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/typed_entry-7900c9f40e63dc9e)
+
+running 3 tests
+test unused_typed_inputs_are_constrained_by_public_execution_certificate ... ok
+test aggregate_entry_has_real_proven_native_layout ... ok
+test typed_input_guards_bind_native_private_execution ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.23s
+
+     Running tests/worker.rs (/Users/master/cyber/.worktrees/selfhost-0.4-finalization-20261002/census/joy/target/release/deps/worker-c36f987d11156040)
+
+running 6 tests
+test dispatch_association_profile_and_byte_limits_precede_decoding ... ok
+test constructor_refuses_non_native_and_inconsistent_saved_jobs ... ok
+test state_presence_cannot_be_downgraded_inside_the_shared_private_format ... ok
+test tampered_public_results_are_rejected_by_the_selected_native_verifier ... ok
+test all_profiles_verify_saved_computations_without_private_inputs ... ok
+test valid_proofs_for_different_saved_expectations_are_rejected ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.94s
+
+   Doc-tests joy_rs
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

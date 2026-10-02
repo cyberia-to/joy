@@ -19,6 +19,7 @@ const STACK: usize = 256 << 20;
 const ART1: u64 = 0x41525431;
 
 mod execution;
+pub mod certificate;
 mod job;
 mod job_limits;
 mod job_result;

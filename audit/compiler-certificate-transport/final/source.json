@@ -1,0 +1,25 @@
+{
+  "base": "71b327eb40813ef19073b4952b6e3b7d8bc7f94c",
+  "files": {
+    "rs/structured.rs": "3d9305cf17fd8768bfb9a0790533871ba4e3264c81ebd7b0d8e8d7f2524dd360",
+    "rs/structured/certificate.rs": "b59491541cffdac39099722be16d9b9875f0dba8cb5b91df36e0dbd68da7a66d",
+    "specs/compiler-certificate-transport.md": "08cbc58b744042f0338f3b7b7419fc3b28a720bbe630aacec569348c2af8f769",
+    ".claude/plans/disclosed-compiler-certificates.md": "5c436084bac9dc90ea018dfc480853c4971fa29752ed8ad84f56b4ac647f5f5d",
+    "rs/structured/certificate/transport/reader.rs": "cdb20eb6eefe9316160c0f2e1c41722fa64fc6e2260ff7fbeb8ec7300b5c8589",
+    "rs/structured/certificate/transport/tests.rs": "72cc3f94c88d5b0610633cf6ef4ac949a710de32155c085ed8a101f3a71f56b3",
+    "rs/structured/certificate/transport/writer.rs": "d60cf341dd6bcd4553cda492a0139a6386515522bb58be49440c36b7454ed95f",
+    "rs/structured/certificate/transport.rs": "f8b38a2dc67acca223114d9f86d3fef59ea81a66fdb4a901204b0449344f36f6",
+    "rs/tests/certificate_allocation.rs": "446b9deb5da280876bafb9f5d8f44a99ad2f21bbecd5c3c8254416110a2a0bff"
+  },
+  "siblings": {
+    "trident": "da0d1a59cd8208fab96f219ccedef29122d5221a",
+    "nox": "172811b7746cdcd6ab198a3ed976dc6c19f55d5b",
+    "zheng": "633e5ba980db94ca10d9d6b67cf24d9d3aef63a7",
+    "hemera": "a931a0a8e7ed369852ce0f8bc6451a59745ee692",
+    "strata": "d2eb1763b8caf04e6c7647ac6fe99761519c2ef9",
+    "bbg": "1d39975ad199b48c350fa4cc011cbf6f289480ee",
+    "lens": "17cafe91431977b738e5b72361187cd01ad93638",
+    "neuron": "fd24e768d623604b67e20b4b93fa8e82c83ac373",
+    "honeycrisp": "ff735e6c262926bc9bab7534786a575020cbe442"
+  }
+}

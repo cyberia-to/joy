@@ -1,0 +1,24 @@
+{
+  "reviewer": "/root/sh7_memory_explore",
+  "scope": "framing, context chain, strict decompression, resource bounds and poison behavior",
+  "findings": [
+    {
+      "status": "resolved",
+      "finding": "compress_to_vec used growing infallible payload allocations and an internal panic branch",
+      "resolution": "bounded preallocated output, reused low-level compressor, explicit fixed startup workspace OOM scope"
+    }
+  ],
+  "remaining_findings": [],
+  "files": {
+    "specs/compiler-certificate-transport.md": "08cbc58b744042f0338f3b7b7419fc3b28a720bbe630aacec569348c2af8f769",
+    "rs/structured/certificate/transport.rs": "f8b38a2dc67acca223114d9f86d3fef59ea81a66fdb4a901204b0449344f36f6",
+    "rs/structured/certificate/transport/reader.rs": "cdb20eb6eefe9316160c0f2e1c41722fa64fc6e2260ff7fbeb8ec7300b5c8589",
+    "rs/structured/certificate/transport/writer.rs": "d60cf341dd6bcd4553cda492a0139a6386515522bb58be49440c36b7454ed95f",
+    "rs/structured/certificate/transport/tests.rs": "72cc3f94c88d5b0610633cf6ef4ac949a710de32155c085ed8a101f3a71f56b3"
+  },
+  "root_allocation_review": {
+    "file": "rs/tests/certificate_allocation.rs",
+    "sha256": "446b9deb5da280876bafb9f5d8f44a99ad2f21bbecd5c3c8254416110a2a0bff",
+    "scope": "isolated System allocator with thread-local refusal; payload errors allocate no error message; drop/deallocation always delegated"
+  }
+}
