@@ -36,13 +36,19 @@ inputs, `--zk` and `--state`. Sizes and times: zheng
 
 When the program exceeds the one-relation compiler (nesting beyond 128 or
 more than 4096 formula nodes, or more rows than it admits), `--succinct`
-falls back to `zheng-nox-machine-v1`: the `ZHENGPF1` envelope profile 4, a
-nox run of any length proven by zheng's uniform step relation, its
+proves it recursively: `zheng-nox-recursive-v1`, the `ZHENGPF1` envelope
+profile 5 — a nox run of any length proven by incrementally verifiable
+computation over zheng's nox machine (each 2^15-row step's circuit verifies
+the previous step; the proof is the last step, its accumulation step and
+one WHIR decider), constant in the run's length (zheng `specs/recursion.md`).
+`--succinct --machine` selects `zheng-nox-machine-v1` instead: the
+`ZHENGPF1` envelope profile 4, the uniform step relation with its
 committed words accumulated and decided by one WHIR opening (zheng
-`specs/machine.md`, `specs/accumulation.md`). The statement binds the whole
-output noun; `joy verify` prints its atoms. Same policy: ≥ 128 proven bits,
-not zero-knowledge, no secrets or state. Sizes and times: zheng
-`audit/accumulation-2026-10.md`.
+`specs/machine.md`, `specs/accumulation.md`), smaller and faster to prove
+for short runs but growing with every segment. Both statements bind the
+whole output noun; `joy verify` accepts either and prints its atoms. Same
+policy: ≥ 128 proven bits, not zero-knowledge, no secrets or state. The
+choice and its measurements: `audit/recursive-profile-2026-10.md`.
 
 Joy uses the soft3 execution/proof stack exclusively. `prove --secret` or
 `prove --zk` selects `joy-nox-zheng-private-execution-v1` (`JOYZH001`): zheng's
