@@ -246,3 +246,36 @@ fn hidden_namespace_uses_authenticated_tables_and_canonical_certificate_metadata
         );
     }
 }
+
+/// veil is the default; MPC-in-the-head proves the same statement under the
+/// same binding and serves as the differential oracle.
+#[test]
+fn veil_is_the_default_and_mith_agrees_on_the_statement() {
+    let (bundle, input, veil) = fixture();
+    assert_eq!(veil.scheme(), joy_rs::ZkScheme::Veil);
+    assert!(veil.proof.starts_with(b"ZHVEIL01"));
+    let (mith, result) = Warrior::new()
+        .prove_zk_execution_with(bundle, input, 9, joy_rs::ZkScheme::Mith)
+        .unwrap();
+    assert_eq!(mith.scheme(), joy_rs::ZkScheme::Mith);
+    assert!(mith.proof.starts_with(b"ZHMITH01"));
+    mith.verify().unwrap();
+    assert_eq!(mith.statement, veil.statement);
+    assert_eq!(result.output, mith.statement.execution.public_output);
+    // a veil proof under a MITH artifact's statement of another input fails
+    let (other, _) = Warrior::new()
+        .prove_zk_execution(bundle, &input_with(&[4], &[7, 13]), 9)
+        .unwrap();
+    let mut swapped = other.clone();
+    swapped.proof = veil.proof.clone();
+    assert!(swapped.verify().is_err());
+    println!(
+        "joy zk artifact: veil {} B proof, MITH {} B proof",
+        veil.proof.len(),
+        mith.proof.len()
+    );
+}
+
+fn input_with(public: &[u64], secret: &[u64]) -> ProgramInput {
+    input(public, secret)
+}
