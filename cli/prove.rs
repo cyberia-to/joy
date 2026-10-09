@@ -48,7 +48,7 @@ pub struct ProveArgs {
 }
 
 /// Default artifact path: `<input stem>.zheng` next to the input.
-fn artifact_path(input: &PathBuf) -> PathBuf {
+fn artifact_path(input: &std::path::Path) -> PathBuf {
     let stem = input
         .file_stem()
         .and_then(|s| s.to_str())
