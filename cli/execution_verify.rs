@@ -1,6 +1,9 @@
 //! Public execution verification precedes legacy trace-statement compatibility.
 use crate::{load_bundle, verify::VerifyArgs};
-use joy_rs::{execution::LegacyExecutionArtifact, ExecutionArtifact, SuccinctExecutionArtifact};
+use joy_rs::{
+    execution::LegacyExecutionArtifact, ExecutionArtifact, MachineExecutionArtifact,
+    SuccinctExecutionArtifact,
+};
 
 pub fn try_verify(args: &VerifyArgs) -> Option<Result<(), String>> {
     let path = args.proof.as_ref().unwrap_or(&args.input);
@@ -20,6 +23,11 @@ pub fn try_verify(args: &VerifyArgs) -> Option<Result<(), String>> {
     if SuccinctExecutionArtifact::has_header(path) {
         return Some(
             SuccinctExecutionArtifact::load(path).and_then(|artifact| verify_succinct(args, &artifact)),
+        );
+    }
+    if MachineExecutionArtifact::has_header(path) {
+        return Some(
+            MachineExecutionArtifact::load(path).and_then(|artifact| verify_machine(args, &artifact)),
         );
     }
     if !ExecutionArtifact::has_header(path) {
@@ -82,6 +90,35 @@ fn verify_succinct(args: &VerifyArgs, artifact: &SuccinctExecutionArtifact) -> R
     println!("Verification: PASS (succinct public execution; committed witness, non-ZK)");
     println!("  public input: {:?}", artifact.statement.public_input);
     println!("  public output: {:?}", artifact.statement.public_output);
+    println!("  reductions: {}", artifact.statement.cycles);
+    Ok(())
+}
+
+fn verify_machine(args: &VerifyArgs, artifact: &MachineExecutionArtifact) -> Result<(), String> {
+    if args.state.is_some() || args.secret.as_ref().is_some_and(|v| !v.is_empty()) {
+        return Err("machine execution verification takes no state or secret inputs".into());
+    }
+    if !artifact.claim_matches(
+        args.claim.as_deref(),
+        args.input_values.as_deref(),
+        args.budget,
+    ) {
+        return Err("execution proof differs from requested input, output or budget".into());
+    }
+    if args.proof.is_some() {
+        let bundle = load_bundle(&args.input, &args.profile, args.target.as_deref())
+            .map_err(|e| e.to_string())?;
+        if bundle.target_vm != "nox"
+            || bundle.reads_state
+            || !artifact.matches_program(&bundle.assembly)?
+        {
+            return Err("execution proof is for another program".into());
+        }
+    }
+    artifact.verify()?;
+    println!("Verification: PASS (machine public execution; uniform step relation, accumulated, non-ZK)");
+    println!("  public input: {:?}", artifact.statement.input);
+    println!("  public output: {:?}", artifact.output()?);
     println!("  reductions: {}", artifact.statement.cycles);
     Ok(())
 }
