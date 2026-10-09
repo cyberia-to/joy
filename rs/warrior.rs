@@ -229,14 +229,16 @@ impl Warrior {
                     .to_string(),
             );
         }
-        self.finish_proof(bundle, result, trace, hash_aux, Vec::new(), [0u8; 32])
+        self.finish_proof(bundle, result, trace, hash_aux, [0u8; 32])
     }
 
-    /// Legacy state trace path, currently refused by the recursive-opening guard.
-    ///
-    /// Look rows (tag 17) answer from `state` and record Brakedown openings;
-    /// the statement carries `state.root()` as the PUBLIC root — the full
-    /// chain from the committed state to the verified proof.
+    /// Legacy state trace path. Look rows (tag 17) answer from `state`;
+    /// bbg records a sampled [`bbg::LookOpening`] per read, which zheng's
+    /// retired trace API cannot check (it refuses every look opening), so
+    /// a trace with reads is refused here. State reads are proven with
+    /// `prove_state_certificate` (JOYST002: zheng authenticates the
+    /// `StateEvidence` under the statement's root). A trace without reads
+    /// proves as `prove_zheng`, with `state.root()` as the statement root.
     pub fn prove_zheng_with_state(
         &self,
         bundle: &ProgramBundle,
@@ -250,7 +252,14 @@ impl Warrior {
         }
         let (result, trace, hash_aux, look_openings) =
             self.execute_traced_with_state(bundle, input, state)?;
-        self.finish_proof(bundle, result, trace, hash_aux, look_openings, state.root())
+        if !look_openings.is_empty() {
+            return Err(
+                "legacy trace statements cannot carry state reads (zheng's retired trace \
+                 API refuses look openings); prove state with prove_state_certificate"
+                    .to_string(),
+            );
+        }
+        self.finish_proof(bundle, result, trace, hash_aux, state.root())
     }
 
     /// Build statement + zheng proof + artifact from an executed trace.
@@ -260,7 +269,6 @@ impl Warrior {
         result: ExecutionResult,
         trace: VecTrace,
         hash_aux: Vec<zheng::HashAux>,
-        look_openings: Vec<zheng::LookOpening>,
         bbg_root: [u8; 32],
     ) -> Result<(crate::proof::ProofArtifact, ExecutionResult), String> {
         if trace.0.len() < 2 {
@@ -279,7 +287,7 @@ impl Warrior {
             bbg_root,
         };
         let params = zheng::ProofParams::default();
-        let proof = zheng::commit(&trace, &hash_aux, &[], &look_openings, &statement, &params)
+        let proof = zheng::commit(&trace, &hash_aux, &[], &[], &statement, &params)
             .map_err(|e| format!("zheng commit failed: {:?}", e))?;
 
         let artifact = crate::proof::ProofArtifact {
@@ -313,7 +321,7 @@ impl Warrior {
             ExecutionResult,
             VecTrace,
             Vec<zheng::HashAux>,
-            Vec<zheng::LookOpening>,
+            Vec<bbg::LookOpening>,
         ),
         String,
     > {
