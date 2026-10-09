@@ -1,6 +1,6 @@
-//! `joy prove --succinct` on a program the one-relation compiler refuses
-//! (a loop nested deeper than its 128 levels) falls back to zheng's
-//! machine: a profile-4 envelope that `joy verify` accepts self-contained
+//! `joy prove --succinct --machine` on a program the one-relation compiler
+//! refuses (a loop nested deeper than its 128 levels) falls back to zheng's
+//! accumulated machine: a profile-4 envelope that `joy verify` accepts self-contained
 //! and bound to its program, and rejects with a wrong claim, input,
 //! program, budget or a flipped byte.
 use joy_rs::MachineExecutionArtifact;
@@ -13,7 +13,9 @@ use std::{
 struct Fixture(PathBuf);
 impl Fixture {
     fn new() -> Self {
-        let path = std::env::temp_dir().join(format!("joy-machine-{}", std::process::id()));
+        static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let path = std::env::temp_dir().join(format!("joy-machine-{}-{n}", std::process::id()));
         fs::create_dir_all(&path).unwrap();
         fs::write(
             path.join("loop.tri"),
@@ -47,12 +49,18 @@ impl Drop for Fixture {
 }
 
 #[test]
+fn machine_requires_succinct() {
+    let f = Fixture::new();
+    assert!(!f.run(&["prove", "loop.tri", "--input-values", "3", "--machine"]).status.success());
+}
+
+#[test]
 fn a_program_beyond_one_relation_proves_with_the_machine() {
     let f = Fixture::new();
     let run = f.ok(&["run", "loop.tri", "--input-values", "3"]);
     let expected = String::from_utf8_lossy(&run.stdout).lines().next().unwrap().trim().to_string();
     f.ok(&[
-        "prove", "loop.tri", "--input-values", "3", "--succinct", "--output", "m.zheng",
+        "prove", "loop.tri", "--input-values", "3", "--succinct", "--machine", "--output", "m.zheng",
     ]);
     let bytes = fs::read(f.0.join("m.zheng")).unwrap();
     assert_eq!(&bytes[..8], b"ZHENGPF1");

@@ -37,6 +37,10 @@ pub struct ProveArgs {
     /// Commit the witness instead of disclosing it (zheng envelope profile 1)
     #[arg(long, conflicts_with_all = ["zk", "secret", "state", "mith"])]
     pub succinct: bool,
+    /// With --succinct: prove a program beyond one relation with the
+    /// accumulated machine (profile 4) instead of recursion (profile 5)
+    #[arg(long, requires = "succinct")]
+    pub machine: bool,
     /// Reduction budget (also the statement's focus bound)
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
@@ -94,6 +98,11 @@ pub fn cmd_prove(args: ProveArgs) {
         process::exit(1);
     }
     let warrior = Warrior::with_budget(args.budget);
+    let fallback = if args.machine {
+        joy_rs::Fallback::Machine
+    } else {
+        joy_rs::Fallback::Recursive
+    };
 
     let t0 = Instant::now();
     let path = args.output.unwrap_or_else(|| artifact_path(&args.input));
@@ -117,7 +126,7 @@ pub fn cmd_prove(args: ProveArgs) {
         )
     } else if args.succinct {
         warrior
-            .prove_succinct(&bundle, &pi, args.budget)
+            .prove_succinct_with(&bundle, &pi, args.budget, fallback)
             .and_then(|(artifact, result)| artifact.to_bytes().map(|bytes| (result, bytes)))
     } else if private {
         warrior
@@ -146,7 +155,11 @@ pub fn cmd_prove(args: ProveArgs) {
     } else if args.state.is_some() {
         "authenticated public state execution"
     } else if args.succinct {
-        "succinct public execution (committed witness; one relation or the accumulated machine)"
+        match bytes.get(10) {
+            Some(5) => "succinct public execution (recursive, envelope profile 5; constant size)",
+            Some(4) => "succinct public execution (accumulated machine, envelope profile 4)",
+            _ => "succinct public execution (committed witness, one relation, envelope profile 1)",
+        }
     } else {
         "public execution"
     };
