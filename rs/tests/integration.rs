@@ -437,7 +437,7 @@ fn look_artifact_tampered_binding_and_table_rejected() {
     let (artifact, _) = Warrior::new()
         .prove_state_execution(&b, &input(&[], &[]), &state, 1000)
         .unwrap();
-    for which in 0..7 {
+    for which in 0..6 {
         let mut bad = artifact.clone();
         match which {
             0 => bad.statement.reads[0].namespace = 1,
@@ -445,8 +445,7 @@ fn look_artifact_tampered_binding_and_table_rejected() {
             2 => bad.statement.reads[0].value += 1,
             3 => bad.statement.execution.public_output[0] += 1,
             4 => bad.certificate.dimensions[0].fields[11] += 1,
-            5 => bad.statement.reads.clear(),
-            _ => bad.source_hash.push('0'),
+            _ => bad.statement.reads.clear(),
         }
         assert!(bad.verify().is_err(), "mutation {which}");
     }

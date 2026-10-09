@@ -76,7 +76,7 @@ impl SuccinctExecutionArtifact {
     }
     /// Derive the relation from the statement and verify the proof.
     pub fn verify(&self) -> Result<(), String> {
-        self.envelope().verify(&mut |_, _| None)
+        self.envelope().verify(None)
     }
     pub fn claim_matches(
         &self,

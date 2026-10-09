@@ -88,7 +88,7 @@ impl Warrior {
             root_in_subject: bundle.reads_state,
         };
         artifact.validate()?;
-        artifact.proof = prove_native(&prepared, &witness, &artifact.binding())?;
+        artifact.proof = prove_native(&prepared, &witness, &artifact.binding(), ZkScheme::Veil)?;
         Ok((artifact, result))
     }
 }

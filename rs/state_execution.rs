@@ -3,13 +3,20 @@
 //! `JOYST002` (produced): the BBG state certificate plus zheng's state-public
 //! envelope (profile 3, statement + v3 certificate). `JOYST001` (retired,
 //! read for one release): the same identity with a v1 direct proof.
+//!
+//! zheng authenticates the certificate's evidence under the statement's root
+//! and every read against it; joy checks only its own identity fields. The
+//! v3 statement carries no context (zheng binds no label a disclosed
+//! witness could not be re-certified under); the v1 transcript absorbed
+//! `context(format, program, source_hash)`, recomputed here to verify it.
 use crate::{execution::parse_program, Warrior};
 use bbg::{certificate::StateCertificate, BbgState};
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
 use trident::runtime::{ExecutionResult, ProgramBundle, ProgramInput, ProofData};
 use zheng::envelope::Envelope;
-use zheng::execution::{state::StateStatement, Certificate, DirectProof, ExecutionStatement};
+use zheng::execution::state::{PublicLookup, StateStatement};
+use zheng::execution::{Certificate, DirectProof, ExecutionStatement};
 
 pub const STATE_EXECUTION_FORMAT: &str = "joy-nox-public-state-execution-v3";
 /// The retired v1 layout (Spartan + PublicTensor), verified for one release.
@@ -56,9 +63,19 @@ struct LegacyWire {
     program: String,
     assembly: String,
     source_hash: String,
-    statement: StateStatement,
+    statement: LegacyStatement,
     certificate: StateCertificate,
     proof: DirectProof,
+}
+
+/// The v1 state statement, with the context it carried.
+#[derive(Serialize, Deserialize)]
+struct LegacyStatement {
+    execution: ExecutionStatement,
+    state_root: [u64; 4],
+    context: [u8; 32],
+    root_in_subject: bool,
+    reads: Vec<PublicLookup>,
 }
 
 fn context(format: &str, program: &str, source_hash: &str) -> [u8; 32] {
@@ -87,18 +104,20 @@ impl StateExecutionArtifact {
             || self.program.len() > 4096
             || self.source_hash.is_empty()
             || self.source_hash.len() > 128
-            || self.statement.context != context(&self.format, &self.program, &self.source_hash)
             || ExecutionStatement::encode_program(&parse_program(&self.assembly)?)?
                 != self.statement.execution.program
         {
             return Err("invalid state execution identity".into());
         }
-        self.certificate.verify(self.statement.state_root)?;
-        let mut cell = |ns, key| self.certificate.cell(ns, key);
+        let evidence = self.certificate.evidence()?;
         match &self.proof {
-            StateProof::Certificate(c) => self.statement.verify_certificate(c, &mut cell),
-            StateProof::Direct(p) => self.statement.verify(p, &mut cell),
+            StateProof::Certificate(c) => self.statement.verify_certificate(c, &evidence),
+            StateProof::Direct(p) => self.statement.verify_v1(&self.legacy_context(), p, &evidence),
         }
+    }
+    /// The context the v1 transcript absorbed.
+    fn legacy_context(&self) -> [u8; 32] {
+        context(LEGACY_STATE_EXECUTION_FORMAT, &self.program, &self.source_hash)
     }
     pub fn to_bytes(&self) -> Result<Vec<u8>, String> {
         let (mut bytes, payload) = match &self.proof {
@@ -118,12 +137,19 @@ impl StateExecutionArtifact {
                 (MAGIC.to_vec(), postcard::to_allocvec(&wire))
             }
             StateProof::Direct(p) => {
+                let s = &self.statement;
                 let wire = LegacyWire {
                     format: self.format.clone(),
                     program: self.program.clone(),
                     assembly: self.assembly.clone(),
                     source_hash: self.source_hash.clone(),
-                    statement: self.statement.clone(),
+                    statement: LegacyStatement {
+                        execution: s.execution.clone(),
+                        state_root: s.state_root,
+                        context: self.legacy_context(),
+                        root_in_subject: s.root_in_subject,
+                        reads: s.reads.clone(),
+                    },
                     certificate: self.certificate.clone(),
                     proof: p.clone(),
                 };
@@ -171,12 +197,21 @@ impl StateExecutionArtifact {
         if !rest.is_empty() || wire.format != LEGACY_STATE_EXECUTION_FORMAT {
             return Err("invalid state execution wire format".into());
         }
+        let l = wire.statement;
+        if l.context != context(LEGACY_STATE_EXECUTION_FORMAT, &wire.program, &wire.source_hash) {
+            return Err("invalid state execution identity".into());
+        }
         Ok(Self {
             format: wire.format,
             program: wire.program,
             assembly: wire.assembly,
             source_hash: wire.source_hash,
-            statement: wire.statement,
+            statement: StateStatement {
+                execution: l.execution,
+                state_root: l.state_root,
+                root_in_subject: l.root_in_subject,
+                reads: l.reads,
+            },
             certificate: wire.certificate,
             proof: StateProof::Direct(wire.proof),
         })
@@ -215,7 +250,9 @@ impl StateExecutionArtifact {
 fn read_bounded(path: &Path) -> Result<Vec<u8>, String> {
     crate::file_input::read(path, MAX_BYTES)
 }
-/// The CLI state file is a public BBG certificate, not an unverified database dump.
+/// The CLI state file is a public BBG certificate, not an unverified database
+/// dump; its own consistency is checked here, its binding to a statement by
+/// zheng.
 pub fn load_certificate(path: &Path) -> Result<StateCertificate, String> {
     let certificate: StateCertificate =
         serde_json::from_slice(&read_bounded(path)?).map_err(|e| e.to_string())?;
@@ -241,17 +278,13 @@ impl Warrior {
         budget: u64,
     ) -> Result<(StateExecutionArtifact, ExecutionResult), String> {
         check_input(bundle, input)?;
-        let root = certificate.root()?;
-        certificate.verify(root)?;
         let program = parse_program(&bundle.assembly)?;
         let (statement, proof) = zheng::execution::state::certify_state_execution(
             &program,
             &input.public,
             budget,
-            root,
             bundle.reads_state,
-            context(STATE_EXECUTION_FORMAT, &bundle.name, &bundle.source_hash),
-            &mut |ns, key| certificate.cell(ns, key),
+            &certificate.evidence()?,
         )?;
         let result = self.run_state_certificate(bundle, input, certificate, budget)?;
         if result.output != statement.execution.public_output
