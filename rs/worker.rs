@@ -28,7 +28,7 @@ impl ProofProfile {
     }
     fn header(self) -> &'static [u8] {
         match self {
-            Self::Public => b"JOYEXEC2",
+            Self::Public => b"JOYEXEC3",
             Self::PublicState => b"JOYST001",
             Self::Private | Self::PrivateState => b"JOYZH001",
         }
@@ -207,8 +207,9 @@ pub fn verify_result(
             let artifact = ExecutionArtifact::from_bytes(result.artifact)
                 .map_err(|_| WorkerError::ProofRejected)?;
             artifact.verify().map_err(|_| WorkerError::ProofRejected)?;
-            let matches = artifact.assembly == expected.bundle.assembly
-                && artifact.program == expected.bundle.name
+            // the program is compared as the statement's token encoding; v3
+            // carries no assembly text of its own
+            let matches = artifact.program == expected.bundle.name
                 && artifact
                     .matches_program(&expected.bundle.assembly)
                     .map_err(|_| WorkerError::ProgramMismatch)?;
@@ -218,8 +219,9 @@ pub fn verify_result(
             let artifact = StateExecutionArtifact::from_bytes(result.artifact)
                 .map_err(|_| WorkerError::ProofRejected)?;
             artifact.verify().map_err(|_| WorkerError::ProofRejected)?;
-            let matches = artifact.assembly == expected.bundle.assembly
-                && artifact.program == expected.bundle.name
+            // the program is compared as the statement's token encoding; v3
+            // carries no assembly text of its own
+            let matches = artifact.program == expected.bundle.name
                 && artifact
                     .matches_program(&expected.bundle)
                     .map_err(|_| WorkerError::ProgramMismatch)?;

@@ -50,11 +50,22 @@ fn compiled_source_roundtrip_and_changed_statement_rejection() {
             0 => bad.statement.public_output[0] += 1,
             1 => bad.statement.public_input[0] += 1,
             2 => bad.statement.cycles += 1,
-            3 => bad.statement.budget += 1,
-            _ => bad.assembly = "[1 24]".into(),
+            3 => bad.statement.budget = bad.statement.cycles - 1,
+            _ => {
+                bad.statement.program = vec![
+                    zheng::execution::NounToken::Pair,
+                    zheng::execution::NounToken::Atom(1),
+                    zheng::execution::NounToken::Atom(24),
+                ]
+            }
         }
         assert!(bad.verify().is_err(), "mutation {mutation} accepted");
     }
+    // the budget is an upper bound: v3 checks cycles <= budget, so a larger
+    // budget is a true claim about the same execution and verifies
+    let mut looser = decoded.clone();
+    looser.statement.budget += 1;
+    looser.verify().unwrap();
 }
 #[test]
 fn prover_and_verifier_traits_bind_claim_without_legacy_downgrade() {
@@ -109,7 +120,10 @@ fn artifact_format_and_claim_filters_are_exact() {
     bad.format = "other".into();
     assert!(ExecutionArtifact::from_bytes(&bad.to_bytes().unwrap()).is_err());
     let mut bad = artifact;
-    bad.proof.spartan.eval_value += nebu::Goldilocks::ONE;
+    match bad.certificate.free.first_mut() {
+        Some(v) => *v = (*v + 1) % nebu::field::P,
+        None => bad.certificate.free.push(1),
+    }
     assert!(bad.verify().is_err());
 }
 

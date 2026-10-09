@@ -1,6 +1,6 @@
 //! Public execution verification precedes legacy trace-statement compatibility.
 use crate::{load_bundle, verify::VerifyArgs};
-use joy_rs::ExecutionArtifact;
+use joy_rs::{execution::LegacyExecutionArtifact, ExecutionArtifact};
 
 pub fn try_verify(args: &VerifyArgs) -> Option<Result<(), String>> {
     let path = args.proof.as_ref().unwrap_or(&args.input);
@@ -8,6 +8,14 @@ pub fn try_verify(args: &VerifyArgs) -> Option<Result<(), String>> {
         return Some(Err(
             "retired foreign private proof format; regenerate with native Zheng proving".into(),
         ));
+    }
+    if LegacyExecutionArtifact::has_header(path) {
+        return Some(LegacyExecutionArtifact::load(path).and_then(|artifact| {
+            artifact.verify()?;
+            println!("Verification: PASS (public execution v2, retired format; re-prove for v3)");
+            println!("  public output: {:?}", artifact.statement.public_output);
+            Ok(())
+        }));
     }
     if !ExecutionArtifact::has_header(path) {
         return None;

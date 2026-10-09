@@ -96,8 +96,14 @@ fn changing_statement_values_cannot_reauthorize_an_execution() {
             0 => forged.statement.public_output = vec![999],
             1 => forged.statement.public_input = vec![4, 5],
             2 => forged.statement.cycles += 1,
-            3 => forged.statement.budget += 1,
-            _ => forged.assembly = "[1 999]".into(),
+            3 => forged.statement.budget = forged.statement.cycles - 1,
+            _ => {
+                forged.statement.program = vec![
+                    joy_rs::execution::NounToken::Pair,
+                    joy_rs::execution::NounToken::Atom(1),
+                    joy_rs::execution::NounToken::Atom(999),
+                ]
+            }
         }
         forged.save(&path).unwrap();
         assert!(
