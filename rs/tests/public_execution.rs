@@ -85,7 +85,7 @@ fn prover_and_verifier_traits_bind_claim_without_legacy_downgrade() {
     bad.claim.program_hash[0] ^= 1;
     assert!(!warrior.verify(&bad).unwrap());
     let mut bad = proof;
-    bad.format = joy_rs::PROOF_FORMAT.into();
+    bad.format = "zheng-hypernova-tensor-merkle-v2".into(); // the retired trace statement
     assert!(warrior.verify(&bad).is_err());
 }
 #[test]

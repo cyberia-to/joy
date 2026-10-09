@@ -53,7 +53,6 @@ joy bench INPUT [--input-file PATH | --input-values WORDS] [--claim WORDS] [--re
 joy verify ARTIFACT [COMMON] [--claim VALUES]
 joy verify INPUT --proof ARTIFACT [COMMON] [--claim VALUES]
 joy verify INPUT --claim VALUES [COMMON]
-joy verify ARTIFACT --legacy-trace-statement
 joy --help
 joy --version
 ```
@@ -97,7 +96,6 @@ for complete noun transport and its resource limits.
 | prove | saved artifact path | timing, reductions, bytes and public output |
 | verify execution certificate | PASS and checked public coordinates | failure diagnostics |
 | verify by rerun | labelled PASS/FAIL; mismatch details | runtime errors |
-| legacy inspection | labelled statement result and unverified metadata | refusal/errors |
 
 Success exits 0. Application failures, proof rejection and claim mismatch
 exit 1. Clap syntax errors exit 2. Help/version exit 0. `verify` output
@@ -138,7 +136,7 @@ coordinates over the authenticated public tables. See
 [private execution](private-execution.md) for disclosure, bounds and assumptions.
 
 Historical `JOYZK001`/`JOYZK002`/`JOYZK003` envelopes are unsupported and fail
-explicitly, including with `--legacy-trace-statement` or `--claim`. They have
+explicitly, including with `--claim`. They have
 no compatibility verifier in Joy. The retired public `JOYEXEC2` and `JOYST001`
 artifacts are verified for one release and retain their execution/input/output/
 cost binding; Joy no longer produces them.
@@ -147,12 +145,10 @@ The Cargo dependency closure, including all features, excludes foreign VM
 warriors and proving engines. Building Joy requires only the soft3 siblings
 and Trident, without a foreign warrior checkout or vendored dependency bootstrap.
 
-Legacy `zheng-hypernova-tensor-merkle-v2` artifacts require
-`--legacy-trace-statement`. This checks a legacy statement and reports
-execution/output as unverified. Requested input/output/state/secret
-constraints are refused. Legacy inspection cannot satisfy a cyber worker
-execution-certificate request. Proof verification MUST never downgrade to
-rerun or legacy inspection after rejection.
+Retired `zheng-hypernova-tensor-merkle-v2` trace-statement artifacts are
+refused as unrecognised proof artifacts; Joy has no verifier for them (zheng's
+legacy fold authenticated nothing). Proof verification MUST never downgrade to
+rerun after rejection.
 
 ## baseline gaps requiring correction
 
@@ -357,11 +353,10 @@ before machine-mode selection may use stderr only.
 Prove results MUST carry kind `execution_certificate`, proof format,
 artifact path, byte size, program identity, authenticated public input/output,
 reductions and disclosure mode. Identity encodings follow the proof profile.
-Verification results MUST identify mode `execution_certificate`,
-`reexecution` or `legacy_statement` and list which external expectations
-were checked. Missing expected output means `claim_checked=false`, even
-when the artifact's own output is authenticated. Legacy output must remain
-explicitly unverified. Wall-time telemetry is distinct from proven cost.
+Verification results MUST identify mode `execution_certificate` or
+`reexecution` and list which external expectations were checked. Missing
+expected output means `claim_checked=false`, even when the artifact's own
+output is authenticated. Wall-time telemetry is distinct from proven cost.
 
 Target application exits match the cyber finite-command convention:
 0 success; 1 operation failure; 2 usage/input validation; 3 unsupported
@@ -378,7 +373,7 @@ the standalone CLI envelope.
 
 Proof artifacts and public state certificates are bounded regular files. Header
 inspection and loading reject directories, symbolic links, FIFOs and devices.
-Native private artifacts are limited to256MiB; public execution to32MiB; state/legacy artifacts
+Native private artifacts are limited to256MiB; public execution to32MiB; state artifacts
 and state certificates to64MiB. Raw `.nox` formulas and JSON bundle reads use
 the same64MiB admission, including verification's source fallback. Reads retain
 a byte cap even if the file grows.
@@ -386,9 +381,6 @@ On macOS and Linux x86_64/aarch64, nonblocking/no-follow opens and descriptor
 identity checks also reject replacement during admission. Other platforms retain
 pre/post regular-file checks without the stronger atomic-open claim. This does
 not change any proof encoding or cryptographic acceptance rule.
-
-Legacy compressed assembly has a256KiB decompressed limit, matching the bounded
-execution formula parser. Exceeding it fails before native parsing/verification.
 
 Implement in this order:
 
@@ -425,7 +417,6 @@ Baseline sources: `joy/cli/{main,run,prove,verify,execution_verify}.rs`,
 `joy/rs/tests/public_execution.rs`.
 State acceptance tests now use the authenticated execution protocol, including
 fresh-process compiled helper reads and root/value/proof substitution rejection.
-Legacy unauthenticated recursive-opening requests are explicitly refused.
 
 Breaking types/semantics require a new schema or proof profile. Additive
 result fields are allowed; consumers ignore unknown result fields, while
