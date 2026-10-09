@@ -34,6 +34,16 @@ parameters with ≥ 128 proven bits. It is not zero-knowledge. It refuses secret
 inputs, `--zk` and `--state`. Sizes and times: zheng
 `audit/succinct-profile-2026-10.md`.
 
+When the program exceeds the one-relation compiler (nesting beyond 128 or
+more than 4096 formula nodes, or more rows than it admits), `--succinct`
+falls back to `zheng-nox-machine-v1`: the `ZHENGPF1` envelope profile 4, a
+nox run of any length proven by zheng's uniform step relation, its
+committed words accumulated and decided by one WHIR opening (zheng
+`specs/machine.md`, `specs/accumulation.md`). The statement binds the whole
+output noun; `joy verify` prints its atoms. Same policy: ≥ 128 proven bits,
+not zero-knowledge, no secrets or state. Sizes and times: zheng
+`audit/accumulation-2026-10.md`.
+
 Joy uses the soft3 execution/proof stack exclusively. `prove --secret` or
 `prove --zk` selects `joy-nox-zheng-private-execution-v1` (`JOYZH001`): zheng's
 succinct zk scheme `veil` where zheng admits the relation (hash.tri: 64.9 KB,
