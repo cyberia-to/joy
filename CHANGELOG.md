@@ -2,6 +2,13 @@
 
 ## Unreleased — self-hosted compilation and native soft3 proving
 
+Soundness floor (zheng phase 1): public artifacts are zheng's `ZHENGPF1`
+envelope (profile 0, certificate v3; 6,463 B for `hash.tri`, 185 B for
+`add.tri`), state artifacts are `JOYST002` (BBG certificate + envelope
+profile 3, certificate v3). `JOYEXEC2` and `JOYST001` are verified for one
+release and no longer produced. Joy's legacy trace-statement path enables
+zheng's `legacy` feature until it is migrated.
+
 Joy runs the Trident compiler as a nox program, preserves its complete output,
 and supports independently verified public certificates of that computation.
 These changes are staged on `release/0.4`; the branch name does not change the

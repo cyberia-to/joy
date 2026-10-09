@@ -18,10 +18,12 @@ joy verify program.tri --proof program.zheng --claim 24
 joy verify program.tri --claim 24 --input-values 3,5  # native re-execution
 ```
 
-Public `joy prove` uses `zheng-nox-public-execution-v2`: Zheng derives the global
-CCS from the canonical program, authenticates the complete public witness and
-checks all constraints and public coordinates. This certificate discloses the
-witness and has linear verification cost. Verification does not run nox.
+Public `joy prove` uses `zheng-nox-public-execution-v3`, written as zheng's
+`ZHENGPF1` envelope (profile 0): Zheng derives the global CCS from the canonical
+program, places the constant and public coordinates itself, takes the remaining
+witness values from the certificate and checks every constraint exactly. This
+certificate discloses the witness and has linear verification cost.
+Verification does not run nox. `JOYEXEC2` (v2) artifacts are still verified.
 
 Joy uses the soft3 execution/proof stack exclusively. `prove --secret` or
 `prove --zk` selects `joy-nox-zheng-private-execution-v1` (`JOYZH001`): Zheng's
@@ -47,8 +49,10 @@ Here `private.tri` must return the product of two `divine()` calls. Input files,
 replacing an existing file requires `--force`.
 
 `--state state.json` loads a bounded authenticated public BBG certificate.
-Public state proofs use `joy-nox-public-state-execution-v1`; each actual lookup
-binds namespace, index, returned value and all four root limbs to execution.
+Public state proofs use `joy-nox-public-state-execution-v3` (`JOYST002`: the
+BBG certificate plus a zheng state-public envelope); each actual lookup binds
+namespace, index, returned value and all four root limbs to execution.
+`JOYST001` (v1) artifacts are still verified.
 Private state proofs hide query coordinates and intermediate witness while
 authenticating the same public tables. The certificate/database remains public.
 

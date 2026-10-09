@@ -117,7 +117,8 @@ versioned input-file schema are in [native CLI operations](native-cli-parity.md)
 3. `verify ARTIFACT` or `verify INPUT --proof ARTIFACT` checks a native
    execution certificate without running nox.
 
-Public execution certificates use `zheng-nox-public-execution-v2`, disclose
+Public execution certificates use `zheng-nox-public-execution-v3`, written as
+the zheng `ZHENGPF1` envelope (profile 0); they disclose
 the full witness and have linear verification cost. They authenticate the
 supported program, public input/output and reduction coordinates. With
 `--proof`, Joy additionally compares the certificate's program with INPUT.
@@ -125,7 +126,8 @@ With `--claim` or `--input-values`, Joy compares the requested vectors.
 Without those flags, verification checks the artifact's own statement;
 the caller must still establish that this is the intended computation.
 
-Public state requests use `joy-nox-public-state-execution-v1`, with namespace,
+Public state requests use `joy-nox-public-state-execution-v3` (`JOYST002`: the
+BBG certificate and a zheng state-public envelope, profile 3), with namespace,
 key, returned value and all four root limbs constrained to the execution.
 Joy uses only the soft3 execution/proof stack. Secret inputs or `--zk` select
 `joy-nox-zheng-private-execution-v1` (`JOYZH001`). Zheng proves its exact CCS
@@ -137,8 +139,9 @@ coordinates over the authenticated public tables. See
 
 Historical `JOYZK001`/`JOYZK002`/`JOYZK003` envelopes are unsupported and fail
 explicitly, including with `--legacy-trace-statement` or `--claim`. They have
-no compatibility verifier in Joy. The public `JOYEXEC2` and `JOYST001`
-protocols retain their execution/input/output/cost binding.
+no compatibility verifier in Joy. The retired public `JOYEXEC2` and `JOYST001`
+artifacts are verified for one release and retain their execution/input/output/
+cost binding; Joy no longer produces them.
 
 The Cargo dependency closure, including all features, excludes foreign VM
 warriors and proving engines. Building Joy requires only the soft3 siblings
