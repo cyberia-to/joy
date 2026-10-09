@@ -59,7 +59,7 @@ pub(crate) fn has_header(path: &Path, magic: &[u8], limit: usize) -> bool {
     let Ok(mut file) = open(path, limit) else {
         return false;
     };
-    let mut header = [0; 8];
+    let mut header = vec![0; magic.len()];
     file.read_exact(&mut header).is_ok() && header == magic
 }
 
