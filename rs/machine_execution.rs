@@ -93,7 +93,7 @@ impl MachineExecutionArtifact {
     }
     /// Derive the relation from the statement and verify the proof.
     pub fn verify(&self) -> Result<(), String> {
-        self.envelope().verify(&mut |_, _| None)
+        self.envelope().verify(None)
     }
     pub fn claim_matches(&self, claim: Option<&[u64]>, inputs: Option<&[u64]>, budget: u64) -> bool {
         claim.is_none_or(|c| self.output().is_ok_and(|o| o == c))
