@@ -1,0 +1,81 @@
+//! `joy prove --succinct` on a program the one-relation compiler refuses
+//! (a loop nested deeper than its 128 levels) falls back to zheng's
+//! machine: a profile-4 envelope that `joy verify` accepts self-contained
+//! and bound to its program, and rejects with a wrong claim, input,
+//! program, budget or a flipped byte.
+use joy_rs::MachineExecutionArtifact;
+use std::{
+    fs,
+    path::PathBuf,
+    process::{Command, Output},
+};
+
+struct Fixture(PathBuf);
+impl Fixture {
+    fn new() -> Self {
+        let path = std::env::temp_dir().join(format!("joy-machine-{}", std::process::id()));
+        fs::create_dir_all(&path).unwrap();
+        fs::write(
+            path.join("loop.tri"),
+            "program squares\nfn main(a: Field) -> Field {\n    let mut x: Field = a\n    for i in 0..140 bounded 140 {\n        x = x * x + 1\n    }\n    x\n}\n",
+        )
+        .unwrap();
+        fs::write(
+            path.join("other.tri"),
+            "program cubes\nfn main(a: Field) -> Field {\n    let mut x: Field = a\n    for i in 0..140 bounded 140 {\n        x = x * x * x\n    }\n    x\n}\n",
+        )
+        .unwrap();
+        Self(path)
+    }
+    fn run(&self, args: &[&str]) -> Output {
+        Command::new(env!("CARGO_BIN_EXE_joy"))
+            .args(args)
+            .current_dir(&self.0)
+            .output()
+            .unwrap()
+    }
+    fn ok(&self, args: &[&str]) -> Output {
+        let result = self.run(args);
+        assert!(result.status.success(), "{}", String::from_utf8_lossy(&result.stderr));
+        result
+    }
+}
+impl Drop for Fixture {
+    fn drop(&mut self) {
+        let _ = fs::remove_dir_all(&self.0);
+    }
+}
+
+#[test]
+fn a_program_beyond_one_relation_proves_with_the_machine() {
+    let f = Fixture::new();
+    let run = f.ok(&["run", "loop.tri", "--input-values", "3"]);
+    let expected = String::from_utf8_lossy(&run.stdout).lines().next().unwrap().trim().to_string();
+    f.ok(&[
+        "prove", "loop.tri", "--input-values", "3", "--succinct", "--output", "m.zheng",
+    ]);
+    let bytes = fs::read(f.0.join("m.zheng")).unwrap();
+    assert_eq!(&bytes[..8], b"ZHENGPF1");
+    assert_eq!(bytes[10], 4, "profile byte: machine");
+    let artifact = MachineExecutionArtifact::from_bytes(&bytes).unwrap();
+    assert_eq!(artifact.output().unwrap(), vec![expected.parse::<u64>().unwrap()]);
+    artifact.verify().unwrap();
+
+    let out = f.ok(&["verify", "m.zheng", "--claim", &expected, "--input-values", "3"]);
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("machine public execution"), "{stdout}");
+    f.ok(&["verify", "loop.tri", "--proof", "m.zheng", "--claim", &expected]);
+    for args in [
+        vec!["verify", "m.zheng", "--claim", "1"],
+        vec!["verify", "m.zheng", "--input-values", "4"],
+        vec!["verify", "m.zheng", "--budget", "1"],
+        vec!["verify", "other.tri", "--proof", "m.zheng"],
+    ] {
+        assert!(!f.run(&args).status.success(), "{args:?}");
+    }
+    let mut bad = bytes.clone();
+    let i = bytes.len() / 2;
+    bad[i] ^= 1;
+    fs::write(f.0.join("bad.zheng"), &bad).unwrap();
+    assert!(!f.run(&["verify", "bad.zheng"]).status.success());
+}
