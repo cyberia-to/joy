@@ -35,11 +35,13 @@ inputs, `--zk` and `--state`. Sizes and times: zheng
 `audit/succinct-profile-2026-10.md`.
 
 Joy uses the soft3 execution/proof stack exclusively. `prove --secret` or
-`prove --zk` selects `joy-nox-zheng-private-execution-v1` (`JOYZH001`): Zheng's
-native randomized CCS proof over Goldilocks and Hemera. Verification needs no
-witness and performs no native re-execution. The protocol has linear costs;
-see [private execution](specs/private-execution.md) for its exact privacy and
-coverage contract. Historical foreign private envelopes must be regenerated.
+`prove --zk` selects `joy-nox-zheng-private-execution-v1` (`JOYZH001`): zheng's
+succinct zk scheme `veil` where zheng admits the relation (hash.tri: 64.9 KB,
+prove ~0.1 s), linear MPC-in-the-head otherwise or with `--mith` (hash.tri:
+9.0 MB, prove ~6 s). Verification needs no witness and performs no native
+re-execution; see [private execution](specs/private-execution.md) for the
+privacy and coverage contract and zheng `audit/zk-profile-2026-10.md` for the
+numbers. Historical foreign private envelopes must be regenerated.
 
 For automated use, keep witnesses in a regular input file instead of argv:
 

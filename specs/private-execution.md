@@ -3,15 +3,19 @@
 Implementation contract for the owner-authorized native proving delivery.
 
 Joy executes nox programs and uses Zheng to prove their verifier-derived CCS.
-The private profile uses Zheng's native finite-ring MPC-in-the-head protocol over
-Goldilocks and Hemera. Its relation comes from the public canonical program and
-subject shape. Its witness consists of private call inputs and intermediate
+The private profile uses zheng's succinct zk scheme `veil` (`ZHVEIL01`; zheng
+`specs/execution.md` § zk profile, `specs/soundness.md` § zk) wherever zheng
+admits the relation, and zheng's native finite-ring MPC-in-the-head protocol over
+Goldilocks and Hemera (`ZHMITH01`) otherwise or on request (`--mith`,
+`ZkScheme::Mith`); verification dispatches on the proof's magic. Its relation
+comes from the public canonical program and subject shape. Its witness consists of private call inputs and intermediate
 values. The verifier receives a public statement and a randomized proof.
 
 `joy-nox-zheng-private-execution-v1`, header `JOYZH001`, binds the canonical
 program, public inputs/outputs, selected reduction count, budget, source identity,
-program name, state ABI and authenticated state identity. The private backend
-fixes its parameters in Zheng's `specs/native-private-ccs.md`. Artifact size is
+program name, state ABI and authenticated state identity. The private backends
+fix their parameters in zheng: `veil` by its admission policy (≥ 128 proven bits),
+MITH in `specs/native-private-ccs.md`. Artifact size is
 bounded at256MiB. Canonical decoding, exact lengths and proof-shape validation
 precede expensive verification. Retired JOYZK envelopes are separate formats.
 
