@@ -24,4 +24,6 @@ pub use execution::{ExecutionArtifact, EXECUTION_FORMAT};
 pub use zk_execution::{ZkExecutionArtifact, ZK_EXECUTION_FORMAT};
 
 pub mod state_execution;
+pub mod succinct_execution;
+pub use succinct_execution::{SuccinctExecutionArtifact, SUCCINCT_EXECUTION_FORMAT};
 pub use state_execution::{StateExecutionArtifact, STATE_EXECUTION_FORMAT};
