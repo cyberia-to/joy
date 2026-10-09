@@ -82,17 +82,23 @@ impl ZkExecutionArtifact {
     }
     pub fn verify(&self) -> Result<(), String> {
         self.validate()?;
-        let prepared = if let Some(state) = &self.state {
-            let tables = state_tables(state)?;
-            zheng::execution::private_state::PrivateStateStatement {
+        if let Some(state) = &self.state {
+            // the root the binding absorbed (the certificate's leaves);
+            // zheng authenticates the tables under it
+            let evidence = state_evidence(state)?;
+            let statement = zheng::execution::private_state::PrivateStateStatement {
                 execution: self.statement.execution.clone(),
-                root: tables.root.map(|v| v.as_u64()),
+                root: evidence.root()?,
                 root_in_subject: self.root_in_subject,
-            }
-            .prepare(&tables)?
-        } else {
-            self.statement.prepare()?
-        };
+            };
+            return if self.proof.starts_with(veil::MAGIC) {
+                statement.verify_veil(&evidence, &VeilProof::from_bytes(&self.proof)?, &self.binding())
+            } else {
+                let proof = PrivateProof::from_bytes(&self.proof).map_err(|e| e.to_string())?;
+                statement.verify_mith(&evidence, &proof, &self.binding())
+            };
+        }
+        let prepared = self.statement.prepare()?;
         let public = coordinates(&prepared);
         if self.proof.starts_with(veil::MAGIC) {
             let proof = VeilProof::from_bytes(&self.proof)?;
@@ -280,7 +286,7 @@ pub fn verify_proof_data(proof: &ProofData) -> Result<bool, String> {
 mod state;
 #[path = "private_wire.rs"]
 mod wire;
-use state::state_tables;
+use state::state_evidence;
 
 fn coordinates(
     prepared: &zheng::execution::private::PreparedExecution,
