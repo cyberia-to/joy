@@ -45,14 +45,6 @@ fn secret_execution_works_but_all_public_provers_refuse_witnesses() {
         .prove_execution(&bundle, &input, 10000)
         .unwrap_err()
         .contains("secret inputs"));
-    assert!(warrior
-        .prove_zheng(&bundle, &input)
-        .unwrap_err()
-        .contains("secret inputs"));
-    assert!(warrior
-        .prove_zheng_with_state(&bundle, &input, &bbg::BbgState::new())
-        .unwrap_err()
-        .contains("secret inputs"));
     let state = bbg::BbgState::new();
     let certificate =
         bbg::certificate::StateCertificate::from_state(&state, &(0..10).collect::<Vec<_>>())
@@ -77,33 +69,5 @@ fn missing_witnesses_are_refused_by_execution() {
             digests: vec![],
         };
         assert!(Warrior::new().run(&bundle, &input).is_err());
-    }
-}
-
-#[test]
-fn relabeling_legacy_statement_cannot_enable_another_format() {
-    let mut bundle = compiled();
-    bundle.assembly = "[5 [[1 3] [1 5]]]".into();
-    let warrior = Warrior::new();
-    let input = ProgramInput {
-        public: vec![],
-        secret: vec![],
-        digests: vec![],
-    };
-    let (mut artifact, _) = warrior.prove_zheng(&bundle, &input).unwrap();
-    for format in [
-        joy_rs::ZK_EXECUTION_FORMAT,
-        joy_rs::EXECUTION_FORMAT,
-        joy_rs::STATE_EXECUTION_FORMAT,
-    ] {
-        artifact.format = format.into();
-        assert!(warrior
-            .verify_zheng(&bundle, &artifact)
-            .unwrap_err()
-            .contains("format"));
-        assert!(warrior
-            .verify_artifact(&artifact)
-            .unwrap_err()
-            .contains("format"));
     }
 }

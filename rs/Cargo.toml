@@ -13,10 +13,7 @@ path = "lib.rs"
 trident-lang = { version = "0.3.0", path = "../../trident", default-features = false }
 nox = { package = "cyber-nox", version = "0.3.0", path = "../../nox/rs" }
 nebu = { package = "strata-nebu", version = "0.1", path = "../../strata/nebu/rs" }
-# `legacy`: joy's retired trace-statement artifact (proof.rs, Warrior::
-# prove_zheng / verify_zheng) still calls zheng's folded trace API, which is
-# unsound and off by default in zheng; migrating it is a follow-up.
-zheng = { version = "0.4.0", path = "../../zheng/rs", features = ["serde", "legacy"] }
+zheng = { version = "0.4.0", path = "../../zheng/rs", features = ["serde"] }
 bbg = { version = "0.3.0", path = "../../bbg/rs", features = ["serde"] }
 hemera = { package = "cyber-hemera", version = "0.3", path = "../../hemera/rs" }
 serde = { version = "1", features = ["derive"] }
