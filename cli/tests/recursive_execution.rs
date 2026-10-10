@@ -16,8 +16,8 @@ use std::{
 
 struct Fixture(PathBuf);
 impl Fixture {
-    fn new() -> Self {
-        let path = std::env::temp_dir().join(format!("joy-recursive-{}", std::process::id()));
+    fn new(tag: &str) -> Self {
+        let path = std::env::temp_dir().join(format!("joy-recursive-{tag}-{}", std::process::id()));
         fs::create_dir_all(&path).unwrap();
         fs::write(
             path.join("loop.tri"),
@@ -54,7 +54,7 @@ impl Drop for Fixture {
 
 #[test]
 fn a_program_beyond_one_relation_proves_recursively() {
-    let f = Fixture::new();
+    let f = Fixture::new("prove");
     let run = f.ok(&["run", "loop.tri", "--input-values", "3"]);
     let expected = String::from_utf8_lossy(&run.stdout).lines().next().unwrap().trim().to_string();
     let proved = f.ok(&[
@@ -106,7 +106,7 @@ fn a_program_beyond_one_relation_proves_recursively() {
 
 #[test]
 fn wrap_flags_need_succinct_and_exclude_each_other() {
-    let f = Fixture::new();
+    let f = Fixture::new("flags");
     for args in [
         vec!["prove", "loop.tri", "--wrap"],
         vec!["prove", "loop.tri", "--no-wrap"],
