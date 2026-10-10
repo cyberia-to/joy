@@ -6,8 +6,11 @@ Soundness floor (zheng phase 1): public artifacts are zheng's `ZHENGPF1`
 envelope (profile 0, certificate v3; 6,463 B for `hash.tri`, 185 B for
 `add.tri`), state artifacts are `JOYST002` (BBG certificate + envelope
 profile 3, certificate v3). `JOYEXEC2` and `JOYST001` are verified for one
-release and no longer produced. Joy's legacy trace-statement path enables
-zheng's `legacy` feature until it is migrated.
+release and no longer produced. The legacy trace-statement artifact
+(`zheng-hypernova-tensor-merkle-v2`; `Warrior::prove_zheng`,
+`prove_zheng_with_state`, `verify_zheng`, `verify_artifact`, `ProofArtifact`,
+`ArtifactMeta`, `PROOF_FORMAT`, `joy verify --legacy-trace-statement`) is
+removed — it authenticated nothing — and Joy builds zheng without `legacy`.
 
 Joy runs the Trident compiler as a nox program, preserves its complete output,
 and supports independently verified public certificates of that computation.

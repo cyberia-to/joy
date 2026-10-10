@@ -105,19 +105,14 @@ Joy owns [runtime capabilities](targets/nox/capabilities.json), including the
 execution and proof restrictions. No checkout or ambient machine descriptor
 is needed. State files are authenticated certificates, not live network sync.
 
-## Legacy trace statements
+## Retired trace statements
 
-Old `zheng-hypernova-tensor-merkle-v2` artifacts do not establish execution
-or emitted values. Inspection requires an explicit opt-in:
-
-```sh
-joy verify old.zheng --legacy-trace-statement
-```
-
-This mode labels execution/output unverified and refuses requested IO, state
-or secret constraints. There is no automatic proof downgrade. The old
-`prove_zheng`/`verify_zheng`/`verify_artifact` library methods remain legacy
-statement APIs; the `Prover`/`Verifier` traits use execution certificates.
+Old `zheng-hypernova-tensor-merkle-v2` artifacts rode zheng's legacy folded
+trace API, which checks no fold and binds no statement; they authenticated
+nothing. Joy no longer reads or produces them: `joy verify` refuses them as
+unrecognised artifacts, and the `prove_zheng`/`verify_zheng`/`verify_artifact`
+library methods are gone. Re-prove with `joy prove`. Joy builds zheng without
+its `legacy` feature.
 
 ## Build and status
 

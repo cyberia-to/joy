@@ -14,9 +14,6 @@ fn verify(args: &VerifyArgs, artifact: &ZkExecutionArtifact) -> Result<(), Strin
     if args.secret.as_ref().is_some_and(|v| !v.is_empty()) {
         return Err("private proof verification uses only public inputs and expected state".into());
     }
-    if args.legacy_trace_statement {
-        return Err("native private proofs require ordinary execution verification".into());
-    }
     if !artifact.claim_matches(
         args.claim.as_deref(),
         args.input_values.as_deref(),

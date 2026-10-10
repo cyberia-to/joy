@@ -1,5 +1,4 @@
-//! Sequential native witnesses and the live-state call adapter.
-use bbg::query::ProofLookProvider;
+//! Sequential native witnesses for call patterns.
 use nebu::Goldilocks;
 use nox::{CallProvider, LookProvider, Order, Reduction};
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -50,34 +49,5 @@ impl<const N: usize> CallProvider<N> for SecretProvider {
         let i = self.next.fetch_add(1, Ordering::SeqCst);
         let v = *self.values.get(i)?;
         reduction.atom(Goldilocks::new(v))
-    }
-}
-
-/// CallProvider over a live BBG state: looks answer (and record openings)
-/// via [`ProofLookProvider`]; secrets serve call patterns as usual.
-pub(super) struct StateCalls<'a> {
-    pub(super) looks: ProofLookProvider<'a>,
-    pub(super) secrets: SecretProvider,
-}
-
-impl<'a> LookProvider for StateCalls<'a> {
-    fn look(
-        &self,
-        commitment: Goldilocks,
-        namespace: Goldilocks,
-        key: Goldilocks,
-    ) -> Option<Goldilocks> {
-        self.looks.look(commitment, namespace, key)
-    }
-}
-
-impl<'a, const N: usize> CallProvider<N> for StateCalls<'a> {
-    fn provide(
-        &self,
-        reduction: &mut Reduction<N>,
-        tag: Goldilocks,
-        object: Order,
-    ) -> Option<Order> {
-        CallProvider::<N>::provide(&self.secrets, reduction, tag, object)
     }
 }

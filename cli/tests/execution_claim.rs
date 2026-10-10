@@ -136,7 +136,7 @@ fn excess_secret_inputs_are_refused_and_single_quote_is_provable() {
 }
 
 #[test]
-fn malformed_execution_artifacts_fail_directly_and_legacy_needs_opt_in() {
+fn malformed_execution_artifacts_fail_directly_and_unknown_proofs_are_refused() {
     let f = Fixture::new();
     f.prove();
     let path = f.0.join("proof.zheng");
@@ -146,26 +146,26 @@ fn malformed_execution_artifacts_fail_directly_and_legacy_needs_opt_in() {
     let bad = f.run(&["verify", "proof.zheng"]);
     assert!(!bad.status.success());
     assert!(String::from_utf8_lossy(&bad.stderr).contains("Verification: FAIL"));
-    let bundle =
-        trident::compile_to_bundle(&f.0.join("main.tri"), &trident::CompileOptions::default())
-            .unwrap();
-    let input = trident::runtime::ProgramInput {
-        public: vec![3, 5],
-        secret: vec![],
-        digests: vec![],
-    };
-    let (legacy, _) = joy_rs::Warrior::new().prove_zheng(&bundle, &input).unwrap();
-    legacy.save(&f.0.join("legacy.zheng")).unwrap();
-    assert!(!f.run(&["verify", "legacy.zheng"]).status.success());
-    f.ok(&["verify", "legacy.zheng", "--legacy-trace-statement"]);
+    // An artifact no supported format recognises — including the retired
+    // trace statement — is refused, never inspected.
+    fs::write(
+        f.0.join("legacy.zheng"),
+        b"zheng-hypernova-tensor-merkle-v2",
+    )
+    .unwrap();
+    for args in [
+        vec!["verify", "legacy.zheng"],
+        vec!["verify", "main.tri", "--proof", "legacy.zheng"],
+    ] {
+        let output = f.run(&args);
+        assert!(!output.status.success(), "{args:?}");
+        assert!(output.stdout.is_empty(), "{args:?}");
+    }
+    let output = f.run(&["verify", "main.tri", "--proof", "legacy.zheng"]);
+    assert!(String::from_utf8_lossy(&output.stderr).contains("unrecognised proof artifact"));
+    // The inspection flag is gone.
     assert!(!f
-        .run(&[
-            "verify",
-            "legacy.zheng",
-            "--legacy-trace-statement",
-            "--input-values",
-            "4,5"
-        ])
+        .run(&["verify", "proof.zheng", "--legacy-trace-statement"])
         .status
         .success());
 }
@@ -193,11 +193,7 @@ fn native_private_proving_verifies_without_secrets_and_publishes_atomically() {
         "--claim",
         "91",
     ]);
-    for extra in [
-        vec!["--claim", "92"],
-        vec!["--secret", "7,13"],
-        vec!["--legacy-trace-statement"],
-    ] {
+    for extra in [vec!["--claim", "92"], vec!["--secret", "7,13"]] {
         let mut args = vec!["verify", "private.zheng"];
         args.extend(extra);
         assert!(!f.run(&args).status.success());
@@ -248,7 +244,7 @@ fn native_private_proving_verifies_without_secrets_and_publishes_atomically() {
 }
 
 #[test]
-fn retired_private_envelopes_never_fall_back_to_execution_or_legacy() {
+fn retired_private_envelopes_never_fall_back_to_execution() {
     let f = Fixture::new();
     for header in [b"JOYZK001", b"JOYZK002", b"JOYZK003"] {
         for name in ["old.zheng", "old.nox", "old.tri", "old.json"] {
@@ -256,7 +252,6 @@ fn retired_private_envelopes_never_fall_back_to_execution_or_legacy() {
             for extra in [
                 vec![],
                 vec!["--claim", "24"],
-                vec!["--legacy-trace-statement"],
                 vec!["--state", "missing.json"],
             ] {
                 for mut args in [
