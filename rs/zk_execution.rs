@@ -1,9 +1,15 @@
 //! Native private nox execution: Zheng owns the relation and randomized proof.
 //! Public statement identity and optional authenticated tables travel with it.
+//!
+//! The proof is zheng's succinct zk scheme (`veil`, `ZHVEIL01`) where the
+//! relation admits it, else linear MPC-in-the-head (`ZHMITH01`); the
+//! verifier dispatches on the proof's magic. Both prove the same relation
+//! under the same binding, so MITH is also the differential oracle.
 use crate::{execution::parse_program, Warrior};
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
 use trident::runtime::{ExecutionResult, ProgramBundle, ProgramInput, ProofData, Runner};
+use zheng::execution::veil::{self, VeilProof};
 use zheng::execution::zk::{self, PrivateProof};
 use zheng::execution::{private::PrivateStatement, ExecutionStatement};
 
@@ -76,19 +82,34 @@ impl ZkExecutionArtifact {
     }
     pub fn verify(&self) -> Result<(), String> {
         self.validate()?;
-        let prepared = if let Some(state) = &self.state {
-            let tables = state_tables(state)?;
-            zheng::execution::private_state::PrivateStateStatement {
+        if let Some(state) = &self.state {
+            // the root the binding absorbed (the certificate's leaves);
+            // zheng authenticates the tables under it
+            let evidence = state_evidence(state)?;
+            let statement = zheng::execution::private_state::PrivateStateStatement {
                 execution: self.statement.execution.clone(),
-                root: tables.root.map(|v| v.as_u64()),
+                root: evidence.root()?,
                 root_in_subject: self.root_in_subject,
-            }
-            .prepare(&tables)?
-        } else {
-            self.statement.prepare()?
-        };
-        let proof = PrivateProof::from_bytes(&self.proof).map_err(|e| e.to_string())?;
+            };
+            return if self.proof.starts_with(veil::MAGIC) {
+                statement.verify_veil(&evidence, &VeilProof::from_bytes(&self.proof)?, &self.binding())
+            } else {
+                let proof = PrivateProof::from_bytes(&self.proof).map_err(|e| e.to_string())?;
+                statement.verify_mith(&evidence, &proof, &self.binding())
+            };
+        }
+        let prepared = self.statement.prepare()?;
         let public = coordinates(&prepared);
+        if self.proof.starts_with(veil::MAGIC) {
+            let proof = VeilProof::from_bytes(&self.proof)?;
+            return veil::verify_relation(
+                &prepared.relation.instance,
+                &proof,
+                &self.binding(),
+                &public,
+            );
+        }
+        let proof = PrivateProof::from_bytes(&self.proof).map_err(|e| e.to_string())?;
         zk::verify(
             &prepared.relation.instance,
             &proof,
@@ -97,6 +118,14 @@ impl ZkExecutionArtifact {
         )
         .map_err(|e| e.to_string())?;
         Ok(())
+    }
+    /// The scheme the proof uses.
+    pub fn scheme(&self) -> ZkScheme {
+        if self.proof.starts_with(veil::MAGIC) {
+            ZkScheme::Veil
+        } else {
+            ZkScheme::Mith
+        }
     }
     pub fn matches_program(&self, bundle: &ProgramBundle) -> Result<bool, String> {
         Ok(bundle.target_vm == "nox"
@@ -179,12 +208,34 @@ impl ZkExecutionArtifact {
     }
 }
 
+/// Which zk proof an artifact carries.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ZkScheme {
+    /// zheng `veil`: succinct, hiding commitment, masked sumchecks.
+    Veil,
+    /// zheng MPC-in-the-head: linear size; the fallback and the oracle.
+    Mith,
+}
+
 impl Warrior {
+    /// Prove with `veil` where the relation admits it, else MITH.
     pub fn prove_zk_execution(
         &self,
         bundle: &ProgramBundle,
         input: &ProgramInput,
         budget: u64,
+    ) -> Result<(ZkExecutionArtifact, ExecutionResult), String> {
+        self.prove_zk_execution_with(bundle, input, budget, ZkScheme::Veil)
+    }
+
+    /// Prove with the given scheme; `Veil` falls back to MITH for a relation
+    /// it does not admit.
+    pub fn prove_zk_execution_with(
+        &self,
+        bundle: &ProgramBundle,
+        input: &ProgramInput,
+        budget: u64,
+        scheme: ZkScheme,
     ) -> Result<(ZkExecutionArtifact, ExecutionResult), String> {
         if bundle.target_vm != "nox" || bundle.reads_state || !input.digests.is_empty() {
             return Err("private CCS execution currently requires stateless nox inputs".into());
@@ -215,7 +266,7 @@ impl Warrior {
             root_in_subject: false,
         };
         artifact.validate()?;
-        artifact.proof = prove_native(&prepared, &witness, &artifact.binding())?;
+        artifact.proof = prove_native(&prepared, &witness, &artifact.binding(), scheme)?;
         Ok((artifact, native))
     }
 }
@@ -235,7 +286,7 @@ pub fn verify_proof_data(proof: &ProofData) -> Result<bool, String> {
 mod state;
 #[path = "private_wire.rs"]
 mod wire;
-use state::state_tables;
+use state::state_evidence;
 
 fn coordinates(
     prepared: &zheng::execution::private::PreparedExecution,
@@ -250,10 +301,25 @@ fn prove_native(
     prepared: &zheng::execution::private::PreparedExecution,
     witness: &[u64],
     binding: &[u8],
+    scheme: ZkScheme,
 ) -> Result<Vec<u8>, String> {
     let witness = zheng::CCSWitness {
         z: witness.iter().copied().map(nebu::Goldilocks::new).collect(),
     };
+    if scheme == ZkScheme::Veil {
+        match veil::prove_relation(
+            &prepared.relation.instance,
+            &witness,
+            binding,
+            &coordinates(prepared),
+        ) {
+            Ok(proof) => return Ok(proof.as_bytes().to_vec()),
+            // a relation veil does not admit falls back; a witness that
+            // satisfies nothing fails under MITH as well
+            Err(e) if e.contains("unsupported") => {}
+            Err(e) => return Err(e),
+        }
+    }
     let proof = zk::prove(
         &prepared.relation.instance,
         &witness,

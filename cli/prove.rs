@@ -30,8 +30,12 @@ pub struct ProveArgs {
     /// Use native Zheng private proving even when no secret inputs are supplied
     #[arg(long)]
     pub zk: bool,
+    /// Prove secret inputs with linear MPC-in-the-head instead of zheng's
+    /// succinct zk scheme (veil); the fallback and the differential oracle
+    #[arg(long)]
+    pub mith: bool,
     /// Commit the witness instead of disclosing it (zheng envelope profile 1)
-    #[arg(long, conflicts_with_all = ["zk", "secret", "state"])]
+    #[arg(long, conflicts_with_all = ["zk", "secret", "state", "mith"])]
     pub succinct: bool,
     /// Reduction budget (also the statement's focus bound)
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
@@ -79,7 +83,12 @@ pub fn cmd_prove(args: ProveArgs) {
             process::exit(1);
         }
     };
-    let private = args.zk || !pi.secret.is_empty();
+    let private = args.zk || args.mith || !pi.secret.is_empty();
+    let scheme = if args.mith {
+        joy_rs::ZkScheme::Mith
+    } else {
+        joy_rs::ZkScheme::Veil
+    };
     if args.succinct && private {
         eprintln!("error: --succinct proves public statements; secret inputs need --zk");
         process::exit(1);
@@ -112,7 +121,7 @@ pub fn cmd_prove(args: ProveArgs) {
             .and_then(|(artifact, result)| artifact.to_bytes().map(|bytes| (result, bytes)))
     } else if private {
         warrior
-            .prove_zk_execution(&bundle, &pi, args.budget)
+            .prove_zk_execution_with(&bundle, &pi, args.budget, scheme)
             .and_then(|(artifact, result)| artifact.to_bytes().map(|bytes| (result, bytes)))
     } else {
         warrior
@@ -130,8 +139,10 @@ pub fn cmd_prove(args: ProveArgs) {
         eprintln!("error: {error}");
         process::exit(1);
     }
-    let mode = if private {
-        "native private execution (Zheng)"
+    let mode = if private && args.mith {
+        "private execution (zheng MPC-in-the-head)"
+    } else if private {
+        "private execution (zheng zk, veil where the relation admits it)"
     } else if args.state.is_some() {
         "authenticated public state execution"
     } else if args.succinct {

@@ -46,7 +46,7 @@ joy run-artifact PROGRAM --input INPUT --output OUTPUT [--emit result|program] [
 joy prove-artifact PROGRAM --input INPUT --output CERTIFICATE [LIMITS] [--force]
 joy verify-artifact PROGRAM --input INPUT --proof CERTIFICATE [--output OUTPUT] [--emit result|program] [LIMITS] [--force]
 joy pack-job --compiler PROGRAM --manifest PACKAGE.json --output JOB [LIMITS] [--force]
-joy prove INPUT [COMMON] [--zk | --succinct] [--output PATH] [--force]
+joy prove INPUT [COMMON] [--zk [--mith] | --succinct] [--output PATH] [--force]
 joy batch run|prove|verify INPUT... [--max-parallel N]
 joy test SOURCE_OR_PROJECT [--target nox|cyber] [--profile NAME]
 joy bench INPUT [--input-file PATH | --input-values WORDS] [--claim WORDS] [--repeat N]
@@ -136,10 +136,20 @@ inputs, `--zk` and `--state`. Sizes and times: zheng
 Public state requests use `joy-nox-public-state-execution-v3` (`JOYST002`: the
 BBG certificate and a zheng state-public envelope, profile 3), with namespace,
 key, returned value and all four root limbs constrained to the execution.
+zheng authenticates the BBG certificate's evidence under the statement's root
+and every read against it; the program name and source hash are the
+artifact's metadata (no proof binds a label of a disclosed witness), compared
+by `joy verify` with the bundle it is given. `JOYST001` artifacts keep their
+v1 context, recomputed from those fields to verify the retired transcript.
 Joy uses only the soft3 execution/proof stack. Secret inputs or `--zk` select
-`joy-nox-zheng-private-execution-v1` (`JOYZH001`). Zheng proves its exact CCS
-with native Goldilocks/Hemera MPC-in-the-head; private verification needs no
-witness or re-execution. The `Prover` trait makes the same selection. Explicit
+`joy-nox-zheng-private-execution-v1` (`JOYZH001`). The proof is zheng's
+succinct zk scheme `veil` (`ZHVEIL01`: masked Spartan over a hiding
+Reed–Solomon commitment, honest-verifier statistical zero knowledge, ≥ 128
+proven bits) wherever zheng admits the relation, and native Goldilocks/Hemera
+MPC-in-the-head (`ZHMITH01`) otherwise or with `--mith`; the verifier
+dispatches on the proof's magic, and both prove the same relation under the
+same binding (MITH is the differential oracle). Private verification needs no
+witness or re-execution. Sizes and times: zheng `audit/zk-profile-2026-10.md`. The `Prover` trait makes the same selection. Explicit
 public proof APIs reject secret inputs. Private state queries hide their
 coordinates over the authenticated public tables. See
 [private execution](private-execution.md) for disclosure, bounds and assumptions.

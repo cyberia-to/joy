@@ -102,9 +102,15 @@ fn every_state_claim_and_the_certificate_are_bound() {
     let mut bad = artifact.clone();
     bad.statement.execution.public_output[0] += 1;
     assert!(bad.verify().is_err(), "output");
+    // program name and source hash are metadata (no proof binds a label of a disclosed
+    // witness); the assembly is bound: it is the statement's program
+    let mut renamed = artifact.clone();
+    renamed.program.push('x');
+    renamed.source_hash.push('0');
+    renamed.verify().unwrap();
     let mut bad = artifact.clone();
-    bad.program.push('x');
-    assert!(bad.verify().is_err(), "identity context");
+    bad.assembly = bad.assembly.replacen('1', "2", 1);
+    assert!(bad.verify().is_err(), "assembly");
     let mut longer = certificate.clone();
     longer.free.push(1);
     let mut bad = artifact.clone();
@@ -131,10 +137,9 @@ fn retired_v1_state_artifacts_still_verify() {
         &program,
         &[],
         1000,
-        certificate.root().unwrap(),
         false,
-        context,
-        &mut |ns, key| certificate.cell(ns, key),
+        &context,
+        &certificate.evidence().unwrap(),
     )
     .unwrap();
     let v1 = StateExecutionArtifact {
