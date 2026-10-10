@@ -46,7 +46,7 @@ joy run-artifact PROGRAM --input INPUT --output OUTPUT [--emit result|program] [
 joy prove-artifact PROGRAM --input INPUT --output CERTIFICATE [LIMITS] [--force]
 joy verify-artifact PROGRAM --input INPUT --proof CERTIFICATE [--output OUTPUT] [--emit result|program] [LIMITS] [--force]
 joy pack-job --compiler PROGRAM --manifest PACKAGE.json --output JOB [LIMITS] [--force]
-joy prove INPUT [COMMON] [--zk] [--output PATH] [--force]
+joy prove INPUT [COMMON] [--zk | --succinct] [--output PATH] [--force]
 joy batch run|prove|verify INPUT... [--max-parallel N]
 joy test SOURCE_OR_PROJECT [--target nox|cyber] [--profile NAME]
 joy bench INPUT [--input-file PATH | --input-values WORDS] [--claim WORDS] [--repeat N]
@@ -123,6 +123,15 @@ supported program, public input/output and reduction coordinates. With
 With `--claim` or `--input-values`, Joy compares the requested vectors.
 Without those flags, verification checks the artifact's own statement;
 the caller must still establish that this is the intended computation.
+
+`joy prove --succinct` uses `zheng-nox-succinct-execution-v1`, written as the
+zheng `ZHENGPF1` envelope (profile 1): the same statement as public v3, with the
+witness committed (WHIR over Goldilocks, hemera Merkle trees) instead of
+disclosed; Zheng's verifier derives the relation and the public half of the
+witness itself, checks a Spartan IOP over Fp3 and one opening, and admits only
+parameters with ≥ 128 proven bits. It is not zero-knowledge. It refuses secret
+inputs, `--zk` and `--state`. Sizes and times: zheng
+`audit/succinct-profile-2026-10.md`.
 
 Public state requests use `joy-nox-public-state-execution-v3` (`JOYST002`: the
 BBG certificate and a zheng state-public envelope, profile 3), with namespace,

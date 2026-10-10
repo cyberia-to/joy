@@ -30,6 +30,9 @@ pub struct ProveArgs {
     /// Use native Zheng private proving even when no secret inputs are supplied
     #[arg(long)]
     pub zk: bool,
+    /// Commit the witness instead of disclosing it (zheng envelope profile 1)
+    #[arg(long, conflicts_with_all = ["zk", "secret", "state"])]
+    pub succinct: bool,
     /// Reduction budget (also the statement's focus bound)
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
@@ -45,7 +48,7 @@ pub struct ProveArgs {
 }
 
 /// Default artifact path: `<input stem>.zheng` next to the input.
-fn artifact_path(input: &PathBuf) -> PathBuf {
+fn artifact_path(input: &std::path::Path) -> PathBuf {
     let stem = input
         .file_stem()
         .and_then(|s| s.to_str())
@@ -77,6 +80,10 @@ pub fn cmd_prove(args: ProveArgs) {
         }
     };
     let private = args.zk || !pi.secret.is_empty();
+    if args.succinct && private {
+        eprintln!("error: --succinct proves public statements; secret inputs need --zk");
+        process::exit(1);
+    }
     let warrior = Warrior::with_budget(args.budget);
 
     let t0 = Instant::now();
@@ -99,6 +106,10 @@ pub fn cmd_prove(args: ProveArgs) {
                 }
             },
         )
+    } else if args.succinct {
+        warrior
+            .prove_succinct_execution(&bundle, &pi, args.budget)
+            .and_then(|(artifact, result)| artifact.to_bytes().map(|bytes| (result, bytes)))
     } else if private {
         warrior
             .prove_zk_execution(&bundle, &pi, args.budget)
@@ -123,6 +134,8 @@ pub fn cmd_prove(args: ProveArgs) {
         "native private execution (Zheng)"
     } else if args.state.is_some() {
         "authenticated public state execution"
+    } else if args.succinct {
+        "succinct public execution (committed witness)"
     } else {
         "public execution"
     };

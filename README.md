@@ -25,6 +25,15 @@ witness values from the certificate and checks every constraint exactly. This
 certificate discloses the witness and has linear verification cost.
 Verification does not run nox. `JOYEXEC2` (v2) artifacts are still verified.
 
+`joy prove --succinct` uses `zheng-nox-succinct-execution-v1`, written as the
+zheng `ZHENGPF1` envelope (profile 1): the same statement as public v3, with the
+witness committed (WHIR over Goldilocks, hemera Merkle trees) instead of
+disclosed; Zheng's verifier derives the relation and the public half of the
+witness itself, checks a Spartan IOP over Fp3 and one opening, and admits only
+parameters with ≥ 128 proven bits. It is not zero-knowledge. It refuses secret
+inputs, `--zk` and `--state`. Sizes and times: zheng
+`audit/succinct-profile-2026-10.md`.
+
 Joy uses the soft3 execution/proof stack exclusively. `prove --secret` or
 `prove --zk` selects `joy-nox-zheng-private-execution-v1` (`JOYZH001`): Zheng's
 native randomized CCS proof over Goldilocks and Hemera. Verification needs no

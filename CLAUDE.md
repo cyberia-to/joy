@@ -70,6 +70,10 @@ Proof formats and content headers:
   exact verifier-derived CCS, verifier-placed public input/output/cost, full
   witness disclosure and linear verification. No zero-knowledge or
   succinctness claim. `JOYEXEC2` (v2) is verified, not produced.
+- `zheng-nox-succinct-execution-v1` (zheng envelope `ZHENGPF1`, profile 1,
+  `joy prove --succinct`): the public v3 statement with the witness committed
+  (WHIR) and opened once; Spartan over Fp3; ≥ 128 proven bits by policy. Not
+  zero-knowledge; stateless only.
 - `joy-nox-public-state-execution-v3` (`JOYST002`: BBG certificate + zheng
   envelope profile 3): actual compiled state reads, all namespace/key/value/root
   coordinates bound to verified public BBG tables. `JOYST001` (v1) is verified,
@@ -138,7 +142,7 @@ in `cyber/specs/worker.md`; do not duplicate node policy in Joy.
 ```
 joy build  <file.tri | project> [--profile NAME] [--emit bundle|nox] [-o PATH] [--force] [--format json-v1]
 joy run    <bundle.json | file.tri | file.nox> [--input-values 1,2] [--secret 3] [--budget N]
-joy prove  <input> [--input-file witness.json] [--zk] [--output p.zheng] [--force]
+joy prove  <input> [--input-file witness.json] [--zk | --succinct] [--output p.zheng] [--force]
 joy batch  run|prove|verify <inputs...> [--max-parallel N]
 joy test   <source | project> [--profile NAME]
 joy bench  <input> [--input-file witness.json] [--claim VALUES] [--repeat N]
