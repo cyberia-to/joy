@@ -12,9 +12,12 @@
 
 use std::process::Command;
 
-/// Peak resident memory of a wrap prove (IVC + three wrap levels, keys
-/// included), measured on hash.tri (joy `audit/wrapped-profile-2026-10.md`).
-pub const WRAP_PEAK_BYTES: u64 = 40 << 30;
+/// Memory a wrap prove needs resident (IVC + three wrap levels, keys
+/// included): max RSS 29.2 GB on hash.tri, 30.9 GB deriving the chain's
+/// keys, rounded up (zheng `audit/wrapped-envelope-2026-10.md`). Its peak
+/// footprint, compressed and swapped pages included, reached 60 GB; below
+/// this much available memory the prove thrashes.
+pub const WRAP_PEAK_BYTES: u64 = 32 << 30;
 
 /// Bytes of memory available to a new process, if known.
 pub fn available_bytes() -> Option<u64> {
