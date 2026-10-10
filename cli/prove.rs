@@ -58,6 +58,11 @@ pub struct ProveArgs {
     /// Replace an existing output only after proving succeeds
     #[arg(long)]
     pub force: bool,
+    /// Prover backend for the bulk kernels (hemera permutations, grinding):
+    /// auto (Metal on Apple Silicon, else a WebGPU adapter, else CPU), cpu,
+    /// metal or webgpu. Every backend produces the same proof bytes.
+    #[arg(long, default_value = "auto", env = "JOY_BACKEND")]
+    pub backend: String,
     /// Public BBG state certificate (JSON)
     #[arg(long)]
     pub state: Option<String>,
@@ -129,6 +134,19 @@ pub fn cmd_prove(args: ProveArgs) {
         }
     };
 
+    let backend = match args
+        .backend
+        .parse::<cyber_lens_gpu::Choice>()
+        .and_then(cyber_lens_gpu::install)
+    {
+        Ok(b) => b,
+        Err(e) => {
+            eprintln!("error: {e}");
+            process::exit(1);
+        }
+    };
+    eprintln!("Backend: {} ({})", backend.0, backend.1);
+
     let t0 = Instant::now();
     let path = args.output.unwrap_or_else(|| artifact_path(&args.input));
     let result = if let Some(state_path) = &args.state {
@@ -199,8 +217,9 @@ pub fn cmd_prove(args: ProveArgs) {
         "public execution"
     };
     eprintln!(
-        "Proved {mode} in {} ms: {} reductions, {} bytes",
+        "Proved {mode} in {} ms on {}: {} reductions, {} bytes",
         t0.elapsed().as_millis(),
+        backend.0,
         result.cycle_count,
         bytes.len()
     );
