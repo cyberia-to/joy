@@ -38,9 +38,17 @@ pub struct ProveArgs {
     #[arg(long, conflicts_with_all = ["zk", "secret", "state", "mith"])]
     pub succinct: bool,
     /// With --succinct: prove a program beyond one relation with the
-    /// accumulated machine (profile 4) instead of recursion (profile 5)
-    #[arg(long, requires = "succinct")]
+    /// accumulated machine (profile 4) instead of recursion (profiles 5/6)
+    #[arg(long, requires = "succinct", conflicts_with_all = ["wrap", "no_wrap"])]
     pub machine: bool,
+    /// With --succinct: wrap a program beyond one relation (profile 6,
+    /// ≤ 64 KB) whatever memory is available (the default when enough is)
+    #[arg(long, requires = "succinct", conflicts_with = "no_wrap")]
+    pub wrap: bool,
+    /// With --succinct: prove a program beyond one relation recursively
+    /// (profile 5) without the wrap chain
+    #[arg(long, requires = "succinct")]
+    pub no_wrap: bool,
     /// Reduction budget (also the statement's focus bound)
     #[arg(long, default_value_t = joy_rs::DEFAULT_BUDGET)]
     pub budget: u64,
@@ -100,8 +108,25 @@ pub fn cmd_prove(args: ProveArgs) {
     let warrior = Warrior::with_budget(args.budget);
     let fallback = if args.machine {
         joy_rs::Fallback::Machine
-    } else {
+    } else if args.no_wrap {
         joy_rs::Fallback::Recursive
+    } else if args.wrap {
+        joy_rs::Fallback::Wrapped
+    } else {
+        match joy_rs::memory::wrap_fits() {
+            (true, _) => joy_rs::Fallback::Wrapped,
+            (false, available) => {
+                if args.succinct {
+                    let gib = |b: u64| b as f64 / (1u64 << 30) as f64;
+                    let have = available.map_or("unknown".to_string(), |a| format!("{:.1} GiB", gib(a)));
+                    eprintln!(
+                        "note: a program beyond one relation is proven recursively (profile 5, ~285 KB): wrapping it to ≤ 64 KB (profile 6) needs ~{:.0} GiB of memory, {have} available; --wrap forces it",
+                        gib(joy_rs::memory::WRAP_PEAK_BYTES)
+                    );
+                }
+                joy_rs::Fallback::Recursive
+            }
+        }
     };
 
     let t0 = Instant::now();
@@ -148,6 +173,15 @@ pub fn cmd_prove(args: ProveArgs) {
         eprintln!("error: {error}");
         process::exit(1);
     }
+    // the prover holds the verifying keys of what it proved: cache them for
+    // later `joy verify` processes
+    if args.succinct {
+        if let Some(profile) = bytes.get(10).and_then(|&b| joy_rs::key_cache::profile_of(b)) {
+            if let Err(error) = joy_rs::key_cache::store(profile) {
+                eprintln!("note: verifying keys not cached ({error})");
+            }
+        }
+    }
     let mode = if private && args.mith {
         "private execution (zheng MPC-in-the-head)"
     } else if private {
@@ -156,6 +190,7 @@ pub fn cmd_prove(args: ProveArgs) {
         "authenticated public state execution"
     } else if args.succinct {
         match bytes.get(10) {
+            Some(6) => "succinct public execution (wrapped, envelope profile 6; constant size, ≤ 64 KB)",
             Some(5) => "succinct public execution (recursive, envelope profile 5; constant size)",
             Some(4) => "succinct public execution (accumulated machine, envelope profile 4)",
             _ => "succinct public execution (committed witness, one relation, envelope profile 1)",

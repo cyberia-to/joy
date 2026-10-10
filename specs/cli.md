@@ -46,7 +46,7 @@ joy run-artifact PROGRAM --input INPUT --output OUTPUT [--emit result|program] [
 joy prove-artifact PROGRAM --input INPUT --output CERTIFICATE [LIMITS] [--force]
 joy verify-artifact PROGRAM --input INPUT --proof CERTIFICATE [--output OUTPUT] [--emit result|program] [LIMITS] [--force]
 joy pack-job --compiler PROGRAM --manifest PACKAGE.json --output JOB [LIMITS] [--force]
-joy prove INPUT [COMMON] [--zk [--mith] | --succinct [--machine]] [--output PATH] [--force]
+joy prove INPUT [COMMON] [--zk [--mith] | --succinct [--machine | --wrap | --no-wrap]] [--output PATH] [--force]
 joy batch run|prove|verify INPUT... [--max-parallel N]
 joy test SOURCE_OR_PROJECT [--target nox|cyber] [--profile NAME]
 joy bench INPUT [--input-file PATH | --input-values WORDS] [--claim WORDS] [--repeat N]
@@ -137,8 +137,18 @@ inputs, `--zk` and `--state`. Sizes and times: zheng
 
 When the program exceeds the one-relation compiler (nesting beyond 128 or
 more than 4096 formula nodes, or more rows than it admits), `--succinct`
-proves it recursively: `zheng-nox-recursive-v1`, the `ZHENGPF1` envelope
-profile 5 — a nox run of any length proven by incrementally verifiable
+proves it recursively and, when the machine has the memory, wraps it:
+`zheng-nox-wrapped-v1`, the `ZHENGPF1` envelope profile 6 — the recursive
+proof's final verifier proved by zheng's three wrap levels, ≤ 64 KB and
+constant in the run's length (zheng `specs/recursion.md` § wrap). The wrap
+chain is the expensive part (minutes, tens of GB): joy wraps by default
+only if the available memory (`JOY_AVAILABLE_MEMORY` bytes if set, else
+`vm_stat` free + inactive + speculative pages on macOS, `MemAvailable` on
+Linux) reaches the measured peak (`joy_rs::memory::WRAP_PEAK_BYTES`);
+otherwise it proves `zheng-nox-recursive-v1`, the envelope profile 5, and
+says so on stderr. `--wrap` forces profile 6, `--no-wrap` profile 5; both
+apply only beyond one relation (a program that fits stays profile 1).
+Profile 5 is a nox run of any length proven by incrementally verifiable
 computation over zheng's nox machine (each 2^15-row step's circuit verifies
 the previous step; the proof is the last step, its accumulation step and
 one WHIR decider), constant in the run's length (zheng `specs/recursion.md`).
@@ -146,10 +156,21 @@ one WHIR decider), constant in the run's length (zheng `specs/recursion.md`).
 `ZHENGPF1` envelope profile 4, the uniform step relation with its
 committed words accumulated and decided by one WHIR opening (zheng
 `specs/machine.md`, `specs/accumulation.md`), smaller and faster to prove
-for short runs but growing with every segment. Both statements bind the
-whole output noun; `joy verify` accepts either and prints its atoms. Same
-policy: ≥ 128 proven bits, not zero-knowledge, no secrets or state. The
-choice and its measurements: `audit/recursive-profile-2026-10.md`.
+for short runs but growing with every segment. All three statements bind
+the whole output noun; `joy verify` accepts any of them and prints its
+atoms. Same policy: ≥ 128 proven bits, not zero-knowledge, no secrets or
+state. The choice and its measurements:
+`audit/recursive-profile-2026-10.md`, `audit/wrapped-profile-2026-10.md`.
+
+Verifying profiles 5 and 6 needs zheng's circuit keys (the IVC key; for 6
+also the final wrap key). Joy keeps them as a zheng key bundle in a cache
+directory (`JOY_CACHE_DIR`, else `$XDG_CACHE_HOME/joy`, else
+`~/Library/Caches/joy` on macOS or `~/.cache/joy`;
+`keys/zheng-p<profile>-<digest>.keys`): `joy prove` writes the keys it
+proved with, `joy verify` installs them before decoding and writes them
+after deriving. zheng accepts a bundle only if its digest is the one zheng
+pins, so the cache cannot change what verifies; a stale or tampered file
+is refused and rederived. `joy verify` prints the key source on stderr.
 
 Public state requests use `joy-nox-public-state-execution-v3` (`JOYST002`: the
 BBG certificate and a zheng state-public envelope, profile 3), with namespace,
