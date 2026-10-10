@@ -18,7 +18,9 @@ impl Verifier for Warrior {
         if proof.format == crate::ZK_EXECUTION_FORMAT {
             return crate::zk_execution::verify_proof_data(proof);
         }
-        if proof.format == crate::STATE_EXECUTION_FORMAT {
+        if proof.format == crate::STATE_EXECUTION_FORMAT
+            || proof.format == crate::state_execution::LEGACY_STATE_EXECUTION_FORMAT
+        {
             return crate::state_execution::verify_proof_data(proof);
         }
         crate::execution::verify_proof_data(proof)

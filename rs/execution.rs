@@ -4,14 +4,15 @@ use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
 use trident::runtime::{ExecutionResult, ProgramBundle, ProgramInput, ProofData, Runner};
 pub use zheng::execution::NounToken;
+use zheng::envelope::{Envelope, MAGIC};
 use zheng::execution::{
     certificate::FORMAT as CERTIFICATE_FORMAT, Certificate, DirectProof, ExecutionNoun,
     ExecutionStatement,
 };
 
 /// Profile v3: the statement and the free witness positions, checked exactly.
+/// On the wire the artifact is zheng's `ZHENGPF1` envelope, profile 0.
 pub const EXECUTION_FORMAT: &str = CERTIFICATE_FORMAT;
-const MAGIC: &[u8] = b"JOYEXEC3";
 /// Profile v2 (Spartan + PublicTensor), read for verification for one release.
 pub const LEGACY_EXECUTION_FORMAT: &str = "zheng-nox-public-execution-v2";
 const LEGACY_MAGIC: &[u8] = b"JOYEXEC2";
@@ -26,10 +27,10 @@ pub fn has_unsupported_private_header(path: &Path) -> bool {
         .any(|magic| crate::file_input::has_header(path, *magic, 64 * 1024 * 1024))
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+/// A public execution proof: exactly a zheng public-profile envelope. The
+/// program is identified by its token encoding in the statement.
+#[derive(Clone, Debug)]
 pub struct ExecutionArtifact {
-    pub format: String,
-    pub program: String,
     pub statement: ExecutionStatement,
     pub certificate: Certificate,
 }
@@ -107,7 +108,7 @@ pub fn render_program(tokens: &[NounToken]) -> Result<String, String> {
 
 /// Bounded bracket parser shared semantically with nox's binary/n-ary syntax.
 /// Converts atoms canonically exactly as the native field-valued noun parser.
-pub(crate) fn parse_program(text: &str) -> Result<ExecutionNoun, String> {
+pub fn parse_program(text: &str) -> Result<ExecutionNoun, String> {
     if text.len() > MAX_ASSEMBLY_BYTES {
         return Err("execution program is too large".into());
     }
@@ -185,9 +186,17 @@ impl ExecutionArtifact {
     pub fn has_header(path: &Path) -> bool {
         crate::file_input::has_header(path, MAGIC, MAX_ARTIFACT_BYTES)
     }
+    pub fn format(&self) -> &'static str {
+        EXECUTION_FORMAT
+    }
+    fn envelope(&self) -> Envelope {
+        Envelope::Public {
+            statement: self.statement.clone(),
+            certificate: self.certificate.clone(),
+        }
+    }
     pub fn to_bytes(&self) -> Result<Vec<u8>, String> {
-        let mut bytes = MAGIC.to_vec();
-        bytes.extend(postcard::to_allocvec(self).map_err(|e| e.to_string())?);
+        let bytes = self.envelope().to_bytes();
         if bytes.len() > MAX_ARTIFACT_BYTES {
             return Err("execution artifact size limit".into());
         }
@@ -197,15 +206,16 @@ impl ExecutionArtifact {
         if bytes.len() > MAX_ARTIFACT_BYTES {
             return Err("execution artifact size limit".into());
         }
-        let payload = bytes
-            .strip_prefix(MAGIC)
-            .ok_or("not a public execution artifact")?;
-        let (artifact, rest): (Self, &[u8]) =
-            postcard::take_from_bytes(payload).map_err(|e| e.to_string())?;
-        if !rest.is_empty() || artifact.format != EXECUTION_FORMAT {
-            return Err("invalid execution artifact format".into());
+        match Envelope::from_bytes(bytes).map_err(|e| e.to_string())? {
+            Envelope::Public {
+                statement,
+                certificate,
+            } => Ok(Self {
+                statement,
+                certificate,
+            }),
+            _ => Err("not a public execution envelope".into()),
         }
-        Ok(artifact)
     }
     pub fn load(path: &Path) -> Result<Self, String> {
         Self::from_bytes(&crate::file_input::read(path, MAX_ARTIFACT_BYTES)?)
@@ -226,9 +236,6 @@ impl ExecutionArtifact {
         render_program(&self.statement.program)
     }
     pub fn verify(&self) -> Result<(), String> {
-        if self.format != EXECUTION_FORMAT || self.program.len() > 4096 {
-            return Err("invalid execution artifact metadata".into());
-        }
         zheng::execution::verify_certificate(&self.statement, &self.certificate)
     }
     pub fn claim_matches(
@@ -287,8 +294,6 @@ impl Warrior {
             return Err("execution relation disagrees with native nox".into());
         }
         let artifact = ExecutionArtifact {
-            format: EXECUTION_FORMAT.into(),
-            program: bundle.name.clone(),
             statement,
             certificate,
         };

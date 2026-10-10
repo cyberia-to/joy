@@ -28,8 +28,8 @@ impl ProofProfile {
     }
     fn header(self) -> &'static [u8] {
         match self {
-            Self::Public => b"JOYEXEC3",
-            Self::PublicState => b"JOYST001",
+            Self::Public => zheng::envelope::MAGIC,
+            Self::PublicState => crate::state_execution::MAGIC,
             Self::Private | Self::PrivateState => b"JOYZH001",
         }
     }
@@ -207,12 +207,11 @@ pub fn verify_result(
             let artifact = ExecutionArtifact::from_bytes(result.artifact)
                 .map_err(|_| WorkerError::ProofRejected)?;
             artifact.verify().map_err(|_| WorkerError::ProofRejected)?;
-            // the program is compared as the statement's token encoding; v3
-            // carries no assembly text of its own
-            let matches = artifact.program == expected.bundle.name
-                && artifact
-                    .matches_program(&expected.bundle.assembly)
-                    .map_err(|_| WorkerError::ProgramMismatch)?;
+            // the program is compared as the statement's token encoding; the
+            // envelope carries no name or assembly text of its own
+            let matches = artifact
+                .matches_program(&expected.bundle.assembly)
+                .map_err(|_| WorkerError::ProgramMismatch)?;
             (artifact.statement, None, matches)
         }
         ProofProfile::PublicState => {

@@ -20,8 +20,8 @@ Supported selections:
 
 | Profile | Artifact | State requirement |
 |---|---|---|
-| Public | `zheng-nox-public-execution-v2` | no state context |
-| PublicState | `joy-nox-public-state-execution-v1` | exact trusted BBG root |
+| Public | `zheng-nox-public-execution-v3` (`ZHENGPF1`) | no state context |
+| PublicState | `joy-nox-public-state-execution-v3` (`JOYST002`) | exact trusted BBG root |
 | Private | `joy-nox-zheng-private-execution-v1` | no state context |
 | PrivateState | `joy-nox-zheng-private-execution-v1` | exact trusted BBG root and authenticated public tables |
 

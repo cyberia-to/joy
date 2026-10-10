@@ -5,7 +5,7 @@
   "deploy": false,
   "proof_formats": [
     "zheng-nox-public-execution-v3",
-    "joy-nox-public-state-execution-v1",
+    "joy-nox-public-state-execution-v3",
     "joy-nox-zheng-private-execution-v1"
   ],
   "restrictions": [

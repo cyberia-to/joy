@@ -66,11 +66,14 @@ subject list; secret call witnesses are served sequentially. `verify --claim`
 without a proof is labelled re-execution, not cryptographic verification.
 
 Proof formats and content headers:
-- `zheng-nox-public-execution-v2` (`JOYEXEC2`): exact verifier-derived CCS,
-  authenticated public input/output/cost, full witness disclosure and linear
-  verification. No zero-knowledge or succinctness claim.
-- `joy-nox-public-state-execution-v1` (`JOYST001`): actual compiled state reads,
-  all namespace/key/value/root coordinates bound to verified public BBG tables.
+- `zheng-nox-public-execution-v3` (zheng envelope `ZHENGPF1`, profile 0):
+  exact verifier-derived CCS, verifier-placed public input/output/cost, full
+  witness disclosure and linear verification. No zero-knowledge or
+  succinctness claim. `JOYEXEC2` (v2) is verified, not produced.
+- `joy-nox-public-state-execution-v3` (`JOYST002`: BBG certificate + zheng
+  envelope profile 3): actual compiled state reads, all namespace/key/value/root
+  coordinates bound to verified public BBG tables. `JOYST001` (v1) is verified,
+  not produced.
   `--state` loads a bounded StateCertificate JSON and may pin the expected root.
 - `joy-nox-zheng-private-execution-v1` (`JOYZH001`): native randomized Zheng
   CCS proof over Goldilocks/Hemera. Secret calls and private queries are hidden;

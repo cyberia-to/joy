@@ -80,7 +80,7 @@ fn batch_preserves_option_looking_inputs_witnesses_and_output_paths() {
         "--output=--proofs",
     ]));
     let artifact = f.0.join("--proofs/0000/proof.zheng");
-    assert!(fs::read(&artifact).unwrap().starts_with(b"JOYEXEC3"));
+    assert!(fs::read(&artifact).unwrap().starts_with(b"ZHENGPF1"));
     f.ok(&[OsString::from("verify"), artifact.into_os_string()]);
 }
 

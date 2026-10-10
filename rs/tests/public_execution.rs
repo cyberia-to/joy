@@ -116,9 +116,14 @@ fn artifact_format_and_claim_filters_are_exact() {
     let mut bytes = artifact.to_bytes().unwrap();
     bytes.push(0);
     assert!(ExecutionArtifact::from_bytes(&bytes).is_err());
-    let mut bad = artifact.clone();
-    bad.format = "other".into();
-    assert!(ExecutionArtifact::from_bytes(&bad.to_bytes().unwrap()).is_err());
+    // the envelope header: another profile byte, the retired magic
+    let mut other = artifact.to_bytes().unwrap();
+    assert_eq!(&other[..8], b"ZHENGPF1");
+    other[10] = 3;
+    assert!(ExecutionArtifact::from_bytes(&other).is_err());
+    let mut retired = artifact.to_bytes().unwrap();
+    retired[..8].copy_from_slice(b"JOYEXEC3");
+    assert!(ExecutionArtifact::from_bytes(&retired).is_err());
     let mut bad = artifact;
     match bad.certificate.free.first_mut() {
         Some(v) => *v = (*v + 1) % nebu::field::P,
