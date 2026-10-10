@@ -90,9 +90,44 @@ impl SuccinctExecutionArtifact {
     }
 }
 
+/// What `joy prove --succinct` produces: one relation's succinct proof
+/// (profile 1) when the program fits the relation compiler, otherwise a
+/// machine proof (profile 4: the uniform step relation, accumulated).
+#[derive(Clone, Debug)]
+pub enum SuccinctArtifact {
+    Relation(SuccinctExecutionArtifact),
+    Machine(Box<crate::MachineExecutionArtifact>),
+}
+
+impl SuccinctArtifact {
+    pub fn to_bytes(&self) -> Result<Vec<u8>, String> {
+        match self {
+            Self::Relation(a) => a.to_bytes(),
+            Self::Machine(a) => a.to_bytes(),
+        }
+    }
+}
+
 impl Warrior {
-    /// Produce a succinct public execution proof. Native execution is an
-    /// independent prover check, as for public v3.
+    /// `joy prove --succinct`: one relation if the program fits the
+    /// relation compiler, else the machine with accumulation.
+    pub fn prove_succinct(
+        &self,
+        bundle: &ProgramBundle,
+        input: &ProgramInput,
+        budget: u64,
+    ) -> Result<(SuccinctArtifact, ExecutionResult), String> {
+        match self.prove_succinct_execution(bundle, input, budget) {
+            Ok((a, r)) => Ok((SuccinctArtifact::Relation(a), r)),
+            Err(relation) => self
+                .prove_machine_execution(bundle, input, budget)
+                .map(|(a, r)| (SuccinctArtifact::Machine(Box::new(a)), r))
+                .map_err(|machine| format!("{relation}; machine: {machine}")),
+        }
+    }
+
+    /// Produce a succinct public execution proof of one relation. Native
+    /// execution is an independent prover check, as for public v3.
     pub fn prove_succinct_execution(
         &self,
         bundle: &ProgramBundle,

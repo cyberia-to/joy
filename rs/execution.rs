@@ -109,6 +109,16 @@ pub fn render_program(tokens: &[NounToken]) -> Result<String, String> {
 /// Bounded bracket parser shared semantically with nox's binary/n-ary syntax.
 /// Converts atoms canonically exactly as the native field-valued noun parser.
 pub fn parse_program(text: &str) -> Result<ExecutionNoun, String> {
+    parse_bounded(text, 128, 4096)
+}
+
+/// The same parser with the machine profile's bounds: nesting up to 4096,
+/// up to 2^20 nodes (zheng `machine::statement::MAX_TOKENS`).
+pub fn parse_machine_program(text: &str) -> Result<ExecutionNoun, String> {
+    parse_bounded(text, 4096, 1 << 20)
+}
+
+fn parse_bounded(text: &str, max_depth: usize, max_nodes: usize) -> Result<ExecutionNoun, String> {
     if text.len() > MAX_ASSEMBLY_BYTES {
         return Err("execution program is too large".into());
     }
@@ -120,7 +130,7 @@ pub fn parse_program(text: &str) -> Result<ExecutionNoun, String> {
         match b[pos] {
             c if c.is_ascii_whitespace() => pos += 1,
             b'[' => {
-                if frames.len() > 128 {
+                if frames.len() > max_depth {
                     return Err("formula depth limit".into());
                 }
                 frames.push(vec![]);
@@ -137,7 +147,7 @@ pub fn parse_program(text: &str) -> Result<ExecutionNoun, String> {
                 }
                 while let Some((head, hd)) = values.pop() {
                     depth = 1 + depth.max(hd);
-                    if depth > 128 {
+                    if depth > max_depth {
                         return Err("formula depth limit".into());
                     }
                     tail = ExecutionNoun::Pair(Box::new(head), Box::new(tail));
@@ -166,7 +176,7 @@ pub fn parse_program(text: &str) -> Result<ExecutionNoun, String> {
             }
             _ => return Err("invalid formula character".into()),
         }
-        if nodes > 4096 {
+        if nodes > max_nodes {
             return Err("formula node limit".into());
         }
     }
@@ -178,7 +188,10 @@ pub fn parse_program(text: &str) -> Result<ExecutionNoun, String> {
         return Err("program must contain exactly one noun".into());
     }
     let (noun, _) = values.pop().ok_or("empty program")?;
-    ExecutionStatement::encode_program(&noun)?;
+    if max_depth <= 128 {
+        // the relation statement's own bounds
+        ExecutionStatement::encode_program(&noun)?;
+    }
     Ok(noun)
 }
 

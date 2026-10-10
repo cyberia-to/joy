@@ -117,7 +117,7 @@ pub fn cmd_prove(args: ProveArgs) {
         )
     } else if args.succinct {
         warrior
-            .prove_succinct_execution(&bundle, &pi, args.budget)
+            .prove_succinct(&bundle, &pi, args.budget)
             .and_then(|(artifact, result)| artifact.to_bytes().map(|bytes| (result, bytes)))
     } else if private {
         warrior
@@ -146,7 +146,7 @@ pub fn cmd_prove(args: ProveArgs) {
     } else if args.state.is_some() {
         "authenticated public state execution"
     } else if args.succinct {
-        "succinct public execution (committed witness)"
+        "succinct public execution (committed witness; one relation or the accumulated machine)"
     } else {
         "public execution"
     };
