@@ -163,15 +163,6 @@ fn prove_works_on_a_minimal_bundle() {
 }
 
 #[test]
-fn prove_refuses_single_row_traces_honestly() {
-    // One trace row = no transition to fold. Honest refusal, not a fake.
-    let err = Warrior::new()
-        .prove_zheng(&bundle("[1 5]"), &input(&[], &[]))
-        .expect_err("single-row trace must be refused");
-    assert!(err.contains("row"), "unexpected error: {}", err);
-}
-
-#[test]
 fn verify_refuses_foreign_proof_formats() {
     let proof = trident::runtime::ProofData {
         claim: trident::field::proof::Claim {
@@ -188,29 +179,13 @@ fn verify_refuses_foreign_proof_formats() {
     assert!(err.contains("format"), "unexpected error: {}", err);
 }
 
-// ── zheng prove / verify ─────────────────────────────────────────────────────
+// ── public execution proofs (profile v3) ─────────────────────────────────────
 
 /// Compile the add.tri fixture through the real trident API.
 fn compiled_add() -> ProgramBundle {
     let mut options = trident::CompileOptions::for_profile("debug");
     options.target_config = joy_rs::nox_terrain();
     trident::compile_to_bundle(&fixture("add.tri"), &options).expect("compile failed")
-}
-
-#[test]
-fn prove_verify_roundtrip() {
-    let warrior = Warrior::new();
-    let b = compiled_add();
-    let (artifact, result) = warrior
-        .prove_zheng(&b, &input(&[3, 5], &[]))
-        .expect("prove failed");
-    assert_eq!(result.output, vec![24]);
-    assert_eq!(artifact.meta.output, vec![24]);
-    assert_eq!(artifact.format, joy_rs::PROOF_FORMAT);
-    assert!(
-        warrior.verify_zheng(&b, &artifact).expect("verify errored"),
-        "honest proof must verify"
-    );
 }
 
 #[test]
@@ -236,84 +211,6 @@ fn prove_verify_roundtrip_through_traits_and_disk() {
     loaded.verify().expect("execution verification failed");
 }
 
-#[test]
-fn tampered_proof_rejected() {
-    let warrior = Warrior::new();
-    let b = compiled_add();
-    let (artifact, _) = warrior
-        .prove_zheng(&b, &input(&[3, 5], &[]))
-        .expect("prove failed");
-
-    // Tamper a field inside the proof via the wire form.
-    let mut v: serde_json::Value =
-        serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
-    let ev = v["proof"]["universal"]["proof"]["eval_value"]
-        .as_u64()
-        .unwrap();
-    v["proof"]["universal"]["proof"]["eval_value"] = serde_json::Value::from(ev ^ 1);
-    let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
-    assert!(
-        !warrior.verify_zheng(&b, &tampered).expect("verify errored"),
-        "tampered proof must be rejected"
-    );
-}
-
-#[test]
-fn proof_for_a_different_program_rejected() {
-    let warrior = Warrior::new();
-    let b = compiled_add();
-    let (artifact, _) = warrior
-        .prove_zheng(&b, &input(&[3, 5], &[]))
-        .expect("prove failed");
-    // A different bundle: raw add-literals formula.
-    let other = bundle("[5 [[1 3] [1 5]]]");
-    assert!(
-        !warrior
-            .verify_zheng(&other, &artifact)
-            .expect("verify errored"),
-        "proof must bind to its program"
-    );
-}
-
-#[test]
-fn artifact_load_error_paths() {
-    // Missing file.
-    let missing = joy_rs::ProofArtifact::load(std::path::Path::new("/nonexistent/p.zheng.json"));
-    assert!(missing.is_err());
-
-    // Malformed JSON.
-    let dir = std::env::temp_dir().join("joy-proof-test");
-    std::fs::create_dir_all(&dir).unwrap();
-    let bad = dir.join("bad.zheng.json");
-    std::fs::write(&bad, b"{not json").unwrap();
-    assert!(joy_rs::ProofArtifact::load(&bad).is_err());
-
-    // Unknown format string.
-    let warrior = Warrior::new();
-    let b = compiled_add();
-    let (mut artifact, _) = warrior
-        .prove_zheng(&b, &input(&[3, 5], &[]))
-        .expect("prove failed");
-    artifact.format = "not-zheng".to_string();
-    let p = dir.join("wrongformat.zheng.json");
-    artifact.save(&p).unwrap();
-    let err = joy_rs::ProofArtifact::load(&p);
-    assert!(err.is_err(), "unknown format must be refused");
-}
-
-#[test]
-fn prove_refuses_look_rows_honestly() {
-    // A look formula (tag 17) has no bbg state wired: prove must refuse,
-    // not fabricate. NullCalls-style provider gives no look values, so the
-    // reduction itself errors — either way, no proof comes out.
-    let warrior = Warrior::new();
-    let b = bundle("[17 [[1 0] [1 2]]]");
-    let r = warrior.prove_zheng(&b, &input(&[], &[]));
-    assert!(r.is_err(), "no proof without a bbg state");
-}
-
-// ── hash blocks (tag 15) ─────────────────────────────────────────────────────
-
 /// Compile the hash.tri fixture (trident's hash builtin -> pattern 15).
 fn compiled_hash() -> ProgramBundle {
     let mut options = trident::CompileOptions::for_profile("debug");
@@ -322,44 +219,52 @@ fn compiled_hash() -> ProgramBundle {
 }
 
 #[test]
-fn hash_program_proves_and_verifies() {
+fn proof_for_a_different_program_rejected() {
     let warrior = Warrior::new();
-    let b = compiled_hash();
-    let (artifact, result) = warrior
-        .prove_zheng(&b, &input(&[42], &[]))
-        .expect("hash prove failed");
-    assert_eq!(result.output.len(), 4, "hash returns a 4-limb digest");
-    assert!(
-        warrior.verify_zheng(&b, &artifact).expect("verify errored"),
-        "hash proof must verify"
-    );
+    let pd = warrior
+        .prove(&compiled_add(), &input(&[3, 5], &[]))
+        .unwrap();
+    let artifact = joy_rs::ExecutionArtifact::from_bytes(&pd.proof_bytes).unwrap();
+    assert!(artifact.matches_program(&compiled_add().assembly).unwrap());
+    assert!(!artifact.matches_program("[5 [[1 3] [1 5]]]").unwrap());
 }
 
 #[test]
-fn tampered_hash_group_rejected() {
+fn output_claim_is_bound_by_the_certificate() {
+    let b = compiled_add();
     let warrior = Warrior::new();
-    let b = compiled_hash();
-    let (artifact, _) = warrior
-        .prove_zheng(&b, &input(&[42], &[]))
-        .expect("hash prove failed");
-
-    // Tamper the witness commitment of the binding group via the wire
-    // form (the rate itself is not in the artifact — it is bound through
-    // the folded hash-binding steps, so any group tamper breaks the
-    // cross-group linkage digest).
-    let mut v: serde_json::Value =
-        serde_json::from_str(&serde_json::to_string(&artifact).unwrap()).unwrap();
-    let wc = &mut v["proof"]["binding"]["accumulator"]["witness_commitment"];
-    let b0 = wc[0].as_u64().unwrap();
-    wc[0] = serde_json::Value::from(b0 ^ 1);
-    let tampered: joy_rs::ProofArtifact = serde_json::from_value(v).unwrap();
-    assert!(
-        !warrior.verify_zheng(&b, &tampered).expect("verify errored"),
-        "tampered hash proof must be rejected"
-    );
+    let mut pd = warrior.prove(&b, &input(&[3, 5], &[])).unwrap();
+    assert_eq!(pd.claim.public_output, vec![24]);
+    pd.claim.public_output = vec![999];
+    assert!(!warrior.verify(&pd).unwrap());
 }
 
-// State acceptance uses the authenticated execution protocol, not the legacy fold.
+#[test]
+fn hash_program_proves_and_verifies() {
+    let warrior = Warrior::new();
+    let b = compiled_hash();
+    let pd = warrior
+        .prove(&b, &input(&[42], &[]))
+        .expect("hash prove failed");
+    assert_eq!(pd.format, joy_rs::EXECUTION_FORMAT);
+    assert_eq!(
+        pd.claim.public_output.len(),
+        4,
+        "hash returns a 4-limb digest"
+    );
+    assert_eq!(
+        pd.claim.public_output,
+        warrior.run(&b, &input(&[42], &[])).unwrap().output
+    );
+    assert!(warrior.verify(&pd).unwrap(), "hash proof must verify");
+    for limb in 0..4 {
+        let mut bad = pd.clone();
+        bad.claim.public_output[limb] ^= 1;
+        assert!(!warrior.verify(&bad).unwrap(), "digest limb {limb}");
+    }
+}
+
+// State acceptance uses the authenticated execution protocol.
 fn look_assembly(root: &[u8; 32], ns: u64, key: u64) -> String {
     let l: Vec<_> = root
         .chunks_exact(8)
@@ -449,49 +354,4 @@ fn look_artifact_tampered_binding_and_table_rejected() {
         }
         assert!(bad.verify().is_err(), "mutation {which}");
     }
-}
-
-#[test]
-fn artifact_is_self_contained_and_binds_its_assembly() {
-    let warrior = Warrior::new();
-    let b = compiled_add();
-    let (mut artifact, _) = warrior
-        .prove_zheng(&b, &input(&[3, 5], &[]))
-        .expect("prove failed");
-    assert_eq!(
-        artifact.meta.assembly_text().unwrap().as_deref(),
-        Some(b.assembly.as_str())
-    );
-    assert!(
-        artifact.meta.assembly.is_none(),
-        "assembly travels deflated"
-    );
-    assert!(
-        warrior.verify_artifact(&artifact).expect("verify errored"),
-        "self-contained artifact must verify without its bundle"
-    );
-    // a swapped assembly no longer matches the proven program_hash
-    artifact.meta.set_assembly("[1 5]");
-    assert!(
-        !warrior.verify_artifact(&artifact).expect("verify errored"),
-        "artifact with a different assembly must reject"
-    );
-    // no assembly at all (pre-0.2.0 artifact) is an explicit error, not a pass
-    artifact.meta.assembly = None;
-    artifact.meta.assembly_deflate = None;
-    assert!(warrior.verify_artifact(&artifact).is_err());
-}
-
-#[test]
-fn metadata_cannot_authorize_an_output_claim() {
-    let b = compiled_add();
-    let warrior = Warrior::new();
-    let (mut artifact, _) = warrior.prove_zheng(&b, &input(&[3, 5], &[])).unwrap();
-    artifact.meta.output = vec![999];
-    // This API verifies only the trace statement; metadata is unverified.
-    assert!(warrior.verify_artifact(&artifact).unwrap());
-    assert!(joy_rs::proof::require_statement_only(Some(&artifact.meta.output)).is_err());
-    let mut pd = warrior.prove(&b, &input(&[3, 5], &[])).unwrap();
-    pd.claim.public_output = vec![999];
-    assert!(!warrior.verify(&pd).unwrap());
 }

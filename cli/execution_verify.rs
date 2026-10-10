@@ -1,4 +1,4 @@
-//! Public execution verification precedes legacy trace-statement compatibility.
+//! Public execution verification: profile v3, and retired v2 read for one release.
 use crate::{load_bundle, verify::VerifyArgs};
 use joy_rs::{execution::LegacyExecutionArtifact, ExecutionArtifact, SuccinctExecutionArtifact};
 

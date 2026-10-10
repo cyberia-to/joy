@@ -1,7 +1,5 @@
 #![cfg(unix)]
-use joy_rs::{
-    state_execution::load_certificate, ExecutionArtifact, ProofArtifact, StateExecutionArtifact,
-};
+use joy_rs::{state_execution::load_certificate, ExecutionArtifact, StateExecutionArtifact};
 use std::{
     fs,
     path::PathBuf,
@@ -84,7 +82,6 @@ fn verification_rejects_streams_links_and_oversize_files_but_keeps_real_proof_ro
         assert!(!StateExecutionArtifact::has_header(path));
         assert!(ExecutionArtifact::load(path).is_err());
         assert!(StateExecutionArtifact::load(path).is_err());
-        assert!(ProofArtifact::load(path).is_err());
         assert!(load_certificate(path).is_err());
     }
     let proved = f.run(&["prove", "main.tri", "--output", "proof.zheng"]);

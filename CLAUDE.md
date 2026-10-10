@@ -33,8 +33,8 @@ rs/             CPU backend (crate: joy-rs)
   lib.rs        pub mod formula/target/warrior
   formula.rs    bracket text <-> nox Reduction arena; subject builder
   target.rs     canonical nox TerrainConfig + versioned warrior package
-  warrior.rs    Warrior + SecretProvider over nox::reduce; prove/verify
-  proof.rs      ProofArtifact (zheng wire form) + program_hash
+  warrior.rs    Warrior + SecretProvider over nox::reduce; prove/verify (traits.rs)
+  proof.rs      program_hash — the program identity proofs bind
   tests/
     integration.rs   end-to-end bundle -> output tests
     fixtures/        add.tri + hand-built add.bundle.json
@@ -89,16 +89,16 @@ Its Trident dependencies disable default features. Never introduce a foreign
 backend fallback. `--zk` and nonempty proving secrets select native Zheng
 private proving. Explicit public proof APIs reject secrets. Successful execution
 and proving consume exactly the active witness stream.
-Retired private envelopes are explicitly refused, including legacy mode.
+Retired private envelopes are explicitly refused.
 
 Execution proofs verify without re-executing nox. Unsupported dynamic
 continuations/shapes and resource excess fail explicitly. See
 `targets/nox/capabilities.json` and Zheng's execution specification for limits.
 
-Legacy `prove_zheng`/`verify_zheng`/`verify_artifact` statement APIs do not prove
-execution/output. CLI inspection requires `--legacy-trace-statement` and
-refuses IO/state/secret constraints. Legacy recursive TensorMerkle opening
-requests remain unsupported; never downgrade a rejected execution proof.
+The legacy trace-statement artifact (`prove_zheng`/`verify_zheng`/
+`verify_artifact`, `--legacy-trace-statement`) is removed: it authenticated
+nothing. Joy builds zheng without `legacy`; never enable it. Never downgrade a
+rejected execution proof.
 
 Live deployment, node/database synchronization and a private state database
 remain unavailable. `cyber` is a compatible nox alias, not a live network
