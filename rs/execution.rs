@@ -3,10 +3,18 @@ use crate::Warrior;
 use serde::{Deserialize, Serialize};
 use std::{fs, path::Path};
 use trident::runtime::{ExecutionResult, ProgramBundle, ProgramInput, ProofData, Runner};
-use zheng::execution::{DirectProof, ExecutionNoun, ExecutionStatement};
+pub use zheng::execution::NounToken;
+use zheng::execution::{
+    certificate::FORMAT as CERTIFICATE_FORMAT, Certificate, DirectProof, ExecutionNoun,
+    ExecutionStatement,
+};
 
-pub const EXECUTION_FORMAT: &str = "zheng-nox-public-execution-v2";
-const MAGIC: &[u8] = b"JOYEXEC2";
+/// Profile v3: the statement and the free witness positions, checked exactly.
+pub const EXECUTION_FORMAT: &str = CERTIFICATE_FORMAT;
+const MAGIC: &[u8] = b"JOYEXEC3";
+/// Profile v2 (Spartan + PublicTensor), read for verification for one release.
+pub const LEGACY_EXECUTION_FORMAT: &str = "zheng-nox-public-execution-v2";
+const LEGACY_MAGIC: &[u8] = b"JOYEXEC2";
 const MAX_ARTIFACT_BYTES: usize = 32 * 1024 * 1024;
 const MAX_ASSEMBLY_BYTES: usize = 256 * 1024;
 
@@ -22,9 +30,79 @@ pub fn has_unsupported_private_header(path: &Path) -> bool {
 pub struct ExecutionArtifact {
     pub format: String,
     pub program: String,
+    pub statement: ExecutionStatement,
+    pub certificate: Certificate,
+}
+
+/// The retired v2 layout; verified, never produced.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct LegacyExecutionArtifact {
+    pub format: String,
+    pub program: String,
     pub assembly: String,
     pub statement: ExecutionStatement,
     pub proof: DirectProof,
+}
+
+impl LegacyExecutionArtifact {
+    pub fn has_header(path: &Path) -> bool {
+        crate::file_input::has_header(path, LEGACY_MAGIC, MAX_ARTIFACT_BYTES)
+    }
+    pub fn load(path: &Path) -> Result<Self, String> {
+        let bytes = crate::file_input::read(path, MAX_ARTIFACT_BYTES)?;
+        let payload = bytes
+            .strip_prefix(LEGACY_MAGIC)
+            .ok_or("not a v2 execution artifact")?;
+        let (artifact, rest): (Self, &[u8]) =
+            postcard::take_from_bytes(payload).map_err(|e| e.to_string())?;
+        if !rest.is_empty() || artifact.format != LEGACY_EXECUTION_FORMAT {
+            return Err("invalid v2 execution artifact format".into());
+        }
+        Ok(artifact)
+    }
+    pub fn verify(&self) -> Result<(), String> {
+        let program = parse_program(&self.assembly)?;
+        if ExecutionStatement::encode_program(&program)? != self.statement.program {
+            return Err("assembly differs from execution statement".into());
+        }
+        zheng::execution::verify_execution(&self.statement, &self.proof)
+    }
+}
+
+/// Canonical bracket text of a prefix-encoded program: `[a b]` per pair.
+pub fn render_program(tokens: &[NounToken]) -> Result<String, String> {
+    fn go(
+        tokens: &[NounToken],
+        pos: &mut usize,
+        out: &mut String,
+        depth: usize,
+    ) -> Result<(), String> {
+        if depth > 129 {
+            return Err("formula depth limit".into());
+        }
+        match tokens.get(*pos).ok_or("truncated program")? {
+            NounToken::Atom(v) => {
+                *pos += 1;
+                out.push_str(&v.to_string());
+            }
+            NounToken::Pair => {
+                *pos += 1;
+                out.push('[');
+                go(tokens, pos, out, depth + 1)?;
+                out.push(' ');
+                go(tokens, pos, out, depth + 1)?;
+                out.push(']');
+            }
+        }
+        Ok(())
+    }
+    let mut out = String::new();
+    let mut pos = 0;
+    go(tokens, &mut pos, &mut out, 0)?;
+    if pos != tokens.len() {
+        return Err("trailing program tokens".into());
+    }
+    Ok(out)
 }
 
 /// Bounded bracket parser shared semantically with nox's binary/n-ary syntax.
@@ -143,15 +221,15 @@ impl ExecutionArtifact {
                 == self.statement.program,
         )
     }
+    /// The program as canonical bracket text, rendered from the statement.
+    pub fn assembly(&self) -> Result<String, String> {
+        render_program(&self.statement.program)
+    }
     pub fn verify(&self) -> Result<(), String> {
         if self.format != EXECUTION_FORMAT || self.program.len() > 4096 {
             return Err("invalid execution artifact metadata".into());
         }
-        let program = parse_program(&self.assembly)?;
-        if ExecutionStatement::encode_program(&program)? != self.statement.program {
-            return Err("assembly differs from execution statement".into());
-        }
-        zheng::execution::verify_execution(&self.statement, &self.proof)
+        zheng::execution::verify_certificate(&self.statement, &self.certificate)
     }
     pub fn claim_matches(
         &self,
@@ -166,7 +244,7 @@ impl ExecutionArtifact {
     pub fn proof_data(&self) -> Result<ProofData, String> {
         Ok(ProofData {
             claim: trident::field::proof::Claim {
-                program_hash: crate::program_hash(&self.assembly)
+                program_hash: crate::program_hash(&self.assembly()?)
                     .chunks_exact(8)
                     .map(|c| {
                         let mut a = [0; 8];
@@ -202,8 +280,8 @@ impl Warrior {
             );
         }
         let program = parse_program(&bundle.assembly)?;
-        let (statement, proof) =
-            zheng::execution::prove_execution(&program, &input.public, budget)?;
+        let (statement, certificate) =
+            zheng::execution::certify_execution(&program, &input.public, budget)?;
         let native = Warrior::with_budget(budget).run(bundle, input)?;
         if native.output != statement.public_output || native.cycle_count != statement.cycles {
             return Err("execution relation disagrees with native nox".into());
@@ -211,9 +289,8 @@ impl Warrior {
         let artifact = ExecutionArtifact {
             format: EXECUTION_FORMAT.into(),
             program: bundle.name.clone(),
-            assembly: bundle.assembly.clone(),
             statement,
-            proof,
+            certificate,
         };
         Ok((artifact, native))
     }
