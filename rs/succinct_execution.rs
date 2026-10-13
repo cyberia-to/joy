@@ -92,11 +92,14 @@ impl SuccinctExecutionArtifact {
 
 /// What `joy prove --succinct` produces: one relation's succinct proof
 /// (profile 1) when the program fits the relation compiler, otherwise a
-/// machine proof (profile 4: the uniform step relation, accumulated).
+/// recursive proof (profile 5: IVC over the nox machine, constant size) or,
+/// on request, a machine proof (profile 4: the uniform step relation,
+/// accumulated, growing with the run).
 #[derive(Clone, Debug)]
 pub enum SuccinctArtifact {
     Relation(SuccinctExecutionArtifact),
     Machine(Box<crate::MachineExecutionArtifact>),
+    Recursive(Box<crate::RecursiveExecutionArtifact>),
 }
 
 impl SuccinctArtifact {
@@ -104,25 +107,56 @@ impl SuccinctArtifact {
         match self {
             Self::Relation(a) => a.to_bytes(),
             Self::Machine(a) => a.to_bytes(),
+            Self::Recursive(a) => a.to_bytes(),
         }
     }
 }
 
+/// How `joy prove --succinct` proves a program beyond one relation.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum Fallback {
+    /// Profile 5, the default: constant size in the run's length.
+    #[default]
+    Recursive,
+    /// Profile 4 (`--machine`): smaller and faster to prove for runs of
+    /// one or two 2^14-row segments, growing ~96 KB per segment.
+    Machine,
+}
+
 impl Warrior {
     /// `joy prove --succinct`: one relation if the program fits the
-    /// relation compiler, else the machine with accumulation.
+    /// relation compiler, else a recursive proof.
     pub fn prove_succinct(
         &self,
         bundle: &ProgramBundle,
         input: &ProgramInput,
         budget: u64,
     ) -> Result<(SuccinctArtifact, ExecutionResult), String> {
-        match self.prove_succinct_execution(bundle, input, budget) {
-            Ok((a, r)) => Ok((SuccinctArtifact::Relation(a), r)),
-            Err(relation) => self
+        self.prove_succinct_with(bundle, input, budget, Fallback::Recursive)
+    }
+
+    /// `joy prove --succinct` with the profile for programs beyond one
+    /// relation chosen by `fallback`.
+    pub fn prove_succinct_with(
+        &self,
+        bundle: &ProgramBundle,
+        input: &ProgramInput,
+        budget: u64,
+        fallback: Fallback,
+    ) -> Result<(SuccinctArtifact, ExecutionResult), String> {
+        let relation = match self.prove_succinct_execution(bundle, input, budget) {
+            Ok((a, r)) => return Ok((SuccinctArtifact::Relation(a), r)),
+            Err(relation) => relation,
+        };
+        match fallback {
+            Fallback::Recursive => self
+                .prove_recursive_execution(bundle, input, budget)
+                .map(|(a, r)| (SuccinctArtifact::Recursive(Box::new(a)), r))
+                .map_err(|e| format!("{relation}; recursive: {e}")),
+            Fallback::Machine => self
                 .prove_machine_execution(bundle, input, budget)
                 .map(|(a, r)| (SuccinctArtifact::Machine(Box::new(a)), r))
-                .map_err(|machine| format!("{relation}; machine: {machine}")),
+                .map_err(|e| format!("{relation}; machine: {e}")),
         }
     }
 

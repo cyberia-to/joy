@@ -74,6 +74,10 @@ Proof formats and content headers:
   `joy prove --succinct`): the public v3 statement with the witness committed
   (WHIR) and opened once; Spartan over Fp3; ≥ 128 proven bits by policy. Not
   zero-knowledge; stateless only.
+- `zheng-nox-recursive-v1` (zheng envelope `ZHENGPF1`, profile 5): what
+  `--succinct` produces beyond the one-relation compiler — IVC over the nox
+  machine, constant size; `--succinct --machine` keeps
+  `zheng-nox-machine-v1` (profile 4, accumulated, grows with the run).
 - `joy-nox-public-state-execution-v3` (`JOYST002`: BBG certificate + zheng
   envelope profile 3): actual compiled state reads, all namespace/key/value/root
   coordinates bound to verified public BBG tables. `JOYST001` (v1) is verified,
@@ -142,7 +146,7 @@ in `cyber/specs/worker.md`; do not duplicate node policy in Joy.
 ```
 joy build  <file.tri | project> [--profile NAME] [--emit bundle|nox] [-o PATH] [--force] [--format json-v1]
 joy run    <bundle.json | file.tri | file.nox> [--input-values 1,2] [--secret 3] [--budget N]
-joy prove  <input> [--input-file witness.json] [--zk | --succinct] [--output p.zheng] [--force]
+joy prove  <input> [--input-file witness.json] [--zk | --succinct [--machine]] [--output p.zheng] [--force]
 joy batch  run|prove|verify <inputs...> [--max-parallel N]
 joy test   <source | project> [--profile NAME]
 joy bench  <input> [--input-file witness.json] [--claim VALUES] [--repeat N]

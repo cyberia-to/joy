@@ -46,7 +46,7 @@ joy run-artifact PROGRAM --input INPUT --output OUTPUT [--emit result|program] [
 joy prove-artifact PROGRAM --input INPUT --output CERTIFICATE [LIMITS] [--force]
 joy verify-artifact PROGRAM --input INPUT --proof CERTIFICATE [--output OUTPUT] [--emit result|program] [LIMITS] [--force]
 joy pack-job --compiler PROGRAM --manifest PACKAGE.json --output JOB [LIMITS] [--force]
-joy prove INPUT [COMMON] [--zk [--mith] | --succinct] [--output PATH] [--force]
+joy prove INPUT [COMMON] [--zk [--mith] | --succinct [--machine]] [--output PATH] [--force]
 joy batch run|prove|verify INPUT... [--max-parallel N]
 joy test SOURCE_OR_PROJECT [--target nox|cyber] [--profile NAME]
 joy bench INPUT [--input-file PATH | --input-values WORDS] [--claim WORDS] [--repeat N]
@@ -135,13 +135,19 @@ inputs, `--zk` and `--state`. Sizes and times: zheng
 
 When the program exceeds the one-relation compiler (nesting beyond 128 or
 more than 4096 formula nodes, or more rows than it admits), `--succinct`
-falls back to `zheng-nox-machine-v1`: the `ZHENGPF1` envelope profile 4, a
-nox run of any length proven by zheng's uniform step relation, its
+proves it recursively: `zheng-nox-recursive-v1`, the `ZHENGPF1` envelope
+profile 5 — a nox run of any length proven by incrementally verifiable
+computation over zheng's nox machine (each 2^15-row step's circuit verifies
+the previous step; the proof is the last step, its accumulation step and
+one WHIR decider), constant in the run's length (zheng `specs/recursion.md`).
+`--succinct --machine` selects `zheng-nox-machine-v1` instead: the
+`ZHENGPF1` envelope profile 4, the uniform step relation with its
 committed words accumulated and decided by one WHIR opening (zheng
-`specs/machine.md`, `specs/accumulation.md`). The statement binds the whole
-output noun; `joy verify` prints its atoms. Same policy: ≥ 128 proven bits,
-not zero-knowledge, no secrets or state. Sizes and times: zheng
-`audit/accumulation-2026-10.md`.
+`specs/machine.md`, `specs/accumulation.md`), smaller and faster to prove
+for short runs but growing with every segment. Both statements bind the
+whole output noun; `joy verify` accepts either and prints its atoms. Same
+policy: ≥ 128 proven bits, not zero-knowledge, no secrets or state. The
+choice and its measurements: `audit/recursive-profile-2026-10.md`.
 
 Public state requests use `joy-nox-public-state-execution-v3` (`JOYST002`: the
 BBG certificate and a zheng state-public envelope, profile 3), with namespace,
