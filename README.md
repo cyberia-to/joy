@@ -56,7 +56,12 @@ one WHIR decider), constant in the run's length (zheng `specs/recursion.md`).
 committed words accumulated and decided by one WHIR opening (zheng
 `specs/machine.md`, `specs/accumulation.md`), smaller and faster to prove
 for short runs but growing with every segment. All three statements bind
-the whole output noun; `joy verify` accepts any of them and prints its
+the whole output noun and bind the program by its hemera digest (zheng
+`machine::program_digest`), not its tokens: the envelope stays constant in
+the program's size, and the verifier is given the program —
+`joy verify PROGRAM --proof ARTIFACT`; another program's artifact is
+refused before its proof is parsed, and `joy verify ARTIFACT` alone
+refuses these profiles with that command. `joy verify` prints the output
 atoms. Same policy: ≥ 128 proven bits, not zero-knowledge, no secrets or
 state. The choice and its measurements:
 `audit/recursive-profile-2026-10.md`, `audit/wrapped-profile-2026-10.md`.
