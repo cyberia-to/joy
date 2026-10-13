@@ -67,16 +67,19 @@ fn a_program_beyond_one_relation_proves_with_the_machine() {
     assert_eq!(bytes[10], 4, "profile byte: machine");
     let artifact = MachineExecutionArtifact::from_bytes(&bytes).unwrap();
     assert_eq!(artifact.output().unwrap(), vec![expected.parse::<u64>().unwrap()]);
-    artifact.verify().unwrap();
 
-    let out = f.ok(&["verify", "m.zheng", "--claim", &expected, "--input-values", "3"]);
+    let out = f.ok(&["verify", "loop.tri", "--proof", "m.zheng", "--claim", &expected, "--input-values", "3"]);
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(stdout.contains("machine public execution"), "{stdout}");
     f.ok(&["verify", "loop.tri", "--proof", "m.zheng", "--claim", &expected]);
+    // the proof binds its program by digest: no program, no verification
+    let alone = f.run(&["verify", "m.zheng"]);
+    assert!(!alone.status.success());
+    assert!(String::from_utf8_lossy(&alone.stderr).contains("binds its program by digest"));
     for args in [
-        vec!["verify", "m.zheng", "--claim", "1"],
-        vec!["verify", "m.zheng", "--input-values", "4"],
-        vec!["verify", "m.zheng", "--budget", "1"],
+        vec!["verify", "loop.tri", "--proof", "m.zheng", "--claim", "1"],
+        vec!["verify", "loop.tri", "--proof", "m.zheng", "--input-values", "4"],
+        vec!["verify", "loop.tri", "--proof", "m.zheng", "--budget", "1"],
         vec!["verify", "other.tri", "--proof", "m.zheng"],
     ] {
         assert!(!f.run(&args).status.success(), "{args:?}");
@@ -85,5 +88,5 @@ fn a_program_beyond_one_relation_proves_with_the_machine() {
     let i = bytes.len() / 2;
     bad[i] ^= 1;
     fs::write(f.0.join("bad.zheng"), &bad).unwrap();
-    assert!(!f.run(&["verify", "bad.zheng"]).status.success());
+    assert!(!f.run(&["verify", "loop.tri", "--proof", "bad.zheng"]).status.success());
 }

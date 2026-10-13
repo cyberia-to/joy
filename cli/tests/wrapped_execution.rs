@@ -63,15 +63,19 @@ fn a_program_beyond_one_relation_proves_wrapped() {
     assert_eq!(bytes[10], 6, "profile byte: wrapped");
     assert!(bytes.len() <= 64 * 1024, "{} B", bytes.len());
 
-    let out = f.ok(&["verify", "w.zheng", "--claim", &expected, "--input-values", "3"]);
+    let out = f.ok(&["verify", "loop.tri", "--proof", "w.zheng", "--claim", &expected, "--input-values", "3"]);
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(stdout.contains("wrapped public execution"), "{stdout}");
     assert!(String::from_utf8_lossy(&out.stderr).contains("keys: "), "keys from the cache");
     f.ok(&["verify", "loop.tri", "--proof", "w.zheng", "--claim", &expected]);
+    // the proof binds its program by digest: no program, no verification
+    let alone = f.run(&["verify", "w.zheng"]);
+    assert!(!alone.status.success());
+    assert!(String::from_utf8_lossy(&alone.stderr).contains("binds its program by digest"));
     for args in [
-        vec!["verify", "w.zheng", "--claim", "1"],
-        vec!["verify", "w.zheng", "--input-values", "4"],
-        vec!["verify", "w.zheng", "--budget", "1"],
+        vec!["verify", "loop.tri", "--proof", "w.zheng", "--claim", "1"],
+        vec!["verify", "loop.tri", "--proof", "w.zheng", "--input-values", "4"],
+        vec!["verify", "loop.tri", "--proof", "w.zheng", "--budget", "1"],
         vec!["verify", "other.tri", "--proof", "w.zheng"],
     ] {
         assert!(!f.run(&args).status.success(), "{args:?}");
@@ -80,15 +84,14 @@ fn a_program_beyond_one_relation_proves_wrapped() {
         let mut bad = bytes.clone();
         bad[i] ^= 1;
         fs::write(f.0.join("bad.zheng"), &bad).unwrap();
-        assert!(!f.run(&["verify", "bad.zheng"]).status.success(), "byte {i}");
+        assert!(!f.run(&["verify", "loop.tri", "--proof", "bad.zheng"]).status.success(), "byte {i}");
     }
     let mut longer = bytes.clone();
     longer.push(0);
     fs::write(f.0.join("long.zheng"), &longer).unwrap();
-    assert!(!f.run(&["verify", "long.zheng"]).status.success());
-    // in-process: canonical, verifies
+    assert!(!f.run(&["verify", "loop.tri", "--proof", "long.zheng"]).status.success());
+    // in-process: canonical
     let artifact = WrappedExecutionArtifact::from_bytes(&bytes).unwrap();
     assert_eq!(artifact.output().unwrap(), vec![expected.parse::<u64>().unwrap()]);
     assert_eq!(artifact.to_bytes().unwrap(), bytes, "canonical");
-    artifact.verify().unwrap();
 }

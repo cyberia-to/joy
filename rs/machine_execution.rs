@@ -11,7 +11,7 @@ use std::{fs, path::Path};
 use trident::runtime::{ExecutionResult, ProgramBundle, ProgramInput, Runner};
 use zheng::envelope::{Envelope, Profile, MAGIC, VERSION};
 use zheng::execution::ExecutionNoun;
-use zheng::machine::{self, MachineProof, MachineStatement};
+use zheng::machine::{self, MachineProof, MachinePublic};
 
 /// Identifies the machine profile.
 pub const MACHINE_EXECUTION_FORMAT: &str = "zheng-nox-machine-v1";
@@ -21,7 +21,7 @@ const MAX_ARTIFACT_BYTES: usize = 256 * 1024 * 1024;
 #[derive(Clone, Debug)]
 pub struct MachineExecutionArtifact {
     pub params: zheng::execution::succinct::WhirParams,
-    pub statement: MachineStatement,
+    pub statement: MachinePublic,
     pub proof: MachineProof,
 }
 
@@ -58,10 +58,20 @@ impl MachineExecutionArtifact {
         Ok(bytes)
     }
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, String> {
+        Self::from_bytes_with(bytes, None)
+    }
+    fn from_bytes_with(bytes: &[u8], program: Option<&[zheng::execution::NounToken]>) -> Result<Self, String> {
         if bytes.len() > MAX_ARTIFACT_BYTES {
             return Err("machine artifact size limit".into());
         }
-        match Envelope::from_bytes(bytes).map_err(|e| e.to_string())? {
+        let envelope = match program {
+            Some(p) => Envelope::from_bytes_for(bytes, p),
+            None => Envelope::from_bytes(bytes),
+        };
+        match envelope.map_err(|e| match e {
+            zheng::envelope::EnvelopeError::ProgramMismatch => "execution proof is for another program".to_string(),
+            e => e.to_string(),
+        })? {
             Envelope::Machine {
                 params,
                 statement,
@@ -77,6 +87,13 @@ impl MachineExecutionArtifact {
     pub fn load(path: &Path) -> Result<Self, String> {
         Self::from_bytes(&crate::file_input::read(path, MAX_ARTIFACT_BYTES)?)
     }
+    /// Load the artifact of the program `assembly`: another program's
+    /// envelope is refused before its proof is parsed (zheng
+    /// `Envelope::from_bytes_for`).
+    pub fn load_for(path: &Path, assembly: &str) -> Result<Self, String> {
+        let program = machine::statement::tokens(&parse_program(assembly)?);
+        Self::from_bytes_with(&crate::file_input::read(path, MAX_ARTIFACT_BYTES)?, Some(&program))
+    }
     pub fn save(&self, path: &Path) -> Result<usize, String> {
         let bytes = self.to_bytes()?;
         fs::write(path, &bytes).map_err(|e| e.to_string())?;
@@ -89,11 +106,12 @@ impl MachineExecutionArtifact {
         Ok(out)
     }
     pub fn matches_program(&self, assembly: &str) -> Result<bool, String> {
-        Ok(machine::statement::tokens(&parse_program(assembly)?) == self.statement.program)
+        Ok(machine::program_digest(&machine::statement::tokens(&parse_program(assembly)?)) == self.statement.program)
     }
     /// Derive the relation from the statement and verify the proof.
-    pub fn verify(&self) -> Result<(), String> {
-        self.envelope().verify(None)
+    pub fn verify(&self, assembly: &str) -> Result<(), String> {
+        let program = machine::statement::tokens(&parse_program(assembly)?);
+        self.envelope().verify_program(&program, None)
     }
     pub fn claim_matches(&self, claim: Option<&[u64]>, inputs: Option<&[u64]>, budget: u64) -> bool {
         claim.is_none_or(|c| self.output().is_ok_and(|o| o == c))
@@ -122,7 +140,7 @@ impl Warrior {
         let (statement, proof) = machine::prove(&program, &input.public, budget, &params)?;
         let artifact = MachineExecutionArtifact {
             params,
-            statement,
+            statement: statement.public(),
             proof,
         };
         let native = Warrior::with_budget(budget).run(bundle, input)?;
