@@ -61,6 +61,10 @@ fn a_program_beyond_one_relation_proves_wrapped() {
     let bytes = fs::read(f.0.join("w.zheng")).unwrap();
     assert_eq!(&bytes[..8], b"ZHENGPF1");
     assert_eq!(bytes[10], 6, "profile byte: wrapped");
+    // the final proof is under zheng's hard gate over every transcript; the
+    // envelope (proof + this fixture's statement) under 64 KiB
+    let artifact = WrappedExecutionArtifact::from_bytes(&bytes).unwrap();
+    assert!(artifact.proof_len().unwrap() <= joy_rs::wrapped_execution::MAX_FINAL_PROOF_BYTES);
     assert!(bytes.len() <= 64 * 1024, "{} B", bytes.len());
 
     let out = f.ok(&["verify", "loop.tri", "--proof", "w.zheng", "--claim", &expected, "--input-values", "3"]);

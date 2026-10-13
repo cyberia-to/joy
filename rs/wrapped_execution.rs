@@ -20,6 +20,9 @@ use zheng::recursion::wrap::FinalProof;
 pub const WRAPPED_EXECUTION_FORMAT: &str = "zheng-nox-wrapped-v1";
 const MAX_ARTIFACT_BYTES: usize = 256 * 1024;
 
+/// zheng's hard gate on a final proof's bytes (64 KiB, by key).
+pub const MAX_FINAL_PROOF_BYTES: usize = zheng::recursion::wrap::MAX_FINAL_BYTES;
+
 /// A wrapped execution proof: exactly a zheng profile-6 envelope.
 #[derive(Clone, Debug)]
 pub struct WrappedExecutionArtifact {
@@ -96,6 +99,12 @@ impl WrappedExecutionArtifact {
         Ok(bytes.len())
     }
     /// The output noun's atoms, left to right (joy's output convention).
+    /// The final proof's length (bounded by [`MAX_FINAL_PROOF_BYTES`] over
+    /// every transcript, zheng's
+    /// `wrap::max_proof_bytes`).
+    pub fn proof_len(&self) -> Result<usize, String> {
+        zheng::envelope::wrapped::proof_bytes(&self.proof).map(|b| b.len())
+    }
     pub fn output(&self) -> Result<Vec<u64>, String> {
         let mut out = Vec::new();
         leaves(&machine::statement::parse(&self.statement.output)?, &mut out);
