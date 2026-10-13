@@ -46,7 +46,7 @@ joy run-artifact PROGRAM --input INPUT --output OUTPUT [--emit result|program] [
 joy prove-artifact PROGRAM --input INPUT --output CERTIFICATE [LIMITS] [--force]
 joy verify-artifact PROGRAM --input INPUT --proof CERTIFICATE [--output OUTPUT] [--emit result|program] [LIMITS] [--force]
 joy pack-job --compiler PROGRAM --manifest PACKAGE.json --output JOB [LIMITS] [--force]
-joy prove INPUT [COMMON] [--zk [--mith] | --succinct [--machine | --wrap | --no-wrap]] [--output PATH] [--force]
+joy prove INPUT [COMMON] [--zk [--mith] | --succinct [--machine | --wrap | --no-wrap]] [--backend auto|cpu|metal|webgpu] [--output PATH] [--force]
 joy batch run|prove|verify INPUT... [--max-parallel N]
 joy test SOURCE_OR_PROJECT [--target nox|cyber] [--profile NAME]
 joy bench INPUT [--input-file PATH | --input-values WORDS] [--claim WORDS] [--repeat N]
@@ -164,6 +164,16 @@ refuses these profiles with that command. `joy verify` prints the output
 atoms. Same policy: ≥ 128 proven bits, not zero-knowledge, no secrets or
 state. The choice and its measurements:
 `audit/recursive-profile-2026-10.md`, `audit/wrapped-profile-2026-10.md`.
+
+`joy prove --backend` (or `JOY_BACKEND`) picks where the prover's bulk
+kernels run — hemera permutations (Merkle leaves and nodes), proof-of-work
+grinding, the coset NTT — through lens's backend trait (`rspcs::backend`,
+`cyber-lens-gpu`): `metal` (Apple Silicon GPU through honeycrisp),
+`webgpu` (wgpu: Vulkan, DX12, Metal, GL), `cpu`, or `auto` (the default:
+Metal if it opens, else a WebGPU adapter, else the CPU). An explicit choice
+that is unavailable is an error. The artifact is byte-identical on every
+backend; stderr names the backend and the device, and the `Proved …` line
+the backend. Measurements: zheng `audit/prover-profile-2026-10.md`.
 
 Verifying profiles 5 and 6 needs zheng's circuit keys (the IVC key; for 6
 also the final wrap key). Joy keeps them as a zheng key bundle in a cache

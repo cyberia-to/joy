@@ -66,6 +66,13 @@ atoms. Same policy: ≥ 128 proven bits, not zero-knowledge, no secrets or
 state. The choice and its measurements:
 `audit/recursive-profile-2026-10.md`, `audit/wrapped-profile-2026-10.md`.
 
+`--backend auto|cpu|metal|webgpu` (env `JOY_BACKEND`) chooses where the
+prover's hashing, grinding and NTTs run: the Apple GPU (Metal, through
+honeycrisp), any WebGPU adapter, or the CPU; `auto` picks the first that
+opens. Every backend writes the same bytes. On an M4 Max, `joy prove
+--succinct hash.tri` takes 1.4 s on Metal, 2.8 s on WebGPU and 5.5 s on the
+CPU (17.7 s before the backends).
+
 Verifying profiles 5 and 6 needs zheng's circuit keys (the IVC key; for 6
 also the final wrap key). Joy keeps them as a zheng key bundle in a cache
 directory (`JOY_CACHE_DIR`, else `$XDG_CACHE_HOME/joy`, else
