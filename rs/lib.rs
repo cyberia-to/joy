@@ -25,10 +25,14 @@ pub use zk_execution::{ZkExecutionArtifact, ZkScheme, ZK_EXECUTION_FORMAT};
 
 pub mod state_execution;
 pub mod machine_execution;
+pub mod key_cache;
+pub mod memory;
 pub mod recursive_execution;
 pub mod succinct_execution;
+pub mod wrapped_execution;
 pub use machine_execution::{MachineExecutionArtifact, MACHINE_EXECUTION_FORMAT};
 pub use recursive_execution::{RecursiveExecutionArtifact, RECURSIVE_EXECUTION_FORMAT};
+pub use wrapped_execution::{WrappedExecutionArtifact, WRAPPED_EXECUTION_FORMAT};
 pub use succinct_execution::{
     Fallback, SuccinctArtifact, SuccinctExecutionArtifact, SUCCINCT_EXECUTION_FORMAT,
 };

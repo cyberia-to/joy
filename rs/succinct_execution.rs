@@ -92,14 +92,16 @@ impl SuccinctExecutionArtifact {
 
 /// What `joy prove --succinct` produces: one relation's succinct proof
 /// (profile 1) when the program fits the relation compiler, otherwise a
-/// recursive proof (profile 5: IVC over the nox machine, constant size) or,
-/// on request, a machine proof (profile 4: the uniform step relation,
-/// accumulated, growing with the run).
+/// wrapped proof (profile 6: IVC, its final verifier proved by wrap levels,
+/// ≤ 64 KB), a recursive proof (profile 5: IVC over the nox machine,
+/// constant size) or, on request, a machine proof (profile 4: the uniform
+/// step relation, accumulated, growing with the run).
 #[derive(Clone, Debug)]
 pub enum SuccinctArtifact {
     Relation(SuccinctExecutionArtifact),
     Machine(Box<crate::MachineExecutionArtifact>),
     Recursive(Box<crate::RecursiveExecutionArtifact>),
+    Wrapped(Box<crate::WrappedExecutionArtifact>),
 }
 
 impl SuccinctArtifact {
@@ -108,6 +110,7 @@ impl SuccinctArtifact {
             Self::Relation(a) => a.to_bytes(),
             Self::Machine(a) => a.to_bytes(),
             Self::Recursive(a) => a.to_bytes(),
+            Self::Wrapped(a) => a.to_bytes(),
         }
     }
 }
@@ -115,7 +118,11 @@ impl SuccinctArtifact {
 /// How `joy prove --succinct` proves a program beyond one relation.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Fallback {
-    /// Profile 5, the default: constant size in the run's length.
+    /// Profile 6: the recursive proof wrapped to ≤ 64 KB (the CLI's default
+    /// when the machine has the memory: `crate::memory`).
+    Wrapped,
+    /// Profile 5: constant size in the run's length (~285 KB), minutes less
+    /// to prove and a few GB of memory.
     #[default]
     Recursive,
     /// Profile 4 (`--machine`): smaller and faster to prove for runs of
@@ -153,6 +160,10 @@ impl Warrior {
                 .prove_recursive_execution(bundle, input, budget)
                 .map(|(a, r)| (SuccinctArtifact::Recursive(Box::new(a)), r))
                 .map_err(|e| format!("{relation}; recursive: {e}")),
+            Fallback::Wrapped => self
+                .prove_wrapped_execution(bundle, input, budget)
+                .map(|(a, r)| (SuccinctArtifact::Wrapped(Box::new(a)), r))
+                .map_err(|e| format!("{relation}; wrapped: {e}")),
             Fallback::Machine => self
                 .prove_machine_execution(bundle, input, budget)
                 .map(|(a, r)| (SuccinctArtifact::Machine(Box::new(a)), r))
