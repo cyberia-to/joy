@@ -3,7 +3,7 @@
 //! `joy verify` accepts self-contained and bound to its program, and
 //! rejects with a wrong claim, input, program, budget or a flipped byte;
 //! a fresh verify installs the keys the prover cached.
-//! Ignored by default: the wrap chain takes ~20 min and ~38 GB.
+//! Ignored by default: the wrap chain takes ~1–3 min and ~15 GB.
 use joy_rs::WrappedExecutionArtifact;
 use std::{
     fs,
@@ -49,7 +49,7 @@ impl Drop for Fixture {
 }
 
 #[test]
-#[ignore = "the wrap chain: ~20 min, ~38 GB"]
+#[ignore = "the wrap chain: ~1–3 min, ~15 GB"]
 fn a_program_beyond_one_relation_proves_wrapped() {
     let f = Fixture::new();
     let run = f.ok(&["run", "loop.tri", "--input-values", "3"]);
@@ -61,6 +61,10 @@ fn a_program_beyond_one_relation_proves_wrapped() {
     let bytes = fs::read(f.0.join("w.zheng")).unwrap();
     assert_eq!(&bytes[..8], b"ZHENGPF1");
     assert_eq!(bytes[10], 6, "profile byte: wrapped");
+    // the final proof is under zheng's hard gate over every transcript; the
+    // envelope (proof + this fixture's statement) under 64 KiB
+    let artifact = WrappedExecutionArtifact::from_bytes(&bytes).unwrap();
+    assert!(artifact.proof_len().unwrap() <= joy_rs::wrapped_execution::MAX_FINAL_PROOF_BYTES);
     assert!(bytes.len() <= 64 * 1024, "{} B", bytes.len());
 
     let out = f.ok(&["verify", "loop.tri", "--proof", "w.zheng", "--claim", &expected, "--input-values", "3"]);

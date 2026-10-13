@@ -139,7 +139,7 @@ proves it recursively and, when the machine has the memory, wraps it:
 `zheng-nox-wrapped-v1`, the `ZHENGPF1` envelope profile 6 — the recursive
 proof's final verifier proved by zheng's three wrap levels, ≤ 64 KB and
 constant in the run's length (zheng `specs/recursion.md` § wrap). The wrap
-chain is the expensive part (minutes, tens of GB): joy wraps by default
+chain is the expensive part (a minute or more, ~15 GB): joy wraps by default
 only if the available memory (`JOY_AVAILABLE_MEMORY` bytes if set, else
 `vm_stat` free + inactive + speculative pages on macOS, `MemAvailable` on
 Linux) reaches the measured peak (`joy_rs::memory::WRAP_PEAK_BYTES`);
