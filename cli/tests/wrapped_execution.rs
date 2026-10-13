@@ -3,7 +3,7 @@
 //! `joy verify` accepts self-contained and bound to its program, and
 //! rejects with a wrong claim, input, program, budget or a flipped byte;
 //! a fresh verify installs the keys the prover cached.
-//! Ignored by default: the wrap chain takes ~1–3 min and ~14 GB.
+//! Ignored by default: the wrap chain takes ~1–3 min and ~15 GB.
 use joy_rs::WrappedExecutionArtifact;
 use std::{
     fs,
@@ -49,7 +49,7 @@ impl Drop for Fixture {
 }
 
 #[test]
-#[ignore = "the wrap chain: ~1–3 min, ~14 GB"]
+#[ignore = "the wrap chain: ~1–3 min, ~15 GB"]
 fn a_program_beyond_one_relation_proves_wrapped() {
     let f = Fixture::new();
     let run = f.ok(&["run", "loop.tri", "--input-values", "3"]);

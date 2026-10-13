@@ -1,6 +1,6 @@
 //! Memory available to a prover, for choosing the wrapped profile.
 //!
-//! The wrap chain's prover (zheng profile 6) peaks near 14 GB
+//! The wrap chain's prover (zheng profile 6) peaks near 15 GB
 //! ([`WRAP_PEAK_BYTES`], measured); `joy prove --succinct` wraps by default
 //! only when at least that much memory is available, else it proves the
 //! recursive profile 5 and says so.
@@ -13,12 +13,11 @@
 use std::process::Command;
 
 /// Memory a wrap prove needs resident (IVC + three wrap levels, the
-/// prover's chain keys included): `joy prove loop.tri --succinct --wrap`
-/// on zheng `feat/proof-stack` peaks at 13.7 GB max RSS on Metal and
-/// 12.9 GB (10.9 GB footprint) on the CPU backend, rounded up (zheng
-/// `audit/wrap-fastverify-2026-10.md`). Below this much available memory
-/// the prove would page.
-pub const WRAP_PEAK_BYTES: u64 = 14 << 30;
+/// prover's chain keys included), with a margin: `joy prove loop.tri
+/// --succinct --wrap` peaks at 14.6 GB max RSS on Metal and 13.2 GB on the
+/// CPU backend (zheng #61, `audit/wrap-fastverify-2026-10.md` §9); this
+/// is that peak plus 15 % (16.8 GB), rounded up to 16 GiB (17.2 GB).
+pub const WRAP_PEAK_BYTES: u64 = 16 << 30;
 
 /// Bytes of memory available to a new process, if known.
 pub fn available_bytes() -> Option<u64> {
