@@ -355,3 +355,32 @@ fn look_artifact_tampered_binding_and_table_rejected() {
         assert!(bad.verify().is_err(), "mutation {which}");
     }
 }
+
+/// zheng's hemera node jet: the native check runs the node formula through
+/// nox's jet registry (one permutation, the formula's cost), so the
+/// succinct proof's statement and the native run agree, output and cycles.
+#[test]
+fn hemera_node_jet_native_run_matches_the_succinct_statement() {
+    use zheng::execution::{node, ExecutionNoun as N};
+    fn text(n: &N) -> String {
+        match n {
+            N::Atom(a) => a.to_string(),
+            N::Pair(a, b) => format!("[{} {}]", text(a), text(b)),
+        }
+    }
+    let pr = |a: N, b: N| N::Pair(Box::new(a), Box::new(b));
+    let (l, r) = ([1, 2, 3, 4], [5, 6, 7, 8]);
+    let subject = pr(pr(node::digest_noun(l), node::digest_noun(r)), N::Atom(node::FLAGS_ROOT));
+    let quote = |x: N| pr(N::Atom(1), x);
+    let program = pr(N::Atom(2), pr(quote(subject), quote(node::formula().clone())));
+    let b = bundle(&text(&program));
+    let budget = 1 << 20;
+    let result = Warrior::with_budget(budget).run(&b, &input(&[], &[])).expect("run");
+    assert_eq!(result.output, node::native(l, r, node::FLAGS_ROOT).to_vec());
+    assert_eq!(result.cycle_count, node::COST + 3);
+    let (artifact, native) = Warrior::with_budget(budget)
+        .prove_succinct_execution(&b, &input(&[], &[]), budget)
+        .expect("prove");
+    assert_eq!(native.cycle_count, artifact.statement.cycles);
+    artifact.verify().expect("verify");
+}
