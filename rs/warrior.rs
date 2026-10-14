@@ -4,7 +4,7 @@
 //! live in `traits.rs` (public v3, native private, state v3). Deploy is an
 //! honest dash (post-M4: particle + cyberlink emission). Never fake a proof.
 
-use nox::{reduce, ErrorKind, Outcome, Reduction, VecTrace};
+use nox::{reduce_with_registry, ErrorKind, JetRegistry, Outcome, Reduction, VecTrace};
 use trident::runtime::{ExecutionResult, ProgramBundle, ProgramInput, Runner};
 
 use crate::formula;
@@ -95,12 +95,26 @@ impl Warrior {
                 let object = formula::build_subject(&mut reduction, &public)?;
                 let provider = SecretProvider::new(secret);
                 let mut tracer = VecTrace::default();
-                match reduce(&mut reduction, object, root, budget, &provider, &mut tracer) {
-                    Outcome::Ok(result, _remaining) => {
+                // jets change speed, never results: zheng's hemera node
+                // (one permutation instead of ~40k reductions, the same cost)
+                let mut registry = JetRegistry::empty();
+                zheng::execution::node::jet::register(&mut registry);
+                match reduce_with_registry(
+                    &mut reduction,
+                    object,
+                    root,
+                    budget,
+                    &provider,
+                    &mut tracer,
+                    &registry,
+                ) {
+                    Outcome::Ok(result, remaining) => {
                         provider.finish()?;
                         Ok(ExecutionResult {
                             output: formula::leaves(&reduction, result)?,
-                            cycle_count: tracer.0.len() as u64,
+                            // the budget spent: a jet records one trace row
+                            // for its whole cost
+                            cycle_count: budget - remaining,
                         })
                     }
                     Outcome::Halt(remaining) => Err(format!(
