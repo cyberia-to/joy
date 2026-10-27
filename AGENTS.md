@@ -1,4 +1,6 @@
-# Joy — Claude Code Instructions
+# AGENTS.md — joy
+
+> the doctrine of the home is `~/cyber/AGENTS.md`; it applies here first. Claude Code receives both files at session start through `~/.config/cyber/agents-md.nu`; other agents read them in order.
 
 nox VM warrior for the cyber battlefield. Build, execute, prove and verify
 Trident programs compiled to nox formulas (the soft3 stack). Live deployment
