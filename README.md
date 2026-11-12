@@ -1,5 +1,8 @@
 # Joy
 
+How the runtime works, with its four actors and the numbers that hold today:
+[the runtime](docs/explanation/the-runtime.md).
+
 Interface specification: [Joy CLI](specs/cli.md). Node integration and
 acceptance are owned by [cyber's worker contract](../cyber/specs/worker.md).
 Both specs distinguish the implemented baseline from the planned interface.
